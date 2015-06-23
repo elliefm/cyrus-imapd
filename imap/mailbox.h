@@ -452,12 +452,13 @@ extern void mailbox_unmap_message(struct mailbox *mailbox,
 /* cache record API */
 int mailbox_ensure_cache(struct mailbox *mailbox, size_t len);
 int mailbox_cacherecord(struct mailbox *mailbox,
-			struct index_record *record);
+                        struct index_record *record);
 int cache_append_record(int fd, struct index_record *record);
 int mailbox_append_cache(struct mailbox *mailbox,
-			 struct index_record *record);
-char *mailbox_cache_get_msgid(struct mailbox *mailbox,
-			      struct index_record *record);
+                         struct index_record *record);
+char *mailbox_cache_get_env(struct mailbox *mailbox,
+                            const struct index_record *record,
+                            int field);
 
 /* field-based lookup functions */
 const char *cacheitem_base(struct index_record *record, int field);
