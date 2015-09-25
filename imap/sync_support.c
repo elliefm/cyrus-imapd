@@ -2922,6 +2922,7 @@ int sync_apply_unmailbox(struct dlist *kin, struct sync_state *sstate)
 
 int sync_apply_rename(struct dlist *kin, struct sync_state *sstate)
 {
+    const char *uniqueid = NULL;
     const char *oldmboxname;
     const char *newmboxname;
     const char *partition;
@@ -2936,6 +2937,10 @@ int sync_apply_rename(struct dlist *kin, struct sync_state *sstate)
 
     /* optional */
     dlist_getnum32(kin, "UIDVALIDITY", &uidvalidity);
+
+    /* XXX someday, renaming a mailbox should depend on uniqueid matching */
+    dlist_getatom(kin, "UNIQUEID", &uniqueid);
+    (void) uniqueid; /* quieten unused warning */
 
     return mboxlist_renamemailbox(oldmboxname, newmboxname, partition,
                                   uidvalidity, 1, sstate->userid,
@@ -3968,7 +3973,8 @@ static int user_reset(const char *userid,
     return sync_parse_response(cmd, sync_be->in, NULL);
 }
 
-static int folder_rename(const char *oldname, const char *newname,
+static int folder_rename(const char *uniqueid,
+                         const char *oldname, const char *newname,
                          const char *partition, unsigned uidvalidity,
                          struct backend *sync_be, unsigned flags)
 {
@@ -3982,6 +3988,7 @@ static int folder_rename(const char *oldname, const char *newname,
         syslog(LOG_INFO, "%s %s -> %s (%s)", cmd, oldname, newname, partition);
 
     kl = dlist_newkvlist(NULL, cmd);
+    dlist_setatom(kl, "UNIQUEID", uniqueid);
     dlist_setatom(kl, "OLDMBOXNAME", oldname);
     dlist_setatom(kl, "NEWMBOXNAME", newname);
     dlist_setatom(kl, "PARTITION", partition);
@@ -5397,8 +5404,8 @@ static int do_folders(struct sync_name_list *mboxname_list, const char *topart,
             }
 
             /* Found unprocessed item which should rename cleanly */
-            r = folder_rename(item->oldname, item->newname, item->part,
-                              item->uidvalidity, sync_be, flags);
+            r = folder_rename(item->uniqueid, item->oldname, item->newname,
+                              item->part, item->uidvalidity, sync_be, flags);
             if (r) {
                 syslog(LOG_ERR, "do_folders(): failed to rename: %s -> %s ",
                        item->oldname, item->newname);
