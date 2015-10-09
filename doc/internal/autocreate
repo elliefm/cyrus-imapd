@@ -1,0 +1,53 @@
+totally incomplete and brand new notes on the existing autocreate mechanism
+===========================================================================
+
+
+autocreate_sieve
+----------------
+
+* called like: autocreate_sieve(userid, config_getstring(IMAPOPT_AUTOCREATE_SIEVE_SCRIPT))
+* called by: autocreate_user()
+
+algorithm
+---------
+
+- check for sieveusehomedir setting, bail out if set (mut ex with autocreate sieve)
+- check for sievedir setting, bail out if not set (required for locating paths)
+- check for autocreate_sieve_script_compiled setting, flag need to compile if not set
+- set sieve_script_dir = user_sieve_path(userid). bail out if it fails
+- derive paths from script name:
+        - sieve_tmpname:        $sieve_script_dir/$sievename.script.NEW
+        - sieve_bctmpname:      $sieve_script_dir/$sievename.bc.NEW
+        - sieve_script_name:    $sieve_script_dir/$sievename.script
+        - sieve_bcscript_name:  $sieve_script_dir/$sievename.bc
+        - sieve_default:        $sieve_script_dir/defaultbc
+        - sieve_bclink_name:    $sievename.bc # rel path to sieve_bcscript_name, used for symlink
+  (bail out if any could not be derived)
+- ensure sieve_script_dir exists, bail out if can't be created
+
+- open and create/truncate sieve_bctmpname, bail out if it fails
+
+- if we aren't flagged to compile, and we have a precompiled filename, and we can read that filename
+    - then try to copy that file to sieve_bctmpname
+        - if it fails due to read, flag to compile; due to write, bail out
+- otherwise, flag to compile
+
+- if we're flagged to compile
+    - try to compile, and write output to sieve_bctmpname
+        - if anything goes wrong, unlink sieve_bctmpname and bail out
+
+- try to copy the original file to sieve_tmpname, bail out if anything goes wrong
+
+- rename sieve_tmpname to sieve_script_name, bail out if it fails
+- rename sieve_bctmpname to sieve_bcscript_name, bail out if it fails
+
+- symlink sieve_default to point to sieve_bclink_name
+
+- if we compiled, and we have autocreate_sieve_script_compile (no 'd') setting
+    - set sieve_tmpname to $compiled_script_name.NEW
+    - open it for exclusive creation
+    - copy contents of sieve_bcscript_name file into it
+    - rename sieve_tmpname to compiled_script_name
+    - if anything goes wrong in here, clean up and return success
+
+- return success
