@@ -226,6 +226,9 @@ static int reservefile(struct protstream *in, const char *part,
 
     fclose(file);
 
+    syslog(LOG_INFO, "staged %s to %s as %s",
+                     message_guid_encode(guid), part, *fname);
+
     return 0;
 
 error:

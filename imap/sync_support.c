@@ -1871,9 +1871,15 @@ int sync_append_copyfile(struct mailbox *mailbox,
         return r;
     }
 
+    syslog(LOG_INFO, "copied %s to %s",
+           message_guid_encode(&record->guid), destname);
+
  just_write:
     r = mailbox_append_index_record(mailbox, record);
     if (r) return r;
+
+    syslog(LOG_INFO, "wrote index record for %s: %s uid %u",
+           message_guid_encode(&record->guid), mailbox->name, record->uid);
 
     /* apply the remote annotations */
     r = apply_annotations(mailbox, record, NULL, annots, 0);
