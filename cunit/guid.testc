@@ -77,4 +77,54 @@ static void test_encode(void)
     s = message_guid_encode(&guid);
     CU_ASSERT_STRING_EQUAL(s, SHA1HEX);
 }
+
+static void test_null(void)
+{
+    static const unsigned char SHA1BIN[20] = {0};
+
+    const struct message_guid null = { GUID_NULL, {0} };
+    struct message_guid guid, guid2;
+    const char *tmp;
+
+    /* null is null */
+    CU_ASSERT_EQUAL(message_guid_isnull(&null), 1);
+
+    /* set null produces null */
+    message_guid_set_null(&guid);
+    CU_ASSERT_EQUAL(guid.status, null.status);
+    CU_ASSERT_EQUAL(memcmp(&guid.value, &null.value, sizeof(null.value)), 0);
+
+    /* XXX is null equal to itself, or not? i.e. is it like zero, or like NaN? */
+    /* treating it like zero for now */
+    CU_ASSERT_EQUAL(message_guid_equal(&guid, &null), 1);
+    CU_ASSERT_EQUAL(message_guid_cmp(&guid, &null), 0);
+    CU_ASSERT_EQUAL(message_guid_cmp(&null, &guid), 0);
+
+    /* if GUID_NULL status is set, (possibly-junk) bytes in value should be ignored */
+    memset(&guid.value, 0x45, sizeof(guid.value));
+    CU_ASSERT_EQUAL(message_guid_isnull(&guid), 1);
+    CU_ASSERT_EQUAL(message_guid_equal(&guid, &null), 1);
+    CU_ASSERT_EQUAL(message_guid_cmp(&guid, &null), 0);
+    CU_ASSERT_EQUAL(message_guid_cmp(&null, &guid), 0);
+
+    /* copy of null message_guid does not copy its (possibly-junk) value */
+    message_guid_copy(&guid2, &guid);
+    CU_ASSERT_EQUAL(guid2.status, guid.status);
+    CU_ASSERT(memcmp(&guid2.value, &guid.value, sizeof(guid.value)) != 0);
+    CU_ASSERT(memcmp(&guid2.value, SHA1BIN, sizeof(SHA1BIN)) == 0);
+
+    /* set null discards old value, even if old status was already null */
+    message_guid_set_null(&guid);
+    CU_ASSERT_EQUAL(memcmp(&guid.value, &null.value, sizeof(null.value)), 0);
+
+    /* encode null => NULL */
+    tmp = message_guid_encode(&null);
+    CU_ASSERT_PTR_NULL(tmp);
+
+    /* decode of non-hex bytes produces null guid */
+    CU_ASSERT_EQUAL(message_guid_decode(&guid, "this is not a hex string"), 0);
+    CU_ASSERT_EQUAL(message_guid_isnull(&guid), 1);
+
+    /* XXX import/export? */
+}
 /* vim: set ft=c: */
