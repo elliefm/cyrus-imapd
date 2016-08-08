@@ -97,7 +97,10 @@ EXPORTED void message_guid_generate(struct message_guid *guid,
 
 EXPORTED void message_guid_copy(struct message_guid *dst, const struct message_guid *src)
 {
-    memcpy(dst, src, sizeof(struct message_guid));
+    if (src->status == GUID_NULL)
+        message_guid_set_null(dst);
+    else
+        memcpy(dst, src, sizeof(struct message_guid));
 }
 
 /* message_guid_equal() **************************************************
@@ -109,12 +112,18 @@ EXPORTED void message_guid_copy(struct message_guid *dst, const struct message_g
 EXPORTED int message_guid_equal(const struct message_guid *g1,
                                 const struct message_guid *g2)
 {
-    return (memcmp(g1->value, g2->value, MESSAGE_GUID_SIZE) == 0);
+    return (message_guid_cmp(g1, g2) == 0);
 }
 
 EXPORTED int message_guid_cmp(const struct message_guid *g1,
                               const struct message_guid *g2)
 {
+    if (g1->status == GUID_NULL)
+        return g2->status == GUID_NULL ? 0 : -1;
+
+    if (g2->status == GUID_NULL)
+        return 1;
+
     return memcmp(g1->value, g2->value, MESSAGE_GUID_SIZE);
 }
 
@@ -211,13 +220,16 @@ EXPORTED void message_guid_import(struct message_guid *guid,
 /* message_guid_encode() *************************************************
  *
  * Returns ptr to '\0' terminated static char * which can be strdup()ed
- * NULL => error. Should be impossible as entire range covered
+ * Returns NULL if the provided guid is the null value.
  *
  ************************************************************************/
 
 EXPORTED const char *message_guid_encode(const struct message_guid *guid)
 {
     static char text[2*MESSAGE_GUID_SIZE+1];
+
+    if (guid->status == GUID_NULL) return NULL;
+
     int r = bin_to_hex(&guid->value, MESSAGE_GUID_SIZE, text, BH_LOWER);
     assert(r == 2*MESSAGE_GUID_SIZE);
     return text;
