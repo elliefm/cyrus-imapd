@@ -127,4 +127,49 @@ static void test_null(void)
 
     /* XXX import/export? */
 }
+
+static void test_nonnull_zero(void)
+{
+    static const char SHA1HEX[41] = "0000000000000000000000000000000000000000";
+    static const unsigned char SHA1BIN[20] = {0};
+
+    const struct message_guid nonnull_zero = { GUID_NONNULL, {0} };
+    const struct message_guid null = { GUID_NULL, {0} };
+    struct message_guid guid;
+    const char *tmp;
+
+    /* is not null, despite value being all zeroes */
+    CU_ASSERT_EQUAL(message_guid_isnull(&nonnull_zero), 0);
+
+    /* non-null zero is equal to itself */
+    CU_ASSERT_EQUAL(message_guid_equal(&nonnull_zero, &nonnull_zero), 1);
+    CU_ASSERT(message_guid_cmp(&nonnull_zero, &nonnull_zero) == 0);
+
+    /* non-null zero is not equal to null */
+    CU_ASSERT_EQUAL(message_guid_equal(&null, &nonnull_zero), 0);
+    CU_ASSERT_EQUAL(message_guid_equal(&nonnull_zero, &null), 0);
+    CU_ASSERT(message_guid_cmp(&null, &nonnull_zero) < 0);
+    CU_ASSERT(message_guid_cmp(&nonnull_zero, &null) > 0);
+
+    /* copy of non-null zero equals non-null zero */
+    message_guid_copy(&guid, &nonnull_zero);
+    CU_ASSERT_EQUAL(guid.status, nonnull_zero.status);
+    CU_ASSERT_EQUAL(memcmp(&guid.value, SHA1BIN, sizeof(SHA1BIN)), 0);
+
+    /* setnull differentiates between null and non-null zeroes*/
+    message_guid_set_null(&guid);
+    CU_ASSERT_EQUAL(guid.status, null.status);
+    CU_ASSERT_EQUAL(memcmp(&guid.value, &null.value, sizeof(null.value)), 0);
+
+    /* encode produces correct string */
+    tmp = message_guid_encode(&nonnull_zero);
+    CU_ASSERT_EQUAL(strcmp(tmp, SHA1HEX), 0);
+
+    /* decode produces correct guid */
+    CU_ASSERT_EQUAL(message_guid_decode(&guid, SHA1HEX), 1);
+    CU_ASSERT_EQUAL(guid.status, nonnull_zero.status);
+    CU_ASSERT_EQUAL(memcmp(&guid.value, SHA1BIN, sizeof(SHA1BIN)), 0);
+
+    /* XXX import/export? */
+}
 /* vim: set ft=c: */
