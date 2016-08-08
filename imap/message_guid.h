@@ -48,7 +48,6 @@
 #define MESSAGE_GUID_SIZE         (20)    /* Size of GUID byte sequence */
 
 enum guid_status {
-    GUID_UNKNOWN = -1, /* Unknown if GUID is [non-]NULL (not yet tested) */
     GUID_NULL =     0, /* GUID is NULL */
     GUID_NONNULL =  1, /* GUID is non-NULL */
 };
@@ -81,6 +80,9 @@ void message_guid_set_null(struct message_guid *guid);
 
 /* Returns 1 if GUID is NULL value */
 int message_guid_isnull(const struct message_guid *guid);
+
+/* Returns 1 if GUID value is all zeroes */
+int message_guid_iszeroes(const struct message_guid *guid);
 
 /* Export Message GUID as byte sequence (MESSAGE_GUID_SIZE)
  * (Wrapper for memcpy() with current implementation)

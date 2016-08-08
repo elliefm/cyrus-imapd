@@ -1701,8 +1701,12 @@ static int mailbox_buf_to_index_record(const char *buf,
 
     message_guid_import(&record->guid, (unsigned char *)buf+OFFSET_MESSAGE_GUID);
     record->modseq = ntohll(*((bit64 *)(buf+OFFSET_MODSEQ)));
-    if (version < 12)
+    if (version < 12) {
+        /* version 10 had a GUID field, but it could be "empty" (all-zeroes) */
+        if (message_guid_iszeroes(&record->guid))
+            message_guid_set_null(&record->guid);
         return 0;
+    }
 
     /* THRID got inserted before cache_crc32 in version 12 */
     if (version == 12) {

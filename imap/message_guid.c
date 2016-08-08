@@ -174,17 +174,22 @@ EXPORTED void message_guid_set_null(struct message_guid *guid)
 
 EXPORTED int message_guid_isnull(const struct message_guid *guid)
 {
-    if (guid->status == GUID_UNKNOWN) {
-        /* allow internal recalculation while still being const */
-        struct message_guid *backdoor = (struct message_guid *)guid;
-        const unsigned char *p = guid->value;
-        int i;
-
-        for (i = 0; (i < MESSAGE_GUID_SIZE) && !*p++; i++);
-        backdoor->status = (i == MESSAGE_GUID_SIZE) ? GUID_NULL : GUID_NONNULL;
-    }
-
     return (guid->status == GUID_NULL);
+}
+
+/* message_guid_iszeroes() ***********************************************
+ *
+ * Returns: 1 if GUID's value is all zeroes, 0 otherwise.  Ignores status.
+ *
+ ************************************************************************/
+EXPORTED int message_guid_iszeroes(const struct message_guid *guid)
+{
+    const unsigned char *p = guid->value;
+    int i;
+
+    for (i = 0; (i < MESSAGE_GUID_SIZE) && !*p++; i++);
+
+    return (i == MESSAGE_GUID_SIZE);
 }
 
 /* message_guid_export() *************************************************
@@ -210,7 +215,7 @@ EXPORTED void message_guid_import(struct message_guid *guid,
                          const unsigned char *buf)
 {
     assert(guid);
-    guid->status = GUID_UNKNOWN;
+    guid->status = GUID_NONNULL;
     memcpy(guid->value, buf, MESSAGE_GUID_SIZE);
 }
 
