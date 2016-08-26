@@ -119,7 +119,7 @@ static void message_parse_address(const char *hdr, struct address **addrp);
 static void message_parse_encoding(const char *hdr, char **hdrp);
 static void message_parse_charset(const struct body *body,
                                   int *encoding, int *charset);
-static void message_parse_string(const char *hdr, char **hdrp);
+static void message_parse_string(const char *hdr, char **hdrp, int replace);
 static void message_parse_header(const char *hdr, struct buf *buf);
 static void message_parse_type(const char *hdr, struct body *body);
 static void message_parse_disposition(const char *hdr, struct body *body);
@@ -765,22 +765,22 @@ static int message_parse_headers(struct msg *msg, struct body *body,
                 message_parse_address(value, &body->cc);
                 break;
             case RFC822_CONTENT_DESCRIPTION:
-                message_parse_string(value, &body->description);
+                message_parse_string(value, &body->description, 0);
                 break;
             case RFC822_CONTENT_DISPOSITION:
                 message_parse_disposition(value, body);
                 break;
             case RFC822_CONTENT_ID:
-                message_parse_string(value, &body->id);
+                message_parse_string(value, &body->id, 0);
                 break;
             case RFC822_CONTENT_LANGUAGE:
                 message_parse_language(value, &body->language);
                 break;
             case RFC822_CONTENT_LOCATION:
-                message_parse_string(value, &body->location);
+                message_parse_string(value, &body->location, 0);
                 break;
             case RFC822_CONTENT_MD5:
-                message_parse_string(value, &body->md5);
+                message_parse_string(value, &body->md5, 0);
                 break;
             case RFC822_CONTENT_TRANSFER_ENCODING:
                 message_parse_encoding(value, &body->encoding);
@@ -800,16 +800,16 @@ static int message_parse_headers(struct msg *msg, struct body *body,
                 message_parse_type(value, body);
                 break;
             case RFC822_DATE:
-                message_parse_string(value, &body->date);
+                message_parse_string(value, &body->date, 0);
                 break;
             case RFC822_FROM:
                 message_parse_address(value, &body->from);
                 break;
             case RFC822_IN_REPLY_TO:
-                message_parse_string(value, &body->in_reply_to);
+                message_parse_string(value, &body->in_reply_to, 0);
                 break;
             case RFC822_MESSAGE_ID:
-                message_parse_string(value, &body->message_id);
+                message_parse_string(value, &body->message_id, 0);
                 break;
             case RFC822_REPLY_TO:
                 message_parse_address(value, &body->reply_to);
@@ -818,10 +818,11 @@ static int message_parse_headers(struct msg *msg, struct body *body,
                 message_parse_received_date(value, &body->received_date);
                 break;
             case RFC822_REFERENCES:
-                message_parse_string(value, &body->references);
+                message_parse_string(value, &body->references, 0);
                 break;
             case RFC822_SUBJECT:
-                message_parse_string(value, &body->subject);
+                /* always grab the last subject header */
+                message_parse_string(value, &body->subject, 1);
                 break;
             case RFC822_SENDER:
                 message_parse_address(value, &body->sender);
@@ -835,10 +836,10 @@ static int message_parse_headers(struct msg *msg, struct body *body,
                     free(body->received_date);
                     body->received_date = 0;
                 }
-                message_parse_string(value, &body->received_date);
+                message_parse_string(value, &body->received_date, 0);
                 break;
             case RFC822_X_ME_MESSAGE_ID:
-                message_parse_string(value, &body->x_me_message_id);
+                message_parse_string(value, &body->x_me_message_id, 0);
                 break;
             default:
                 break;
@@ -979,13 +980,19 @@ static void message_parse_charset(const struct body *body,
 /*
  * Parse an uninterpreted header
  */
-static void message_parse_string(const char *hdr, char **hdrp)
+static void message_parse_string(const char *hdr, char **hdrp, int replace)
 {
     const char *hdrend;
     char *he;
 
     /* Ignore if we already saw one of these headers */
-    if (*hdrp) return;
+    if (*hdrp && !replace) return;
+
+    /* Discard the old one if we need to replace it */
+    if (*hdrp) {
+        free(*hdrp);
+        *hdrp = NULL;
+    }
 
     /* Skip initial whitespace */
     while (*hdr == ' ' || *hdr == '\t') hdr++;
@@ -1705,7 +1712,7 @@ static void message_parse_received_date(const char *hdr, char **hdrp)
   if (*hdrp) return;
 
   /* Copy header to temp buffer */
-  message_parse_string(hdr, &hdrbuf);
+  message_parse_string(hdr, &hdrbuf, 0);
 
   /* From rfc2822, 3.6.7
    *   received = "Received:" name-val-list ";" date-time CRLF
@@ -1725,7 +1732,7 @@ static void message_parse_received_date(const char *hdr, char **hdrp)
 
   /* Found it, copy out date string part */
   curp++;
-  message_parse_string(curp, hdrp);
+  message_parse_string(curp, hdrp, 0);
   free(hdrbuf);
 }
 
