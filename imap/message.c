@@ -115,7 +115,8 @@ static int message_parse_headers(struct msg *msg,
                                     struct body *body,
                                     const char *defaultContentType,
                                     strarray_t *boundaries);
-static void message_parse_address(const char *hdr, struct address **addrp);
+static void message_parse_address(const char *hdr, struct address **addrp,
+                                  int replace);
 static void message_parse_encoding(const char *hdr, char **hdrp);
 static void message_parse_charset(const struct body *body,
                                   int *encoding, int *charset);
@@ -759,10 +760,10 @@ static int message_parse_headers(struct msg *msg, struct body *body,
 
             switch (message_header_lookup(next+1, &value)) {
             case RFC822_BCC:
-                message_parse_address(value, &body->bcc);
+                message_parse_address(value, &body->bcc, 1);
                 break;
             case RFC822_CC:
-                message_parse_address(value, &body->cc);
+                message_parse_address(value, &body->cc, 1);
                 break;
             case RFC822_CONTENT_DESCRIPTION:
                 message_parse_string(value, &body->description, 0);
@@ -803,7 +804,7 @@ static int message_parse_headers(struct msg *msg, struct body *body,
                 message_parse_string(value, &body->date, 0);
                 break;
             case RFC822_FROM:
-                message_parse_address(value, &body->from);
+                message_parse_address(value, &body->from, 1);
                 break;
             case RFC822_IN_REPLY_TO:
                 message_parse_string(value, &body->in_reply_to, 0);
@@ -812,7 +813,7 @@ static int message_parse_headers(struct msg *msg, struct body *body,
                 message_parse_string(value, &body->message_id, 0);
                 break;
             case RFC822_REPLY_TO:
-                message_parse_address(value, &body->reply_to);
+                message_parse_address(value, &body->reply_to, 1);
                 break;
             case RFC822_RECEIVED:
                 message_parse_received_date(value, &body->received_date);
@@ -825,10 +826,10 @@ static int message_parse_headers(struct msg *msg, struct body *body,
                 message_parse_string(value, &body->subject, 1);
                 break;
             case RFC822_SENDER:
-                message_parse_address(value, &body->sender);
+                message_parse_address(value, &body->sender, 1);
                 break;
             case RFC822_TO:
-                message_parse_address(value, &body->to);
+                message_parse_address(value, &body->to, 1);
                 break;
             case RFC822_X_DELIVEREDINTERNALDATE:
                 /* Explicit x-deliveredinternaldate overrides received: headers */
@@ -859,9 +860,16 @@ static int message_parse_headers(struct msg *msg, struct body *body,
  * Parse a list of RFC-822 addresses from a header, appending them
  * to the address list pointed to by 'addrp'.
  */
-static void message_parse_address(const char *hdr, struct address **addrp)
+static void message_parse_address(const char *hdr, struct address **addrp,
+                                  int replace)
 {
     char *hdrend, hdrendchar = '\0';
+
+    /* Discard the old one if we need to replace it */
+    if (*addrp && replace) {
+        parseaddr_free(*addrp);
+        *addrp = NULL;
+    }
 
     /* Find end of header */
     hdrend = (char *)hdr;
