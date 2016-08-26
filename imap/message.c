@@ -801,7 +801,8 @@ static int message_parse_headers(struct msg *msg, struct body *body,
                 message_parse_type(value, body);
                 break;
             case RFC822_DATE:
-                message_parse_string(value, &body->date, 0);
+                /* always grab the last date header */
+                message_parse_string(value, &body->date, 1);
                 break;
             case RFC822_FROM:
                 message_parse_address(value, &body->from, 1);
