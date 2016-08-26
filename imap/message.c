@@ -810,7 +810,8 @@ static int message_parse_headers(struct msg *msg, struct body *body,
                 message_parse_string(value, &body->in_reply_to, 0);
                 break;
             case RFC822_MESSAGE_ID:
-                message_parse_string(value, &body->message_id, 0);
+                /* always grab the last message-id header */
+                message_parse_string(value, &body->message_id, 1);
                 break;
             case RFC822_REPLY_TO:
                 message_parse_address(value, &body->reply_to, 1);
