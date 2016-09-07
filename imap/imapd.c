@@ -58,6 +58,9 @@
 #include <sys/wait.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <time.h>
+#include <stdbool.h>
+#include <errno.h>
 
 #include <sasl/sasl.h>
 
@@ -3055,6 +3058,25 @@ static void cmd_id(char *tag)
     imapd_id.did_id = 1;
 }
 
+static bool deadline_exceeded (const struct timespec *d)
+{
+    struct timespec now;
+
+    if (d->tv_sec <= 0) {
+        /* No deadline configured */
+        return false;
+    }
+
+    if (clock_gettime(CLOCK_MONOTONIC_COARSE, &now) == -1) {
+        syslog(LOG_ERR, "clock_gettime (%d %s): error reading clock",
+               errno, strerror(errno));
+        return false;
+    }
+
+    return now.tv_sec > d->tv_sec ||
+           (now.tv_sec == d->tv_sec && now.tv_nsec > d->tv_nsec);
+}
+
 /*
  * Perform an IDLE command
  */
@@ -3064,6 +3086,22 @@ static void cmd_idle(char *tag)
     int flags;
     static struct buf arg;
     static int idle_period = -1;
+    static time_t idle_timeout = -1;
+    struct timespec deadline = { 0, 0 };
+
+    if (idle_timeout == -1) {
+        idle_timeout = config_getint(IMAPOPT_IMAPIDLETIMEOUT);
+    }
+
+    if (idle_timeout > 0) {
+        errno = 0;
+        if (clock_gettime(CLOCK_MONOTONIC_COARSE, &deadline) == -1) {
+            syslog(LOG_ERR, "clock_gettime (%d %s): error reading clock",
+                   errno, strerror(errno));
+        } else {
+            deadline.tv_sec += idle_timeout;
+        }
+    }
 
     if (!backend_current) {  /* Local mailbox */
 
@@ -3080,6 +3118,11 @@ static void cmd_idle(char *tag)
 
         index_release(imapd_index);
         while ((flags = idle_wait(imapd_in->fd))) {
+            if (deadline_exceeded(&deadline)) {
+                shut_down(0);
+                break;
+            }
+
             if (flags & IDLE_INPUT) {
                 /* Get continuation data */
                 c = getword(imapd_in, &arg);
@@ -3112,7 +3155,8 @@ static void cmd_idle(char *tag)
         idle_stop(index_mboxname(imapd_index));
     }
     else {  /* Remote mailbox */
-        int done = 0, shutdown = 0;
+        int done = 0;
+        enum { shutdown_skip, shutdown_bye, shutdown_silent } shutdown = shutdown_skip;
         char buf[2048];
 
         /* get polling period */
@@ -3144,6 +3188,11 @@ static void cmd_idle(char *tag)
 
         /* Pipe updates to client while waiting for end of command */
         while (!done) {
+            if (deadline_exceeded(&deadline)) {
+                shutdown = shutdown_silent;
+                goto done_shutdown;
+            }
+
             /* Flush any buffered output */
             prot_flush(imapd_out);
 
@@ -3152,7 +3201,8 @@ static void cmd_idle(char *tag)
                 (shutdown_file(buf, sizeof(buf)) ||
                  (imapd_userid &&
                   userdeny(imapd_userid, config_ident, buf, sizeof(buf))))) {
-                shutdown = done = 1;
+                done = 1;
+                shutdown = shutdown_bye;
                 goto done;
             }
 
@@ -3176,12 +3226,21 @@ static void cmd_idle(char *tag)
             pipe_until_tag(backend_current, tag, 0);
         }
 
-        if (shutdown) {
+      done_shutdown:
+        switch (shutdown) {
+        case shutdown_bye:
+            ;
             char *p;
 
             for (p = buf; *p == '['; p++); /* can't have [ be first char */
             prot_printf(imapd_out, "* BYE [ALERT] %s\r\n", p);
+            /* fallthrough */
+        case shutdown_silent:
             shut_down(0);
+            break;
+        case shutdown_skip:
+        default:
+            break;
         }
     }
 
