@@ -892,6 +892,10 @@ Blank lines and lines beginning with ``#'' are ignored.
    idled is not enabled or cannot be contacted.  The minimum value is
    1.  A value of 0 will disable IDLE. */
 
+{ "imapidletimeout", 0, INT }
+/* Timeout for idling clients (RFC 2177) in seconds. A value of zero (the
+   default) means no timeout is enforced. */
+
 { "imapidresponse", 1, SWITCH }
 /* If enabled, the server responds to an ID command with a parameter
    list containing: version, vendor, support-url, os, os-version,
