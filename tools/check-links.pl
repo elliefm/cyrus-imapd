@@ -44,6 +44,7 @@ use strict;
 use warnings;
 
 use Data::Dumper;
+use File::Find;
 use Getopt::Std;
 use HTML::TokeParser::Simple;
 
@@ -60,23 +61,13 @@ sub find_files
 
     my @files;
 
-    opendir my $dh, $dir || die "can't opendir $dir: $!";
-    while (readdir $dh) {
-        next if $_ eq q{.} or $_ eq q{..};
+    my $wanted = sub {
+        my $ext = (split /\./, $_)[-1];
+        return if not grep { $_ eq $ext } @{$exts};
+        push @files, $File::Find::name;
+    };
 
-        my $f = "$dir/$_";
-
-        if (-d $f) {
-            push @files, find_files($f, $exts);
-        }
-        else {
-            my $ext = (split /\./, $f)[-1];
-            next if not grep { $_ eq $ext } @{$exts};
-
-            push @files, $f;
-        }
-    }
-    closedir $dh;
+    find($wanted, $dir);
 
     return @files;
 }
