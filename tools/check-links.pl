@@ -176,10 +176,10 @@ sub check_hrefs
 usage if not getopts("dv", \%options);
 $htmlroot = shift @ARGV // q{.};
 
-print Dumper \%options;
+out_debug Dumper \%options;
 
-print "htmlroot: $htmlroot\n";
-print "ok\n";
+out_debug "htmlroot: $htmlroot";
+out_debug "ok";
 
 %files = map { ($_ => {}) } find_files $htmlroot;
 
@@ -191,9 +191,9 @@ while (my ($file, $data) = each %files) {
     parse_file($file, $data);
 }
 
-print Dumper \%files;
+out_debug Dumper \%files;
 
 # process our discoveries
 check_hrefs(\%files);
 
-print Dumper \%counts;
+out_debug Dumper \%counts;
