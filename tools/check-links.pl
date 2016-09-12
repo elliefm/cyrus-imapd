@@ -43,6 +43,7 @@
 use strict;
 use warnings;
 
+use Cwd qw(abs_path);
 use Data::Dumper;
 use File::Basename;
 use File::Find;
@@ -51,32 +52,16 @@ use HTML::TokeParser::Simple;
 
 my %options;
 my %counts;
-my %files;
+my %g_files;
 my $htmlroot;
+
+$Data::Dumper::Indent = 1;
+$Data::Dumper::Sortkeys = 1;
 
 sub usage
 {
     print STDERR "Usage: check-links.pl [options] htmlroot\n";
     exit 1;
-}
-
-sub find_files
-{
-    my ($dir, $exts) = @_;
-    $exts = [ 'html' ] if not ref $exts;
-
-    my @files;
-
-    my $wanted = sub {
-        my $ext = (split /\./, $_)[-1];
-        return if not $ext;
-        return if not grep { $_ eq $ext } @{$exts};
-        push @files, $File::Find::name;
-    };
-
-    find($wanted, $dir);
-
-    return @files;
 }
 
 sub out_warn
@@ -113,6 +98,21 @@ sub out_debug
     print $message, "\n";
 }
 
+sub find_files
+{
+    my ($dir, $exts) = @_;
+    $exts = [ 'html' ] if not ref $exts;
+
+    my $cb = sub {
+        my $ext = (split /\./, $_)[-1];
+        return if not $ext;
+        return if not grep { $_ eq $ext } @{$exts};
+        $g_files{abs_path($_)} = { name => $File::Find::name };
+    };
+
+    find($cb, $dir);
+}
+
 sub parse_file
 {
     my ($filename, $data) = @_;
@@ -124,12 +124,17 @@ sub parse_file
 
         my $id = $tag->get_attr('id');
         if ($id) {
-            out_error "$filename: duplicate id: $id" if exists $data->{anchors}->{$id};
+            out_error "$data->{name}: duplicate id: $id" if exists $data->{anchors}->{$id};
             $data->{anchors}->{$id} = {};
         }
 
         my $href = $tag->get_attr('href');
         push @{$data->{hrefs}}, $href if $href;
+
+        if ($tag->is_tag('form')) {
+            my $action = $tag->get_attr('action');
+            push @{$data->{hrefs}}, $action if $action;
+        }
     }
 }
 
@@ -137,14 +142,18 @@ sub check_hrefs
 {
     my ($files) = @_;
 
-    foreach my $filename (sort keys %{$files}) {
+    foreach my $real_filename (sort keys %{$files}) {
+        my $filename = $files->{$real_filename}->{name};
+
         out_verbose "checking $filename hrefs...";
         my (undef, $path, undef) = fileparse($filename);
         out_debug "$filename is in $path";
 
-        foreach my $href (@{$files->{$filename}->{hrefs}}) {
+        foreach my $href (@{$files->{$real_filename}->{hrefs}}) {
             my ($link, $anchor, $junk) = split /#/, $href;
             out_error "bad link: $href" if $junk;
+
+            my $key;
 
             if ($link) {
                 # skip mailto links
@@ -157,16 +166,53 @@ sub check_hrefs
                     $link = "$htmlroot/$link";
                 }
                 else {
-                    $link = "$path/$link";
+                    $link = "$path$link"; # $path has trailing '/' already!
                 }
 
                 out_error "$filename: link to nonexistent file: $href ($link)" if not -f $link;
+
+                $key = abs_path($link);
+
+                if (exists $files->{$key}) {
+                    $files->{$key}->{seen} ++;
+                    out_debug "seen $link: $files->{$key}->{seen}";
+                }
+                else {
+                    # XXX hush noise from links to non-html files
+#                    out_warn "$filename: link to unrecognised file: $href ($link)";
+                }
+            }
+            else {
+                # no link, so links to anchors are within the same page
+                $key = $real_filename;
             }
 
-            # XXX fix the link path so we can find it in our hash
-            # XXX then mark it as seen
-            # XXX and if we're linking to an anchor, make sure that anchor exists
-            # XXX and mark it as soon too
+            if ($anchor) {
+                if (exists $files->{$key}->{anchors}->{$anchor}) {
+                    $files->{$key}->{anchors}->{$anchor}->{seen}++;
+                    out_debug "seen #$anchor: $files->{$key}->{anchors}->{$anchor}->{seen}";
+                }
+                else {
+                    out_error "$filename: link to unrecognised anchor: $href ($anchor)";
+                }
+            }
+        }
+    }
+}
+
+sub check_seen
+{
+    my ($files) = @_;
+
+    foreach my $real_filename (sort keys %{$files}) {
+        my $filename = $files->{$real_filename}->{name};
+
+        out_verbose "checking $filename seen...";
+
+        out_error "$filename: nothing links to me" if not $files->{$real_filename}->{seen};
+
+        while (my ($id, $anchor) = each %{$files->{$real_filename}->{anchors}}) {
+            out_warn "$filename: unused anchor '$id'" if not $anchor->{seen};
         }
     }
 }
@@ -181,19 +227,20 @@ out_debug Dumper \%options;
 out_debug "htmlroot: $htmlroot";
 out_debug "ok";
 
-%files = map { ($_ => {}) } find_files $htmlroot;
+find_files $htmlroot;
 
 #print Dumper \%files;
 
 # parse the files
-while (my ($file, $data) = each %files) {
-    out_verbose "parsing $file...";
+while (my ($file, $data) = each %g_files) {
+    out_verbose "parsing $data->{name}...";
     parse_file($file, $data);
 }
 
-out_debug Dumper \%files;
 
 # process our discoveries
-check_hrefs(\%files);
+check_hrefs(\%g_files);
+out_debug Dumper \%g_files;
+check_seen(\%g_files);
 
 out_debug Dumper \%counts;
