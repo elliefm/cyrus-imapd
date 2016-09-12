@@ -58,6 +58,11 @@ my $htmlroot;
 $Data::Dumper::Indent = 1;
 $Data::Dumper::Sortkeys = 1;
 
+select STDERR;
+$| = 1;
+select STDOUT;
+$| = 1;
+
 sub usage
 {
     print STDERR "Usage: check-links.pl [options] htmlroot\n";
