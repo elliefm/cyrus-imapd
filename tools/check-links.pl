@@ -52,7 +52,6 @@ use HTML::TokeParser::Simple;
 
 my %options;
 my %counts;
-my %g_files;
 my $htmlroot;
 
 $Data::Dumper::Indent = 1;
@@ -65,7 +64,14 @@ $| = 1;
 
 sub usage
 {
-    print STDERR "Usage: check-links.pl [options] htmlroot\n";
+    print STDERR <<WOOF;
+Usage: check-links.pl [options] htmlroot
+
+Options:
+    -u  warn about unused anchors
+    -v  verbose
+    -d  debugging mode (implies -v)
+WOOF
     exit 1;
 }
 
@@ -103,14 +109,14 @@ sub out_debug
 
 sub find_files
 {
-    my ($dir, $exts) = @_;
+    my ($files, $dir, $exts) = @_;
     $exts = [ 'html' ] if not ref $exts;
 
     my $cb = sub {
         my $ext = (split /\./, $_)[-1];
         return if not $ext;
         return if not grep { $_ eq $ext } @{$exts};
-        $g_files{abs_path($_)} = { name => $File::Find::name };
+        $files->{abs_path($_)} = { name => $File::Find::name };
     };
 
     find($cb, $dir);
@@ -148,7 +154,7 @@ sub check_hrefs
     foreach my $real_filename (sort keys %{$files}) {
         my $filename = $files->{$real_filename}->{name};
 
-        out_verbose "$filename: checking my links...";
+        out_verbose "$filename: checking links...";
         my (undef, $path, undef) = fileparse($filename);
 
         foreach my $href (@{$files->{$real_filename}->{hrefs}}) {
@@ -240,22 +246,24 @@ sub summarise
         }
     }
 }
+
 #############################################################################
 
 usage if not getopts("duv", \%options);
 $htmlroot = shift @ARGV // q{.};
 
-find_files $htmlroot;
+my %files;
+find_files(\%files, $htmlroot);
 
 # parse the files
-while (my ($file, $data) = each %g_files) {
+while (my ($file, $data) = each %files) {
     out_verbose "parsing $data->{name}...";
     parse_file($file, $data);
 }
 
 # process our discoveries
-check_hrefs(\%g_files);
-check_seen(\%g_files);
+check_hrefs(\%files);
+check_seen(\%files);
 
 # and wrap up
 summarise(\%counts);
