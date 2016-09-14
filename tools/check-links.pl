@@ -49,6 +49,7 @@ use File::Basename;
 use File::Find;
 use Getopt::Std;
 use HTML::TokeParser::Simple;
+use LWP::UserAgent;
 
 my %options;
 my %counts;
@@ -68,6 +69,7 @@ sub usage
 Usage: check-links.pl [options] htmlroot
 
 Options:
+    -r  check remote links (slow!)
     -u  warn about unused anchors
     -v  verbose
     -d  debugging mode (implies -v)
@@ -79,32 +81,32 @@ sub out_warn
 {
     my ($file, $message) = @_;
 
-    $counts{'warning'}->{$file} ++;
-    print STDERR "$file: warning: $message\n";
+    $counts{'warning'}->{$file} ++ if $file;
+    print STDERR "$file: " if $file;
+    print STDERR "warning: $message\n";
 }
 
 sub out_error
 {
     my ($file, $message) = @_;
 
-    $counts{'error'}->{$file} ++;
-    print STDERR "$file: error: $message\n";
+    $counts{'error'}->{$file} ++ if $file;
+    print STDERR "$file: " if $file;
+    print STDERR "error: $message\n";
 }
 
 sub out_verbose
 {
     return if not $options{v} and not $options{d};
 
-    my ($message) = @_;
-    print $message, "\n";
+    print @_;
 }
 
 sub out_debug
 {
     return if not $options{d};
 
-    my ($message) = @_;
-    print $message, "\n";
+    print @_;
 }
 
 sub find_files
@@ -155,14 +157,41 @@ sub parse_file
     }
 }
 
+my %remote_cache;
+sub check_remote
+{
+    my ($lwp, $filename, $link) = @_;
+
+    if (not exists $remote_cache{$link}) {
+        out_verbose "checking remote link $link...";
+        $remote_cache{$link} = $lwp->head($link);
+        out_verbose " " . $remote_cache{$link}->status_line() . "\n";
+    }
+
+    return if $remote_cache{$link}->is_success();
+
+    out_error $filename, "remote link failed: $link (" . $remote_cache{$link}->status_line() . ")";
+}
+
 sub check_hrefs
 {
     my ($files) = @_;
 
+    my $lwp;
+    if ($options{r}) {
+        $lwp = LWP::UserAgent->new();
+        $lwp->env_proxy();
+        $lwp->timeout(5);
+        if (not $lwp->is_online()) {
+            out_warn undef, "not checking remote links: you are offline";
+            undef $lwp;
+        }
+    }
+
     foreach my $real_filename (sort keys %{$files}) {
         my $filename = $files->{$real_filename}->{name};
 
-        out_verbose "$filename: checking links...";
+        out_verbose "$filename: checking links...\n";
         my (undef, $path, undef) = fileparse($filename);
 
         foreach my $href (@{$files->{$real_filename}->{hrefs}}) {
@@ -175,8 +204,12 @@ sub check_hrefs
                 # skip mailto links
                 next if $link =~ m{^mailto:};
 
-                # XXX todo - check external links
-                next if $link =~ m{^\w+://};
+                # check external links
+                if ($link =~ m{^(\w+)://}) {
+                    next if not grep { $_ eq $1 } qw( http https );
+                    check_remote($lwp, $filename, $link) if $lwp;
+                    next;
+                }
 
                 if ($link =~ m{^/}) {
                     $link = "$htmlroot/$link";
@@ -190,7 +223,6 @@ sub check_hrefs
 
                     if (exists $files->{$key}) {
                         $files->{$key}->{seen} ++;
-                        out_debug "seen $link: $files->{$key}->{seen}";
                     }
                     else {
                         # XXX hush noise from links to non-html files
@@ -209,7 +241,6 @@ sub check_hrefs
             if ($anchor) {
                 if (exists $files->{$key}->{anchors}->{$anchor}) {
                     $files->{$key}->{anchors}->{$anchor}->{seen}++;
-                    out_debug "seen #$anchor: $files->{$key}->{anchors}->{$anchor}->{seen}";
                 }
                 else {
                     out_error $filename, "link to unrecognised anchor: $href ($anchor)";
@@ -226,7 +257,7 @@ sub check_seen
     foreach my $real_filename (sort keys %{$files}) {
         my $filename = $files->{$real_filename}->{name};
 
-        out_verbose "$filename: checking what links to me...";
+        out_verbose "$filename: checking what links to me...\n";
 
         out_error $filename, "nothing links to me" if not $files->{$real_filename}->{seen};
 
@@ -244,23 +275,23 @@ sub summarise
     my ($counts) = @_;
 
     if (scalar keys %{$counts->{error}}) {
-        out_verbose "Errors:";
+        out_verbose "Errors:\n";
         foreach my $f (sort keys %{$counts->{error}}) {
-            out_verbose "    $f: $counts->{error}->{$f}";
+            out_verbose "    $f: $counts->{error}->{$f}\n";
         }
     }
 
     if (scalar keys %{$counts->{warning}}) {
-        out_verbose "Warnings:";
+        out_verbose "Warnings:\n";
         foreach my $f (sort keys %{$counts->{warning}}) {
-            out_verbose "    $f: $counts->{warning}->{$f}";
+            out_verbose "    $f: $counts->{warning}->{$f}\n";
         }
     }
 }
 
 #############################################################################
 
-usage if not getopts("duv", \%options);
+usage if not getopts("druv", \%options);
 $htmlroot = shift @ARGV // q{.};
 
 my %files;
@@ -268,7 +299,7 @@ find_files(\%files, $htmlroot);
 
 # parse the files
 while (my ($file, $data) = each %files) {
-    out_verbose "parsing $data->{name}...";
+    out_verbose "parsing $data->{name}...\n";
     parse_file($file, $data);
 }
 
