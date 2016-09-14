@@ -71,20 +71,18 @@ sub usage
 
 sub out_warn
 {
-    my ($message, $count_str) = @_;
+    my ($file, $message) = @_;
 
-    $counts{'warning'} ++;
-    $counts{$count_str} ++ if $count_str;
-    print STDERR 'warning: ', $message, "\n";
+    $counts{'warning'}->{$file} ++;
+    print STDERR "$file: warning: $message\n";
 }
 
 sub out_error
 {
-    my ($message, $count_str) = @_;
+    my ($file, $message) = @_;
 
-    $counts{'error'} ++;
-    $counts{$count_str} ++ if $count_str;
-    print STDERR 'error: ', $message, "\n";
+    $counts{'error'}->{$file} ++;
+    print STDERR "$file: error: $message\n";
 }
 
 sub out_verbose
@@ -129,7 +127,7 @@ sub parse_file
 
         my $id = $tag->get_attr('id');
         if ($id) {
-            out_error "$data->{name}: duplicate id: $id" if exists $data->{anchors}->{$id};
+            out_error $data->{name}, "duplicate id: $id" if exists $data->{anchors}->{$id};
             $data->{anchors}->{$id} = {};
         }
 
@@ -150,13 +148,12 @@ sub check_hrefs
     foreach my $real_filename (sort keys %{$files}) {
         my $filename = $files->{$real_filename}->{name};
 
-        out_verbose "checking $filename hrefs...";
+        out_verbose "$filename: checking my links...";
         my (undef, $path, undef) = fileparse($filename);
-        out_debug "$filename is in $path";
 
         foreach my $href (@{$files->{$real_filename}->{hrefs}}) {
             my ($link, $anchor, $junk) = split /#/, $href;
-            out_error "bad link: $href" if $junk;
+            out_error $filename, "bad link: $href" if $junk;
 
             my $key;
 
@@ -174,7 +171,7 @@ sub check_hrefs
                     $link = "$path$link"; # $path has trailing '/' already!
                 }
 
-                out_error "$filename: link to nonexistent file: $href ($link)" if not -f $link;
+                out_error $filename, "link to nonexistent file: $href ($link)" if not -f $link;
 
                 $key = abs_path($link);
 
@@ -184,7 +181,7 @@ sub check_hrefs
                 }
                 else {
                     # XXX hush noise from links to non-html files
-#                    out_warn "$filename: link to unrecognised file: $href ($link)";
+#                    out_warn $filename, "link to unrecognised file: $href ($link)";
                 }
             }
             else {
@@ -198,7 +195,7 @@ sub check_hrefs
                     out_debug "seen #$anchor: $files->{$key}->{anchors}->{$anchor}->{seen}";
                 }
                 else {
-                    out_error "$filename: link to unrecognised anchor: $href ($anchor)";
+                    out_error $filename, "link to unrecognised anchor: $href ($anchor)";
                 }
             }
         }
@@ -212,29 +209,43 @@ sub check_seen
     foreach my $real_filename (sort keys %{$files}) {
         my $filename = $files->{$real_filename}->{name};
 
-        out_verbose "checking $filename seen...";
+        out_verbose "$filename: checking what links to me...";
 
-        out_error "$filename: nothing links to me" if not $files->{$real_filename}->{seen};
+        out_error $filename, "nothing links to me" if not $files->{$real_filename}->{seen};
 
+        next if not $options{u};
         while (my ($id, $anchor) = each %{$files->{$real_filename}->{anchors}}) {
-            out_warn "$filename: unused anchor '$id'" if not $anchor->{seen};
+            out_warn $filename, "nothing links to #$id" if not $anchor->{seen};
         }
     }
 }
 
+sub summarise
+{
+    return if not $options{v};
+
+    my ($counts) = @_;
+
+    if (scalar keys %{$counts->{error}}) {
+        out_verbose "Errors:";
+        foreach my $f (sort keys %{$counts->{error}}) {
+            out_verbose "    $f: $counts->{error}->{$f}";
+        }
+    }
+
+    if (scalar keys %{$counts->{warning}}) {
+        out_verbose "Warnings:";
+        foreach my $f (sort keys %{$counts->{warning}}) {
+            out_verbose "    $f: $counts->{warning}->{$f}";
+        }
+    }
+}
 #############################################################################
 
-usage if not getopts("dv", \%options);
+usage if not getopts("duv", \%options);
 $htmlroot = shift @ARGV // q{.};
 
-out_debug Dumper \%options;
-
-out_debug "htmlroot: $htmlroot";
-out_debug "ok";
-
 find_files $htmlroot;
-
-#print Dumper \%files;
 
 # parse the files
 while (my ($file, $data) = each %g_files) {
@@ -242,10 +253,10 @@ while (my ($file, $data) = each %g_files) {
     parse_file($file, $data);
 }
 
-
 # process our discoveries
 check_hrefs(\%g_files);
-out_debug Dumper \%g_files;
 check_seen(\%g_files);
 
-out_debug Dumper \%counts;
+# and wrap up
+summarise(\%counts);
+exit scalar keys %{$counts{error}};
