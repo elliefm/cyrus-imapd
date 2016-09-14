@@ -113,9 +113,9 @@ sub find_files
     $exts = [ 'html' ] if not ref $exts;
 
     my $cb = sub {
-        my $ext = (split /\./, $_)[-1];
-        return if not $ext;
-        return if not grep { $_ eq $ext } @{$exts};
+        return if not m{\.([^.]+)$};
+        return if not $1;
+        return if not grep { $_ eq $1 } @{$exts};
         $files->{abs_path($_)} = { name => $File::Find::name };
     };
 
@@ -135,6 +135,14 @@ sub parse_file
         if ($id) {
             out_error $data->{name}, "duplicate id: $id" if exists $data->{anchors}->{$id};
             $data->{anchors}->{$id} = {};
+        }
+
+        if ($tag->is_tag('a')) {
+            my $name = $tag->get_attr('name');
+            if ($name) {
+                out_error $data->{name}, "duplicate anchor: $name" if exists $data->{anchors}->{$name};
+                $data->{anchors}->{$name} = {};
+            }
         }
 
         my $href = $tag->get_attr('href');
@@ -177,17 +185,20 @@ sub check_hrefs
                     $link = "$path$link"; # $path has trailing '/' already!
                 }
 
-                out_error $filename, "link to nonexistent file: $href ($link)" if not -f $link;
+                if (-f $link) {
+                    $key = abs_path($link);
 
-                $key = abs_path($link);
-
-                if (exists $files->{$key}) {
-                    $files->{$key}->{seen} ++;
-                    out_debug "seen $link: $files->{$key}->{seen}";
+                    if (exists $files->{$key}) {
+                        $files->{$key}->{seen} ++;
+                        out_debug "seen $link: $files->{$key}->{seen}";
+                    }
+                    else {
+                        # XXX hush noise from links to non-html files
+#                       out_warn $filename, "link to unrecognised file: $href ($link)";
+                    }
                 }
                 else {
-                    # XXX hush noise from links to non-html files
-#                    out_warn $filename, "link to unrecognised file: $href ($link)";
+                    out_error $filename, "link to nonexistent file: $href ($link)" if not -f $link;
                 }
             }
             else {
