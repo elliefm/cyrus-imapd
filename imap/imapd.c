@@ -974,9 +974,8 @@ int service_main(int argc __attribute__((unused)),
     proc_register(config_ident, imapd_clienthost, NULL, NULL, NULL);
 
     /* Set inactivity timer */
-    imapd_timeout = config_getint(IMAPOPT_TIMEOUT);
-    if (imapd_timeout < 30) imapd_timeout = 30;
-    imapd_timeout *= 60;
+    imapd_timeout = config_getduration(IMAPOPT_TIMEOUT, 'm');
+    if (imapd_timeout < 30 * 60) imapd_timeout = 30 * 60;
     prot_settimeout(imapd_in, imapd_timeout);
     prot_setflushonread(imapd_in, imapd_out);
 
