@@ -146,7 +146,14 @@ EXPORTED unsigned long config_getbitfield(enum imapopt opt)
     return imapopts[opt].val.x;
 }
 
-static int parse_duration(const char *str, int defunit)
+/* Parse a duration value, converted to seconds.
+ *
+ * defunit is one of 'd', 'h', 'm', 's' and determines how
+ * unitless values are parsed.
+ *
+ * Returns a duration in seconds >= 0, or -1 on error.
+ */
+EXPORTED int config_parseduration(const char *str, int defunit)
 {
     assert(strchr("dhms", defunit) != NULL); /* n.b. also permits \0 */
 
@@ -214,7 +221,7 @@ EXPORTED int config_getduration(enum imapopt opt, int defunit)
 
     if (imapopts[opt].val.s == NULL) return 0;
 
-    int duration = parse_duration(imapopts[opt].val.s, defunit);
+    int duration = config_parseduration(imapopts[opt].val.s, defunit);
     char errbuf[1024];
 
     if (duration < 0) {
@@ -860,7 +867,7 @@ static void config_read_file(const char *filename)
             case OPT_DURATION:
             {
                 /* make sure it's parseable, though we don't know the default units */
-                int duration = parse_duration(p, '\0');
+                int duration = config_parseduration(p, '\0');
                 if (duration < 0) {
                     sprintf(errbuf, "unparsable duration '%s' for %s in line %d",
                             p, imapopts[opt].optname, lineno);

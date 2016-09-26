@@ -65,6 +65,10 @@ extern const char *config_partitiondir(const char *partition);
 extern const char *config_metapartitiondir(const char *partition);
 extern const char *config_archivepartitiondir(const char *partition);
 
+/* for parsing a duration-format string obtained elsewhere,
+ * such as from an overflow string */
+extern int config_parseduration(const char *str, int defunit);
+
 /* cached configuration variables accessable to external world */
 extern const char *config_filename;
 extern const char *config_dir;
