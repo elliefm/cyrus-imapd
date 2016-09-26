@@ -1770,7 +1770,7 @@ EXPORTED void tcp_enable_keepalive(int fd)
         }
 #endif
 #ifdef TCP_KEEPIDLE
-        optval = config_getint(IMAPOPT_TCP_KEEPALIVE_IDLE);
+        optval = config_getduration(IMAPOPT_TCP_KEEPALIVE_IDLE, 's');
         if (optval) {
             r = setsockopt(fd, proto->p_proto, TCP_KEEPIDLE, &optval, optlen);
             if (r < 0) {
@@ -1779,7 +1779,7 @@ EXPORTED void tcp_enable_keepalive(int fd)
         }
 #endif
 #ifdef TCP_KEEPINTVL
-        optval = config_getint(IMAPOPT_TCP_KEEPALIVE_INTVL);
+        optval = config_getduration(IMAPOPT_TCP_KEEPALIVE_INTVL, 's');
         if (optval) {
             r = setsockopt(fd, proto->p_proto, TCP_KEEPINTVL, &optval, optlen);
             if (r < 0) {
