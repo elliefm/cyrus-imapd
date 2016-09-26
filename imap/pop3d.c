@@ -1406,7 +1406,7 @@ static void cmd_apop(char *response)
                popd_clienthost, popd_apop_chal,
                sasl_errdetail(popd_saslconn));
 
-        failedloginpause = config_getint(IMAPOPT_FAILEDLOGINPAUSE);
+        failedloginpause = config_getduration(IMAPOPT_FAILEDLOGINPAUSE, 's');
         if (failedloginpause != 0) {
             sleep(failedloginpause);
         }
@@ -1540,7 +1540,7 @@ static void cmd_pass(char *pass)
                             strlen(pass))!=SASL_OK) {
         syslog(LOG_NOTICE, "badlogin: %s plaintext %s %s",
                popd_clienthost, popd_userid, sasl_errdetail(popd_saslconn));
-        failedloginpause = config_getint(IMAPOPT_FAILEDLOGINPAUSE);
+        failedloginpause = config_getduration(IMAPOPT_FAILEDLOGINPAUSE, 's');
         if (failedloginpause != 0) {
             sleep(failedloginpause);
         }
@@ -1737,7 +1737,7 @@ static void cmd_auth(char *arg)
                        popd_clienthost, authtype);
             }
 
-            failedloginpause = config_getint(IMAPOPT_FAILEDLOGINPAUSE);
+            failedloginpause = config_getduration(IMAPOPT_FAILEDLOGINPAUSE, 's');
             if (failedloginpause != 0) {
                 sleep(failedloginpause);
             }
