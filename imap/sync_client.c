@@ -665,7 +665,7 @@ static int do_daemon_work(const char *channel, const char *sync_shutdown_file,
     return(r);
 }
 
-static int get_intconfig(const char *channel, const char *val)
+static int get_durationconfig(const char *channel, const char *val, int defunit)
 {
     int response = -1;
 
@@ -674,12 +674,13 @@ static int get_intconfig(const char *channel, const char *val)
         char name[MAX_MAILBOX_NAME]; /* crazy long, but hey */
         snprintf(name, MAX_MAILBOX_NAME, "%s_%s", channel, val);
         result = config_getoverflowstring(name, NULL);
-        if (result) response = atoi(result);
+        if (result)
+            response = config_parseduration(result, defunit);
     }
 
     if (response == -1) {
         if (!strcmp(val, "sync_repeat_interval"))
-            response = config_getint(IMAPOPT_SYNC_REPEAT_INTERVAL);
+            response = config_getduration(IMAPOPT_SYNC_REPEAT_INTERVAL, defunit);
     }
 
     return response;
@@ -1243,7 +1244,7 @@ int main(int argc, char **argv)
                 sync_shutdown_file = get_config(channel, "sync_shutdown_file");
 
             if (!min_delta)
-                min_delta = get_intconfig(channel, "sync_repeat_interval");
+                min_delta = get_durationconfig(channel, "sync_repeat_interval", 's');
 
             do_daemon(channel, sync_shutdown_file, timeout, min_delta);
         }
