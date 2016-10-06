@@ -11764,6 +11764,10 @@ static void list_data_recursivematch(struct listargs *listargs,
 /* Retrieves the data and prints the untagged responses for a LIST command. */
 static void list_data(struct listargs *listargs)
 {
+    char *p = strarray_join(&listargs->pat, " ");
+    syslog(LOG_DEBUG, "%s: called (sel: %d ret: %d pat: %s)", __func__, listargs->sel, listargs->ret, p);
+    free(p);
+
     int (*findall)(struct namespace *namespace,
 		   const char *pattern, int isadmin, const char *userid,
 		   struct auth_state *auth_state, int (*proc)(),
@@ -11824,6 +11828,10 @@ static void list_data(struct listargs *listargs)
  */
 static int list_data_remote(char *tag, struct listargs *listargs)
 {
+    char *p = strarray_join(&listargs->pat, " ");
+    syslog(LOG_DEBUG, "%s: called (sel: %d ret: %d pat: %s)", __func__, listargs->sel, listargs->ret, p);
+    free(p);
+
     if ((listargs->cmd & LIST_CMD_EXTENDED) &&
 	!CAPA(backend_inbox, CAPA_LISTEXTENDED)) {
 	/* client wants to use extended list command but backend doesn't
