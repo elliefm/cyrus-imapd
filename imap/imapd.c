@@ -2188,6 +2188,14 @@ static void cmdloop(void)
 		listargs.cmd = LIST_CMD_XLIST;
 		listargs.ret = LIST_RET_CHILDREN | LIST_RET_SPECIALUSE;
 		getlistargs(tag.s, &listargs);
+		syslog(LOG_DEBUG, "%s: Xlist about to call cmd_list (patcount %d)",
+				  __func__, listargs.pat.count);
+		do {
+		    char *p = strarray_join(&listargs.pat, " ");
+		    syslog(LOG_DEBUG, "%s: patterns: %s", __func__, p);
+		    free(p);
+
+		} while (0);
 		if (listargs.pat.count) cmd_list(tag.s, &listargs);
 
 		snmp_increment(LIST_COUNT, 1);
@@ -6527,6 +6535,13 @@ static void getlistargs(char *tag, struct listargs *listargs)
     static struct buf reference, buf;
     int c;
 
+    do {
+	char *p = strarray_join(&listargs->pat, " ");
+	syslog(LOG_DEBUG, "%s: called (cmd: %u sel: %u ret: %u pat: %s)",
+			__func__, listargs->cmd, listargs->sel, listargs->ret, p);
+	free(p);
+    } while (0);
+
     /* Check for and parse LIST-EXTENDED selection options */
     c = prot_getc(imapd_in);
     if (c == '(') {
@@ -6540,11 +6555,17 @@ static void getlistargs(char *tag, struct listargs *listargs)
     else
 	prot_ungetc(c, imapd_in);
 
+    syslog(LOG_DEBUG, "%s: got to line %d", __func__, __LINE__);
+
     if (imapd_magicplus) listargs->sel |= LIST_SEL_SUBSCRIBED;
 
     /* Read in reference name */
+    syslog(LOG_DEBUG, "%s: got to line %d", __func__, __LINE__);
+    syslog(LOG_DEBUG, "%s: about to read a reference, c is %x", __func__, c);
     c = getastring(imapd_in, imapd_out, &reference);
+    syslog(LOG_DEBUG, "%s: got to line %d", __func__, __LINE__);
     if (c == EOF && !*reference.s) {
+	syslog(LOG_DEBUG, "%s: missing reference? c='%x'", __func__, c);
 	prot_printf(imapd_out,
 		    "%s BAD Missing required argument to List: reference name\r\n",
 		    tag);
@@ -6553,6 +6574,7 @@ static void getlistargs(char *tag, struct listargs *listargs)
     }
     listargs->ref = reference.s;
 
+    syslog(LOG_DEBUG, "%s: got to line %d", __func__, __LINE__);
     if (c != ' ') {
 	prot_printf(imapd_out,
 		    "%s BAD Missing required argument to List: mailbox pattern\r\n", tag);
@@ -6561,13 +6583,16 @@ static void getlistargs(char *tag, struct listargs *listargs)
     }
 
     /* Read in mailbox pattern(s) */
+    syslog(LOG_DEBUG, "%s: got to line %d", __func__, __LINE__);
     c = prot_getc(imapd_in);
     if (c == '(') {
 	listargs->cmd = LIST_CMD_EXTENDED;
 	for (;;) {
 	    c = getastring(imapd_in, imapd_out, &buf);
-	    if (*buf.s)
+	    if (*buf.s) {
+		syslog(LOG_DEBUG, "%s: found multi pattern: %s", __func__, buf_cstring(&buf));
 		strarray_append(&listargs->pat, buf.s);
+	    }
 	    if (c != ' ') break;
 	}
 	if (c != ')') {
@@ -6588,8 +6613,16 @@ static void getlistargs(char *tag, struct listargs *listargs)
 	    eatline(imapd_in, c);
 	    goto freeargs;
 	}
+	syslog(LOG_DEBUG, "%s: found single pattern: %s", __func__, buf_cstring(&buf));
 	strarray_append(&listargs->pat, buf.s);
     }
+
+    syslog(LOG_DEBUG, "%s: got to line %d", __func__, __LINE__);
+    do {
+	char *p = strarray_join(&listargs->pat, " ");
+	syslog(LOG_DEBUG, "%s: patterns are: %s", __func__, p);
+	free(p);
+    } while (0);
 
     /* Check for and parse LIST-EXTENDED return options */
     if (c == ' ') {
@@ -6658,9 +6691,11 @@ static void cmd_list(char *tag, struct listargs *listargs)
 	   mailboxes locally (frontend) and the subscriptions remotely
 	   (INBOX backend).  We can only pass the buck to the INBOX backend
 	   if its running a unified config */
+	syslog(LOG_DEBUG, "%s: calling list_data_remote...\n", __func__);
 	if (list_data_remote(tag, listargs))
 	    return;
     } else {
+	syslog(LOG_DEBUG, "%s: calling list_data...\n", __func__);
 	list_data(listargs);
     }
 
@@ -11894,6 +11929,7 @@ static int list_data_remote(char *tag, struct listargs *listargs)
 
     /* print mailbox pattern(s) */
     if (listargs->pat.count > 1) {
+	syslog(LOG_DEBUG, "%s: more than one pattern, creating paren list", __func__);
 	char **p;
 	char c = '(';
 
@@ -11904,6 +11940,7 @@ static int list_data_remote(char *tag, struct listargs *listargs)
 	}
 	(void)prot_putc(')', backend_inbox->out);
     } else {
+	syslog(LOG_DEBUG, "%s: only one pattern: %s", __func__, listargs->pat.data[0]);
 	prot_printf(backend_inbox->out, 
 		    "{%tu+}\r\n%s", strlen(listargs->pat.data[0]), listargs->pat.data[0]);
     }
