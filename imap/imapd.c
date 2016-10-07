@@ -6628,6 +6628,10 @@ static void cmd_list(char *tag, struct listargs *listargs)
 {
     clock_t start = clock();
     char mytime[100];
+    unsigned want_subscribed = (listargs->sel & LIST_SEL_SUBSCRIBED) ||
+			       (listargs->ret & LIST_RET_SUBSCRIBED);
+    unsigned want_specialuse = (listargs->sel & LIST_SEL_SPECIALUSE) ||
+			       (listargs->ret & LIST_RET_SPECIALUSE);
 
     if (listargs->sel & LIST_SEL_REMOTE) {
 	if (!config_getswitch(IMAPOPT_PROXYD_DISABLE_MAILBOX_REFERRALS)) {
@@ -6645,8 +6649,7 @@ static void cmd_list(char *tag, struct listargs *listargs)
 	/* special case: query top-level hierarchy separator */
 	prot_printf(imapd_out, "* XLIST (\\Noselect) \"%c\" \"\"\r\n",
 		    imapd_namespace.hier_sep);
-    } else if (((listargs->sel & LIST_SEL_SUBSCRIBED) ||
-		(listargs->ret & LIST_RET_SUBSCRIBED)) &&
+    } else if ((want_subscribed || want_specialuse) &&
 	       (backend_inbox || (backend_inbox = proxy_findinboxserver(imapd_userid)))) {
 	/* remote inbox */
 
