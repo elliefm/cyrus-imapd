@@ -11223,6 +11223,9 @@ static int set_haschildren(char *name, int matchlen,
 static void specialuse_flags(mbentry_t *mbentry, const char *sep,
 			     int isxlist)
 {
+    syslog(LOG_DEBUG, "%s: called (mbentry: %s, sep: '%s', isxlist: %d)",
+		      __func__, mbentry->name, sep, isxlist);
+
     char inboxname[MAX_MAILBOX_PATH+1];
     int inboxlen;
 
@@ -11243,10 +11246,19 @@ static void specialuse_flags(mbentry_t *mbentry, const char *sep,
     /* subdir */
     else if (mbentry->name[inboxlen] == '.') {
 	struct buf attrib = BUF_INITIALIZER;
+	int r;
 	/* check if there's a special use flag set */
-	if (!annotatemore_lookup(mbentry->name, "/specialuse", imapd_userid, &attrib)) {
-	    if (attrib.len)
+	if (!(r = annotatemore_lookup(mbentry->name, "/specialuse", imapd_userid, &attrib))) {
+	    if (attrib.len) {
+		syslog(LOG_DEBUG, "%s: special-use flag set: %s", __func__, buf_cstring(&attrib));
 		prot_printf(imapd_out, "%s%s", sep, buf_cstring(&attrib));
+	    }
+	    else {
+		syslog(LOG_DEBUG, "%s: no special-use flag set", __func__);
+	    }
+	}
+	else {
+	    syslog(LOG_DEBUG, "%s: annotatemore_lookup returned %d (%s)", __func__, r, error_message(r));
 	}
 	buf_free(&attrib);
     }
@@ -11258,6 +11270,11 @@ static void specialuse_flags(mbentry_t *mbentry, const char *sep,
 static void list_response(const char *name, int attributes,
 			  struct listargs *listargs)
 {
+    char *p = strarray_join(&listargs->pat, " ");
+    syslog(LOG_DEBUG, "%s: called (cmd: %u sel: %u ret: %u pat: %s)",
+		      __func__, listargs->cmd, listargs->sel, listargs->ret, p);
+    free(p);
+
     const struct mbox_name_attribute *attr;
     char internal_name[MAX_MAILBOX_PATH+1];
     int r;
@@ -11765,7 +11782,8 @@ static void list_data_recursivematch(struct listargs *listargs,
 static void list_data(struct listargs *listargs)
 {
     char *p = strarray_join(&listargs->pat, " ");
-    syslog(LOG_DEBUG, "%s: called (sel: %d ret: %d pat: %s)", __func__, listargs->sel, listargs->ret, p);
+    syslog(LOG_DEBUG, "%s: called (cmd: %u sel: %u ret: %u pat: %s)",
+		      __func__, listargs->cmd, listargs->sel, listargs->ret, p);
     free(p);
 
     int (*findall)(struct namespace *namespace,
@@ -11829,7 +11847,8 @@ static void list_data(struct listargs *listargs)
 static int list_data_remote(char *tag, struct listargs *listargs)
 {
     char *p = strarray_join(&listargs->pat, " ");
-    syslog(LOG_DEBUG, "%s: called (sel: %d ret: %d pat: %s)", __func__, listargs->sel, listargs->ret, p);
+    syslog(LOG_DEBUG, "%s: called (cmd: %u sel: %u ret: %u pat: %s)",
+		      __func__, listargs->cmd, listargs->sel, listargs->ret, p);
     free(p);
 
     if ((listargs->cmd & LIST_CMD_EXTENDED) &&
