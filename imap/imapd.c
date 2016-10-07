@@ -11835,7 +11835,7 @@ static int list_data_remote(char *tag, struct listargs *listargs)
     }
 
     /* print tag, command and list selection options */
-    if (listargs->cmd & LIST_CMD_LSUB) {
+    if (listargs->cmd == LIST_CMD_LSUB) {
 	prot_printf(backend_inbox->out, "%s Lsub ", tag);
     } else {
 	const char *select_opts[] = {
@@ -11846,7 +11846,8 @@ static int list_data_remote(char *tag, struct listargs *listargs)
 	char c = '(';
 	int i;
 
-	prot_printf(backend_inbox->out, "%s List ", tag);
+	prot_printf(backend_inbox->out, "%s %s ", tag,
+		    listargs->cmd == LIST_CMD_XLIST ? "Xlist" : "List");
 	if (listargs->sel) {
 	    for (i = 0; select_opts[i]; i++) {
 		unsigned opt = (1 << i);
@@ -11878,6 +11879,12 @@ static int list_data_remote(char *tag, struct listargs *listargs)
     } else {
 	prot_printf(backend_inbox->out, 
 		    "{%tu+}\r\n%s", strlen(listargs->pat.data[0]), listargs->pat.data[0]);
+    }
+
+    /* don't accidentally promote a plain XLIST to an extended-LIST
+     * just because of its defaults */
+    if (listargs->cmd == LIST_CMD_XLIST) {
+	listargs->ret &= ~(LIST_RET_CHILDREN | LIST_RET_SPECIALUSE);
     }
 
     /* print list return options */
