@@ -11847,15 +11847,17 @@ static int list_data_remote(char *tag, struct listargs *listargs)
 	int i;
 
 	prot_printf(backend_inbox->out, "%s List ", tag);
-	for (i = 0; select_opts[i]; i++) {
-	    unsigned opt = (1 << i);
+	if (listargs->sel) {
+	    for (i = 0; select_opts[i]; i++) {
+		unsigned opt = (1 << i);
 
-	    if (!(listargs->sel & opt)) continue;
+		if (!(listargs->sel & opt)) continue;
 
-	    prot_printf(backend_inbox->out, "%c%s", c, select_opts[i]);
-	    c = ' ';
+		prot_printf(backend_inbox->out, "%c%s", c, select_opts[i]);
+		c = ' ';
+	    }
+	    prot_puts(backend_inbox->out, ") ");
 	}
-	prot_puts(backend_inbox->out, ") ");
     }
 
     /* print reference argument */
