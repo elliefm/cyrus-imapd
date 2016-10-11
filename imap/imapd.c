@@ -12155,8 +12155,12 @@ static void freefieldlist(struct fieldlist *l)
     }
 }
 
-static int set_haschildren(const mbentry_t *mbentry __attribute__((unused)), void *rock)
+//static int set_haschildren(const mbentry_t *mbentry __attribute__((unused)), void *rock)
+static int set_haschildren(const mbentry_t *mbentry, void *rock)
 {
+    syslog(LOG_DEBUG, "%s: mbentry=%s",
+                      __func__,
+                      mbentry ? mbentry->name : "(none)");
     int *attributes = (int *)rock;
     list_callback_calls++;
     *attributes |= MBOX_ATTRIBUTE_HASCHILDREN;
@@ -12227,6 +12231,17 @@ static void list_response(const char *extname, const mbentry_t *mbentry,
     const char *sep;
     const char *cmd;
     struct statusdata sdata = STATUSDATA_INIT;
+
+    syslog(LOG_DEBUG, "%s: extname=%s, mbentry=%s, attributes=%d, "
+                      "listargs=(cmd %u, sel %u, ret %u), altns=%d",
+                      __func__,
+                      extname,
+                      mbentry ? mbentry->name : "(none)",
+                      attributes,
+                      listargs->cmd,
+                      listargs->sel,
+                      listargs->ret,
+                      imapd_namespace.isalt);
 
     if ((attributes & MBOX_ATTRIBUTE_NONEXISTENT)) {
         if (!(listargs->cmd & LIST_CMD_EXTENDED)) {
@@ -12319,6 +12334,8 @@ static void list_response(const char *extname, const mbentry_t *mbentry,
                 intname = mbentry->name;
             else
                 intname = freeme = mboxname_from_external(extname, &imapd_namespace, imapd_userid);
+
+            syslog(LOG_DEBUG, "%s: about to mboxlist_mboxtree, intname=%s", __func__, intname);
 
             mboxlist_mboxtree(intname, set_haschildren, &attributes, MBOXTREE_SKIP_ROOT);
             if (freeme) free(freeme);

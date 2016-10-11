@@ -2461,13 +2461,18 @@ EXPORTED int mboxlist_mboxtree(const char *mboxname, mboxlist_cb *proc, void *ro
     struct allmb_rock mbrock = { NULL, flags, proc, rock };
     int r = 0;
 
+    syslog(LOG_DEBUG, "%s: mboxname=%s, flags=%d",
+                      __func__, mboxname, flags);
+
     if (!(flags & MBOXTREE_SKIP_ROOT)) {
+        syslog(LOG_DEBUG, "%s: processing root", __func__);
         r = cyrusdb_forone(mbdb, mboxname, strlen(mboxname), allmbox_p, allmbox_cb, &mbrock, 0);
         if (r) goto done;
     }
 
     if (!(flags & MBOXTREE_SKIP_CHILDREN)) {
         char *prefix = strconcat(mboxname, ".", (char *)NULL);
+        syslog(LOG_DEBUG, "%s: processing children, prefix=%s", __func__, prefix);
         r = cyrusdb_foreach(mbdb, prefix, strlen(prefix), allmbox_p, allmbox_cb, &mbrock, 0);
         free(prefix);
         if (r) goto done;
@@ -2484,6 +2489,7 @@ EXPORTED int mboxlist_mboxtree(const char *mboxname, mboxlist_cb *proc, void *ro
             buf_printf(&buf, "%s.%s", dp, mboxname);
         }
         const char *prefix = buf_cstring(&buf);
+        syslog(LOG_DEBUG, "%s: processing deleted, prefix=%s", __func__, prefix);
         r = cyrusdb_foreach(mbdb, prefix, strlen(prefix), allmbox_p, allmbox_cb, &mbrock, 0);
         buf_free(&buf);
         if (r) goto done;
