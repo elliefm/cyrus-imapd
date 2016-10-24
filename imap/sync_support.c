@@ -845,16 +845,38 @@ struct sync_sieve_list *sync_sieve_list_create(void)
 }
 
 void sync_sieve_list_add(struct sync_sieve_list *l, const char *name,
+                         const char *filename, const char *bcfilename,
                          time_t last_update, struct message_guid *guidp,
                          int active)
 {
-    struct sync_sieve *item = xzmalloc(sizeof(struct sync_sieve));
+    struct sync_sieve *item = NULL;
+    char *freeme = NULL;
 
-    item->name = xstrdup(name);
-    item->last_update = last_update;
+    if (!name) {
+        const char *s = filename ? filename : bcfilename;
+        assert(s != NULL);
+        name = freeme = xstrdup(s);
+        char *ext = strrchr(freeme, '.');
+        if (ext && (!strcmp(ext, ".script") || !strcmp(ext, ".bc"))) {
+            *ext = '\0';
+        }
+    }
+
+    item = sync_sieve_lookup(l, name);
+    if (!item) item = xzmalloc(sizeof(*item));
+
+    if (!item->name) item->name = xstrdup(name);
+    if (!item->filename) item->filename = xstrdupnull(filename);
+    if (!item->bcfilename) item->bcfilename = xstrdupnull(bcfilename);
+
     item->active = active;
-    message_guid_copy(&item->guid, guidp);
     item->mark = 0;
+
+    if (filename) {
+        /* we only want timestamp/guid of the .script file, not the .bc file */
+        item->last_update = last_update;
+        message_guid_copy(&item->guid, guidp);
+    }
 
     if (l->tail)
         l->tail = l->tail->next = item;
@@ -862,14 +884,22 @@ void sync_sieve_list_add(struct sync_sieve_list *l, const char *name,
         l->head = l->tail = item;
 
     l->count++;
+
+    if (freeme) free(freeme);
 }
 
 struct sync_sieve *sync_sieve_lookup(struct sync_sieve_list *l, const char *name)
 {
     struct sync_sieve *p;
 
+    assert(name != NULL);
+
     for (p = l->head; p; p = p->next) {
         if (!strcmp(p->name, name))
+            return p;
+        if (!strcmpnull(p->filename, name))
+            return p;
+        if (!strcmpnull(p->bcfilename, name))
             return p;
     }
 
@@ -878,14 +908,9 @@ struct sync_sieve *sync_sieve_lookup(struct sync_sieve_list *l, const char *name
 
 void sync_sieve_list_set_active(struct sync_sieve_list *l, const char *name)
 {
-    struct sync_sieve *item;
+    struct sync_sieve *item = sync_sieve_lookup(l, name);
 
-    for (item = l->head; item; item = item->next) {
-        if (!strcmp(item->name, name)) {
-            item->active = 1;
-            break;
-        }
-    }
+    if (item) item->active = 1;
 }
 
 void sync_sieve_list_free(struct sync_sieve_list **lp)
@@ -896,7 +921,9 @@ void sync_sieve_list_free(struct sync_sieve_list **lp)
     current = l->head;
     while (current) {
         next = current->next;
-        free(current->name);
+        if (current->name) free(current->name);
+        if (current->filename) free(current->filename);
+        if (current->bcfilename) free(current->bcfilename);
         free(current);
         current = next;
     }
@@ -922,6 +949,7 @@ struct sync_sieve_list *sync_sieve_list_generate(const char *userid)
     while((next = readdir(mbdir)) != NULL) {
         uint32_t size;
         char *result;
+        char *ext;
         struct message_guid guid;
         if (!strcmp(next->d_name, ".") || !strcmp(next->d_name, ".."))
             continue;
@@ -945,13 +973,22 @@ struct sync_sieve_list *sync_sieve_list_generate(const char *userid)
             continue;
         }
 
-        /* calculate the sha1 on the fly, relatively cheap */
-        result = sync_sieve_read(userid, next->d_name, &size);
-        if (!result) continue;
-        message_guid_generate(&guid, result, size);
+        ext = strrchr(next->d_name, '.');
+        if (!ext)
+            continue;
 
-        sync_sieve_list_add(list, next->d_name, sbuf.st_mtime, &guid, 0);
-        free(result);
+        if (!strcmp(ext, ".script")) {
+            /* calculate the sha1 on the fly, relatively cheap */
+            result = sync_sieve_read(userid, next->d_name, &size);
+            if (!result) continue;
+            message_guid_generate(&guid, result, size);
+
+            sync_sieve_list_add(list, NULL, next->d_name, NULL, sbuf.st_mtime, &guid, 0);
+            free(result);
+        }
+        else if (!strcmp(ext, ".bc")) {
+            sync_sieve_list_add(list, NULL, NULL, next->d_name, 0, NULL, 0);
+        }
     }
     closedir(mbdir);
 
@@ -3832,12 +3869,17 @@ int sync_response_parse(struct protstream *sync_in, const char *cmd,
     for (kl = kin->head; kl; kl = kl->next) {
         if (!strcmp(kl->name, "SIEVE")) {
             struct message_guid guid;
+            const char *name = NULL;
             const char *filename = NULL;
+            const char *bcfilename = NULL;
             const char *guidstr = NULL;
             time_t modtime = 0;
             uint32_t active = 0;
             if (!sieve_list) goto parse_err;
-            if (!dlist_getatom(kl, "FILENAME", &filename)) goto parse_err;
+            dlist_getatom(kl, "NAME", &name);
+            dlist_getatom(kl, "FILENAME", &filename);
+            dlist_getatom(kl, "BCFILENAME", &bcfilename);
+            if (!name && !filename && !bcfilename) goto parse_err;
             if (!dlist_getdate(kl, "LAST_UPDATE", &modtime)) goto parse_err;
             dlist_getatom(kl, "GUID", &guidstr); /* optional */
             if (guidstr) {
@@ -3847,7 +3889,8 @@ int sync_response_parse(struct protstream *sync_in, const char *cmd,
                 message_guid_set_null(&guid);
             }
             dlist_getnum32(kl, "ISACTIVE", &active); /* optional */
-            sync_sieve_list_add(sieve_list, filename, modtime, &guid, active);
+            sync_sieve_list_add(sieve_list, name, filename, bcfilename,
+                                modtime, &guid, active);
         }
 
         else if (!strcmp(kl->name, "QUOTA")) {
