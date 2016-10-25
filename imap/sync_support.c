@@ -863,7 +863,16 @@ void sync_sieve_list_add(struct sync_sieve_list *l, const char *name,
     }
 
     item = sync_sieve_lookup(l, name);
-    if (!item) item = xzmalloc(sizeof(*item));
+    if (!item) {
+        item = xzmalloc(sizeof(*item));
+
+        if (l->tail)
+            l->tail = l->tail->next = item;
+        else
+            l->head = l->tail = item;
+
+        l->count++;
+    }
 
     if (!item->name) item->name = xstrdup(name);
     if (!item->filename) item->filename = xstrdupnull(filename);
@@ -877,13 +886,6 @@ void sync_sieve_list_add(struct sync_sieve_list *l, const char *name,
         item->last_update = last_update;
         message_guid_copy(&item->guid, guidp);
     }
-
-    if (l->tail)
-        l->tail = l->tail->next = item;
-    else
-        l->head = l->tail = item;
-
-    l->count++;
 
     if (freeme) free(freeme);
 }
