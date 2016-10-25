@@ -1129,23 +1129,24 @@ int main(int argc, char **argv)
                 if ((len == 0) || (buf[0] == '#'))
                     continue;
 
-                if (sync_do_user(buf, partition, sync_backend, flags)) {
+                if ((r = sync_do_user(buf, partition, sync_backend, flags))) {
                     if (verbose)
                         fprintf(stderr,
                                 "Error from sync_do_user(%s): bailing out!\n",
                                 buf);
-                    syslog(LOG_ERR, "Error in sync_do_user(%s): bailing out!",
-                           buf);
+                    syslog(LOG_ERR, "Error in sync_do_user(%s): bailing out! %d %s",
+                           buf, r, error_message(r));
                     exit_rc = 1;
                 }
             }
             fclose(file);
         } else for (i = optind; !r && i < argc; i++) {
-            if (sync_do_user(argv[i], partition, sync_backend, flags)) {
+            if ((r = sync_do_user(argv[i], partition, sync_backend, flags))) {
                 if (verbose)
                     fprintf(stderr, "Error from sync_do_user(%s): bailing out!\n",
                             argv[i]);
-                syslog(LOG_ERR, "Error in sync_do_user(%s): bailing out!", argv[i]);
+                syslog(LOG_ERR, "Error in sync_do_user(%s): bailing out! %d %s",
+                       argv[i], r, error_message(r));
                 exit_rc = 1;
             }
         }

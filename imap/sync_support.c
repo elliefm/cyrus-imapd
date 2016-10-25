@@ -3861,6 +3861,8 @@ int sync_response_parse(struct protstream *sync_in, const char *cmd,
     int r;
 
     r = sync_parse_response(cmd, sync_in, &kin);
+    syslog(LOG_DEBUG, "%s: sync_parse_response returned %d (%s)",
+                      __func__, r, error_message(r));
 
     /* Unpleasant: translate remote access error into "please reset me" */
     if (r == IMAP_MAILBOX_NONEXISTENT)
@@ -3881,6 +3883,10 @@ int sync_response_parse(struct protstream *sync_in, const char *cmd,
             dlist_getatom(kl, "NAME", &name);
             dlist_getatom(kl, "FILENAME", &filename);
             dlist_getatom(kl, "BCFILENAME", &bcfilename);
+
+            syslog(LOG_DEBUG, "%s: parsed SIEVE: name=%s filename=%s bcfilename=%s",
+                               __func__, name, filename, bcfilename);
+
             if (!name && !filename && !bcfilename) goto parse_err;
             if (!dlist_getdate(kl, "LAST_UPDATE", &modtime)) goto parse_err;
             dlist_getatom(kl, "GUID", &guidstr); /* optional */
@@ -5764,6 +5770,7 @@ int sync_do_user_sieve(const char *userid, struct sync_sieve_list *replica_sieve
 
         r = sieve_upload(userid, mitem->name, mitem->last_update,
                          sync_be, flags);
+        syslog(LOG_DEBUG, "%s: sieve_upload returned %d %s", __func__, r, error_message(r));
         if (r) goto bail;
     }
 
@@ -5775,6 +5782,7 @@ int sync_do_user_sieve(const char *userid, struct sync_sieve_list *replica_sieve
                 replica_active = 1;
         } else {
             r = sieve_delete(userid, ritem->name, sync_be, flags);
+            syslog(LOG_DEBUG, "%s: sieve_delete returned %d %s", __func__, r, error_message(r));
             if (r) goto bail;
         }
     }
@@ -5791,6 +5799,7 @@ int sync_do_user_sieve(const char *userid, struct sync_sieve_list *replica_sieve
             break;
 
         r = sieve_activate(userid, mitem->name, sync_be, flags);
+        syslog(LOG_DEBUG, "%s: sieve_activate returned %d %s", __func__, r, error_message(r));
         if (r) goto bail;
 
         replica_active = 1;
