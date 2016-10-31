@@ -852,7 +852,7 @@ void sync_sieve_list_add(struct sync_sieve_list *l, const char *name,
 {
     struct sync_sieve *item = xzmalloc(sizeof(struct sync_sieve));
 
-    item->name = xstrdup(name);
+    item->filename = xstrdup(name);
     item->last_update = last_update;
     item->active = active;
     message_guid_copy(&item->guid, guidp);
@@ -871,7 +871,7 @@ struct sync_sieve *sync_sieve_lookup(struct sync_sieve_list *l, const char *name
     struct sync_sieve *p;
 
     for (p = l->head; p; p = p->next) {
-        if (!strcmp(p->name, name))
+        if (!strcmp(p->filename, name))
             return p;
     }
 
@@ -883,7 +883,7 @@ void sync_sieve_list_set_active(struct sync_sieve_list *l, const char *name)
     struct sync_sieve *item;
 
     for (item = l->head; item; item = item->next) {
-        if (!strcmp(item->name, name)) {
+        if (!strcmp(item->filename, name)) {
             item->active = 1;
             break;
         }
@@ -898,7 +898,7 @@ void sync_sieve_list_free(struct sync_sieve_list **lp)
     current = l->head;
     while (current) {
         next = current->next;
-        free(current->name);
+        free(current->filename);
         free(current);
         current = next;
     }
@@ -2900,7 +2900,7 @@ static int user_getsieve(const char *userid, struct protstream *pout)
 
     for (sieve = sieve_list->head; sieve; sieve = sieve->next) {
         kl = dlist_newkvlist(NULL, "SIEVE");
-        dlist_setatom(kl, "FILENAME", sieve->name);
+        dlist_setatom(kl, "FILENAME", sieve->filename);
         dlist_setdate(kl, "LAST_UPDATE", sieve->last_update);
         dlist_setatom(kl, "GUID", message_guid_encode(&sieve->guid));
         dlist_setnum32(kl, "ISACTIVE", sieve->active ? 1 : 0);
@@ -5814,7 +5814,7 @@ int sync_do_user_sieve(const char *userid, struct sync_sieve_list *replica_sieve
 
     /* Upload missing and out of date or mismatching scripts */
     for (mitem = master_sieve->head; mitem; mitem = mitem->next) {
-        ritem = sync_sieve_lookup(replica_sieve, mitem->name);
+        ritem = sync_sieve_lookup(replica_sieve, mitem->filename);
         if (ritem) {
             ritem->mark = 1;
             /* compare the GUID if known */
@@ -5829,11 +5829,11 @@ int sync_do_user_sieve(const char *userid, struct sync_sieve_list *replica_sieve
         }
 
         /* Don't upload compiled bytecode */
-        ext = strrchr(mitem->name, '.');
+        ext = strrchr(mitem->filename, '.');
         if (ext && !strcmp(ext, ".bc"))
             continue;
 
-        r = sieve_upload(userid, mitem->name, mitem->last_update,
+        r = sieve_upload(userid, mitem->filename, mitem->last_update,
                          sync_be, flags);
         if (r) goto bail;
     }
@@ -5845,7 +5845,7 @@ int sync_do_user_sieve(const char *userid, struct sync_sieve_list *replica_sieve
             if (ritem->active)
                 replica_active = 1;
         } else {
-            r = sieve_delete(userid, ritem->name, sync_be, flags);
+            r = sieve_delete(userid, ritem->filename, sync_be, flags);
             if (r) goto bail;
         }
     }
@@ -5857,11 +5857,11 @@ int sync_do_user_sieve(const char *userid, struct sync_sieve_list *replica_sieve
             continue;
 
         master_active = 1;
-        ritem = sync_sieve_lookup(replica_sieve, mitem->name);
+        ritem = sync_sieve_lookup(replica_sieve, mitem->filename);
         if (ritem && ritem->active)
             break;
 
-        r = sieve_activate(userid, mitem->name, sync_be, flags);
+        r = sieve_activate(userid, mitem->filename, sync_be, flags);
         if (r) goto bail;
 
         replica_active = 1;

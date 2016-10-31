@@ -313,7 +313,7 @@ void sync_seen_list_free(struct sync_seen_list **lp);
 struct sync_sieve {
     struct sync_sieve *next;
     char *user;
-    char *name;
+    char *filename;
     time_t last_update;
     struct message_guid guid;
     int active;
