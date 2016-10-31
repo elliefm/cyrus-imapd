@@ -275,12 +275,12 @@ int main(int argc, char **argv)
                     if (errno == EEXIST) {
                         struct stat sbuf;
 
-                        if (stat(alias, &sbuf)) {
-                            fprintf(stderr, "stat(%s) failed: %s\n",
+                        if (lstat(alias, &sbuf)) {
+                            fprintf(stderr, "lstat(%s) failed: %s\n",
                                     alias, strerror(errno));
                             errno = EEXIST;
                         }
-                        else if (sbuf.st_mode & S_IFLNK) {
+                        else if (S_ISLNK(sbuf.st_mode)) {
                             char link[MAX_MAILBOX_PATH+1];
                             int n = readlink(alias, link, MAX_MAILBOX_PATH);
 
