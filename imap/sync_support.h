@@ -312,8 +312,8 @@ struct sync_sieve {
     struct sync_sieve *next;
     char *user;
     char *name;
-    char *filename;
-    char *bcfilename;
+    char *scriptfname;
+    char *bcfname;
     time_t last_update;
     struct message_guid guid;
     int active;
@@ -329,7 +329,7 @@ struct sync_sieve_list {
 struct sync_sieve_list *sync_sieve_list_create(void);
 
 void sync_sieve_list_add(struct sync_sieve_list *l, const char *name,
-                         const char *filename, const char *bcfilename,
+                         const char *scriptfname, const char *bcfname,
                          time_t last_update, struct message_guid *guidp,
                          int active);
 
@@ -342,9 +342,9 @@ void sync_sieve_list_free(struct sync_sieve_list **lp);
 
 struct sync_sieve_list *sync_sieve_list_generate(const char *userid);
 
-char *sync_sieve_read(const char *userid, const char *name, uint32_t *sizep);
+char *sync_sieve_read(const char *userid, const char *fname, uint32_t *sizep);
 
-int sync_sieve_upload(const char *userid, const char *name,
+int sync_sieve_upload(const char *userid, const char *fname,
                       time_t last_update, const char *content, size_t len);
 
 int sync_sieve_activate(const char *userid, const char *name);

@@ -845,7 +845,7 @@ struct sync_sieve_list *sync_sieve_list_create(void)
 }
 
 void sync_sieve_list_add(struct sync_sieve_list *l, const char *name,
-                         const char *filename, const char *bcfilename,
+                         const char *scriptfname, const char *bcfname,
                          time_t last_update, struct message_guid *guidp,
                          int active)
 {
@@ -853,7 +853,7 @@ void sync_sieve_list_add(struct sync_sieve_list *l, const char *name,
     char *freeme = NULL;
 
     if (!name) {
-        const char *s = filename ? filename : bcfilename;
+        const char *s = scriptfname ? scriptfname : bcfname;
         assert(s != NULL);
         name = freeme = xstrdup(s);
         char *ext = strrchr(freeme, '.');
@@ -875,13 +875,13 @@ void sync_sieve_list_add(struct sync_sieve_list *l, const char *name,
     }
 
     if (!item->name) item->name = xstrdup(name);
-    if (!item->filename) item->filename = xstrdupnull(filename);
-    if (!item->bcfilename) item->bcfilename = xstrdupnull(bcfilename);
+    if (!item->scriptfname) item->scriptfname = xstrdupnull(scriptfname);
+    if (!item->bcfname) item->bcfname = xstrdupnull(bcfname);
 
     item->active = active;
     item->mark = 0;
 
-    if (filename) {
+    if (scriptfname) {
         /* we only want timestamp/guid of the .script file, not the .bc file */
         item->last_update = last_update;
         message_guid_copy(&item->guid, guidp);
@@ -899,9 +899,9 @@ struct sync_sieve *sync_sieve_lookup(struct sync_sieve_list *l, const char *name
     for (p = l->head; p; p = p->next) {
         if (!strcmp(p->name, name))
             return p;
-        if (!strcmpnull(p->filename, name))
+        if (!strcmpnull(p->scriptfname, name))
             return p;
-        if (!strcmpnull(p->bcfilename, name))
+        if (!strcmpnull(p->bcfname, name))
             return p;
     }
 
@@ -924,8 +924,8 @@ void sync_sieve_list_free(struct sync_sieve_list **lp)
     while (current) {
         next = current->next;
         if (current->name) free(current->name);
-        if (current->filename) free(current->filename);
-        if (current->bcfilename) free(current->bcfilename);
+        if (current->scriptfname) free(current->scriptfname);
+        if (current->bcfname) free(current->bcfname);
         free(current);
         current = next;
     }
@@ -1000,7 +1000,7 @@ struct sync_sieve_list *sync_sieve_list_generate(const char *userid)
     return list;
 }
 
-char *sync_sieve_read(const char *userid, const char *name, uint32_t *sizep)
+char *sync_sieve_read(const char *userid, const char *fname, uint32_t *sizep)
 {
     const char *sieve_path = user_sieve_path(userid);
     char filename[2048];
@@ -1013,7 +1013,7 @@ char *sync_sieve_read(const char *userid, const char *name, uint32_t *sizep)
     if (sizep)
         *sizep = 0;
 
-    snprintf(filename, sizeof(filename), "%s/%s", sieve_path, name);
+    snprintf(filename, sizeof(filename), "%s/%s", sieve_path, fname);
 
     file = fopen(filename, "r");
     if (!file) return NULL;
@@ -1038,10 +1038,10 @@ char *sync_sieve_read(const char *userid, const char *name, uint32_t *sizep)
     fclose(file);
     *s = '\0';
 
-    return(result);
+    return result;
 }
 
-int sync_sieve_upload(const char *userid, const char *name,
+int sync_sieve_upload(const char *userid, const char *fname,
                       time_t last_update, const char *content,
                       size_t len)
 {
@@ -1054,7 +1054,7 @@ int sync_sieve_upload(const char *userid, const char *name,
     struct stat sbuf;
     struct utimbuf utimbuf;
 
-    ext = strrchr(name, '.');
+    ext = strrchr(fname, '.');
     if (ext && !strcmp(ext, ".bc")) {
         /* silently ignore attempts to upload compiled bytecode */
         return 0;
@@ -1070,7 +1070,7 @@ int sync_sieve_upload(const char *userid, const char *name,
 
     snprintf(tmpname, sizeof(tmpname), "%s/sync_tmp-%lu",
              sieve_path, (unsigned long)getpid());
-    snprintf(newname, sizeof(newname), "%s/%s", sieve_path, name);
+    snprintf(newname, sizeof(newname), "%s/%s", sieve_path, fname);
 
     if ((file=fopen(tmpname, "w")) == NULL) {
         return IMAP_IOERROR;
@@ -1106,6 +1106,7 @@ int sync_sieve_upload(const char *userid, const char *name,
     return r;
 }
 
+// FIXME filename?
 int sync_sieve_activate(const char *userid, const char *name)
 {
     const char *sieve_path = user_sieve_path(userid);
@@ -1146,6 +1147,7 @@ int sync_sieve_deactivate(const char *userid)
     return(0);
 }
 
+// FIXME filename?
 int sync_sieve_delete(const char *userid, const char *name)
 {
     const char *sieve_path = user_sieve_path(userid);
@@ -3873,22 +3875,28 @@ int sync_response_parse(struct protstream *sync_in, const char *cmd,
     for (kl = kin->head; kl; kl = kl->next) {
         if (!strcmp(kl->name, "SIEVE")) {
             struct message_guid guid;
+            const char *filename = NULL; /* backward compatibility */
             const char *name = NULL;
-            const char *filename = NULL;
-            const char *bcfilename = NULL;
+            const char *scriptfname = NULL;
+            const char *bcfname = NULL;
             const char *guidstr = NULL;
             time_t modtime = 0;
             uint32_t active = 0;
+
             if (!sieve_list) goto parse_err;
-            dlist_getatom(kl, "NAME", &name);
+
             dlist_getatom(kl, "FILENAME", &filename);
-            dlist_getatom(kl, "BCFILENAME", &bcfilename);
+            dlist_getatom(kl, "NAME", &name);
+            dlist_getatom(kl, "SCRIPTFNAME", &scriptfname);
+            dlist_getatom(kl, "BCFNAME", &bcfname);
 
-            syslog(LOG_DEBUG, "%s: parsed SIEVE: name=%s filename=%s bcfilename=%s",
-                               __func__, name, filename, bcfilename);
+            syslog(LOG_DEBUG, "%s: parsed SIEVE: filename=%s name=%s scriptfname=%s bcfname=%s",
+                               __func__, filename, name, scriptfname, bcfname);
 
-            if (!name && !filename && !bcfilename) goto parse_err;
+            if (!filename && (!name || !scriptfname || !bcfname)) goto parse_err;
+
             if (!dlist_getdate(kl, "LAST_UPDATE", &modtime)) goto parse_err;
+
             dlist_getatom(kl, "GUID", &guidstr); /* optional */
             if (guidstr) {
                 if (!message_guid_decode(&guid, guidstr)) goto parse_err;
@@ -3896,9 +3904,29 @@ int sync_response_parse(struct protstream *sync_in, const char *cmd,
             else {
                 message_guid_set_null(&guid);
             }
+
             dlist_getnum32(kl, "ISACTIVE", &active); /* optional */
-            sync_sieve_list_add(sieve_list, name, filename, bcfilename,
-                                modtime, &guid, active);
+
+            if (name) {
+                sync_sieve_list_add(sieve_list, name, scriptfname, bcfname,
+                                    modtime, &guid, active);
+            }
+            else {
+                /* backward compatibility */
+                const char *ext = strrchr(filename, '.');
+
+                if (!strcmpsafe(ext, ".script")) {
+                    sync_sieve_list_add(sieve_list, NULL, filename, NULL,
+                                        modtime, &guid, active);
+                }
+                else if (!strcmpsafe(ext, ".bc")) {
+                    sync_sieve_list_add(sieve_list, NULL, NULL, filename,
+                                        0, NULL, active);
+                }
+                else {
+                    goto parse_err;
+                }
+            }
         }
 
         else if (!strcmp(kl->name, "QUOTA")) {
