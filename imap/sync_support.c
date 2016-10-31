@@ -935,14 +935,12 @@ struct sync_sieve_list *sync_sieve_list_generate(const char *userid)
             continue;
 
         if (!strcmp(next->d_name, "defaultbc")) {
-            if (sbuf.st_mode & S_IFLNK) {
-                count = readlink(filename, active, 2047);
+            count = readlink(filename, active, 2047);
 
-                if (count >= 0) {
-                    active[count] = '\0';
-                } else {
-                    /* XXX Report problem? */
-                }
+            if (count >= 0) {
+                active[count] = '\0';
+            } else {
+                /* XXX Report problem? */
             }
             continue;
         }
