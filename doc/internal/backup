@@ -895,6 +895,13 @@ todo list
 * valgrind
 * finish reconstruct
 * compact: split before append?
+* imap XBACKUP command, like XFER, that provokes a sync run of the user to the backup server (admin only)
+* compact: do nothing mode that reports how much needs compacting?
+* cyr_backup: "show meta" command that shows meta information about the backup (last backup time,
+  last compact time, dirty percent, compression ratio, ... ?)
+* record "total number of records seen" per mailbox (increase by n for each apply mailbox containing
+  records) -- then compare this with the number of actual records to see how many stale "apply mailbox"
+  lines we're still storing and could compact out
 
 compact implementation steps:
     1 remove unused chunks, keep everything else as is
