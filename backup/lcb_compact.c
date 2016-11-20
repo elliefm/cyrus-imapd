@@ -101,6 +101,14 @@ static int compact_open(const char *name,
     buf_printf(&compact_data_fname, "%s.new", name);
     buf_printf(&compact_index_fname, "%s.index.new", name);
 
+    syslog(LOG_DEBUG, "%s: original_data_fname: %s, original_index_fname: %s, "
+                      "compact_data_fname: %s, compact_index_fname: %s",
+                      __func__,
+                      buf_cstring(&original_data_fname),
+                      buf_cstring(&original_index_fname),
+                      buf_cstring(&compact_data_fname),
+                      buf_cstring(&compact_index_fname));
+
     r = backup_real_open(&original,
                          buf_cstring(&original_data_fname),
                          buf_cstring(&original_index_fname),
