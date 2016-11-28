@@ -5180,8 +5180,8 @@ static int do_xbackup(const char *channel,
     free_callbacks(cb);
     cb = NULL;
 
-    for (i = 0; i < list->count; i++) {
-        const mbname_t *mbname = ptrarray_nth(list, i);
+    const mbname_t *mbname;
+    ptrarray_foreach(list, i, mbname) {
         if (!mbname) continue;
         const char *userid = mbname_userid(mbname);
         const char *intname = mbname_intname(mbname);
@@ -5286,10 +5286,9 @@ void cmd_xbackup(const char *tag,
     if (list.count) {
         r = do_xbackup(channel, &list);
 
-        for (i = 0; i < list.count; i++) {
-            mbname_t *mbname = ptrarray_nth(&list, i);
-            if (mbname)
-                mbname_free(&mbname);
+        mbname_t *mbname;
+        ptrarray_foreach(&list, i, mbname) {
+            mbname_free(&mbname);
         }
         ptrarray_fini(&list);
     }

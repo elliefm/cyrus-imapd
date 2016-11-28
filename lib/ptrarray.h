@@ -87,4 +87,9 @@ int ptrarray_find(const ptrarray_t *pa, void *match,
 
 void ptrarray_sort(ptrarray_t *pa, int (*compare)(const void **, const void **));
 
+#define ptrarray_foreach(pa, iter, ptr)                     \
+for ((iter) = 0, (ptr) = ptrarray_nth((pa), (iter));        \
+     (iter) < (pa)->count;                                  \
+     ++(iter), (ptr) = ptrarray_nth((pa), (iter)))
+
 #endif /* __CYRUS_PTRARRAY_H__ */
