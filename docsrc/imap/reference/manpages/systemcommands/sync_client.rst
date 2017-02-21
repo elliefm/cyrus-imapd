@@ -16,7 +16,7 @@ Synopsis
     **sync_client** [ **-v** ] [ **-l** ] [ **-L** ] [ **-z** ] [ **-C** *config-file* ] [ **-S** *server-name* ]
         [ **-f** *input-file* ] [ **-F** *shutdown_file* ] [ **-w** *wait_interval* ]
         [ **-t** *timeout* ] [ **-d** *delay* ] [ **-r** ] [ **-n** *channel* ] [ **-u** ] [ **-m** ]
-        [ **-p** *partition* ] [ **-A** ] [ **-s** ] *objects*...
+        [ **-p** *partition* ] [ **-A** ] [ **-s** ] [ **-M** ] *objects*...
 
 Description
 ===========
@@ -147,6 +147,14 @@ Options
     In mailbox or user replication mode: provides the name of the 
     partition on the replica to which the mailboxes/users should be 
     replicated.
+
+.. option:: -M
+
+    In mailbox or user replication mode: reserve all messages on the
+    destination server, not just the new ones.  This can be used to
+    recover from cases where the replica's indexes are up to date,
+    but some underlying messages files are known or suspected to be
+    missing.
         
 Examples
 ========

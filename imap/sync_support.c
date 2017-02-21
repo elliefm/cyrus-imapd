@@ -3797,7 +3797,8 @@ static int find_reserve_all(struct sync_name_list *mboxname_list,
                             struct sync_folder_list *master_folders,
                             struct sync_folder_list *replica_folders,
                             struct sync_reserve_list *reserve_list,
-                            uint32_t batchsize)
+                            uint32_t batchsize,
+                            int reserve_all)
 {
     struct sync_name *mbox;
     struct sync_folder *rfolder;
@@ -3856,6 +3857,17 @@ static int find_reserve_all(struct sync_name_list *mboxname_list,
                        mailbox->name, fromuid, touid, mailbox->i.last_uid,
                        frommodseq, tomodseq, mailbox->i.highestmodseq);
             }
+        }
+
+        /* override fromuid -after- any batchsize calculations.  this means
+         * the reported batch size may be misleading if the destination is
+         * missing old messages, but ensures that the altered start point
+         * doesn't affect the intermediate state calculations
+         */
+        if (reserve_all) {
+            syslog(LOG_DEBUG, "reserving all messages in mailbox %s\n",
+                   mailbox->name);
+            fromuid = 0;
         }
 
         sync_folder_list_add(master_folders, mailbox->uniqueid, mailbox->name,
@@ -3979,13 +3991,14 @@ static int reserve_messages(struct sync_name_list *mboxname_list,
                             struct sync_folder_list *replica_folders,
                             struct sync_reserve_list *reserve_list,
                             struct backend *sync_be,
-                            uint32_t batchsize)
+                            uint32_t batchsize,
+                            int reserve_all)
 {
     struct sync_reserve *reserve;
     int r;
 
     r = find_reserve_all(mboxname_list, topart, master_folders,
-                         replica_folders, reserve_list, batchsize);
+                         replica_folders, reserve_list, batchsize, reserve_all);
     if (r) return r;
 
     for (reserve = reserve_list->head; reserve; reserve = reserve->next) {
@@ -5537,6 +5550,7 @@ static int do_folders(struct sync_name_list *mboxname_list, const char *topart,
     struct sync_folder *mfolder, *rfolder;
     const char *part;
     uint32_t batchsize = 0;
+    int reserve_all = (flags & SYNC_FLAG_RESERVE_ALL) ? 1 : 0;
 
     if (channelp) {
         batchsize = config_getint(IMAPOPT_SYNC_BATCHSIZE);
@@ -5547,7 +5561,8 @@ static int do_folders(struct sync_name_list *mboxname_list, const char *topart,
     reserve_list = sync_reserve_list_create(SYNC_MSGID_LIST_HASH_SIZE);
 
     r = reserve_messages(mboxname_list, topart, master_folders,
-                         replica_folders, reserve_list, sync_be, batchsize);
+                         replica_folders, reserve_list, sync_be, batchsize,
+                         reserve_all);
     if (r) {
         syslog(LOG_ERR, "reserve messages: failed: %s", error_message(r));
         goto bail;

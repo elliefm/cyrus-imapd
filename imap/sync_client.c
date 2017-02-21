@@ -109,6 +109,7 @@ static int connect_once    = 0;
 static int background      = 0;
 static int do_compress     = 0;
 static int no_copyback     = 0;
+static int reserve_all     = 0;
 
 static char *prev_userid;
 
@@ -898,7 +899,8 @@ int main(int argc, char **argv)
 
     setbuf(stdout, NULL);
 
-    while ((opt = getopt(argc, argv, "C:vlLS:F:f:w:t:d:n:rRumsozOAp:")) != EOF) {
+    /* XXX sort this, it's horrible */
+    while ((opt = getopt(argc, argv, "C:vlLS:F:f:w:t:d:n:rRumsozOAp:M")) != EOF) {
         switch (opt) {
         case 'C': /* alt config file */
             alt_config = optarg;
@@ -1001,6 +1003,10 @@ int main(int argc, char **argv)
             partition = optarg;
             break;
 
+        case 'M':
+            reserve_all = 1;
+            break;
+
         default:
             usage("sync_client");
         }
@@ -1009,9 +1015,13 @@ int main(int argc, char **argv)
     if (mode == MODE_UNKNOWN)
         fatal("No replication mode specified", EC_USAGE);
 
+    if (reserve_all && mode != MODE_USER && mode != MODE_MAILBOX)
+        fatal("-M is only valid with -m or -u", EC_USAGE);
+
     if (verbose) flags |= SYNC_FLAG_VERBOSE;
     if (verbose_logging) flags |= SYNC_FLAG_LOGGING;
     if (no_copyback) flags |= SYNC_FLAG_NO_COPYBACK;
+    if (reserve_all) flags |= SYNC_FLAG_RESERVE_ALL;
 
     /* fork if required */
     if (background && !input_filename && !getenv("CYRUS_ISDAEMON")) {
