@@ -117,6 +117,7 @@ sbin_PROGRAMS =
 noinst_HEADERS =
 noinst_LTLIBRARIES =
 noinst_PROGRAMS =
+data_DATA =
 EXTRA_DIST = \
 	$(wildcard tools/vzic/*)
 
@@ -258,6 +259,11 @@ if SIEVE
 check_PROGRAMS += notifyd/notifytest
 libexec_PROGRAMS += notifyd/notifyd
 endif # SIEVE
+
+if SNMP
+mibsdir = $(datadir)/snmp/mibs
+mibs_DATA = master/CYRUS-MASTER.mib
+endif # SNMP
 
 else # SERVER
 EXTRA_DIST += \

@@ -39,6 +39,7 @@ if test "$with_snmp" != "no"; then
     else
       AC_MSG_RESULT(no)
       AC_MSG_WARN([Could not find the required paths. Please check your net-snmp installation.])
+      with_snmp=no
     fi
   else
     dnl
@@ -66,6 +67,8 @@ if test "$with_snmp" != "no"; then
     fi
     AC_SUBST(LIB_UCDSNMP)
   fi
+
+  AM_CONDITIONAL([SNMP], [test "${with_snmp}" != "no"])
 fi
 
 ])
