@@ -9,7 +9,7 @@ IMPORTS
         FROM CMU-MIB;
 
 cyrusMasterMIB MODULE-IDENTITY
-    LAST-UPDATED "1704070437Z"          -- 2017 April 7
+    LAST-UPDATED "1704070532Z"          -- 2017 April 7
     ORGANIZATION "CMU Project Cyrus"
     CONTACT-INFO
                 "       WWW: https://github.com/cyrusimap/cyrus-imapd/
@@ -107,7 +107,9 @@ cyrusMasterInfo OBJECT IDENTIFIER ::= { cyrusMasterMIB 1 }
 
                          serviceId              INTEGER,
 
-                         serviceConnections     Counter32
+                         serviceConnections     Counter32,
+
+                         serviceMaxChildren     INTEGER
 
                          }
 
@@ -180,6 +182,18 @@ cyrusMasterInfo OBJECT IDENTIFIER ::= { cyrusMasterMIB 1 }
                                        service since initialization."
 
                          ::= { serviceEntry 5 }
+
+      serviceMaxChildren OBJECT-TYPE
+
+                         SYNTAX     INTEGER
+
+                         ACCESS     read-only
+
+                         STATUS     mandatory
+
+                         DESCRIPTION "The maximum number of child processes for this service."
+
+                         ::= { serviceEntry 6 }
 
 -- event table
 
