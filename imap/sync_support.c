@@ -2594,6 +2594,8 @@ int sync_apply_mailbox(struct dlist *kin,
     if (!dlist_getlist(kin, "RECORD", &kr))
         return IMAP_PROTOCOL_BAD_PARAMETERS;
 
+    syslog(LOG_INFO, "sync: applying MAILBOX %s (uniqueid %s)", mboxname, uniqueid);
+
     /* optional */
     dlist_getlist(kin, "ANNOTATIONS", &ka);
     dlist_getdate(kin, "POP3_SHOW_AFTER", &pop3_show_after);
@@ -3081,6 +3083,8 @@ int sync_apply_unmailbox(struct dlist *kin, struct sync_state *sstate)
 {
     const char *mboxname = kin->sval;
 
+    syslog(LOG_INFO, "sync: applying UNMAILBOX %s", mboxname);
+
     /* Delete with admin priveleges */
     return mboxlist_deletemailbox(mboxname, sstate->userisadmin,
                                   sstate->userid, sstate->authstate,
@@ -3104,6 +3108,8 @@ int sync_apply_rename(struct dlist *kin, struct sync_state *sstate)
     /* optional */
     dlist_getnum32(kin, "UIDVALIDITY", &uidvalidity);
 
+    syslog(LOG_INFO, "sync: applying RENAME %s => %s", oldmboxname, newmboxname);
+
     return mboxlist_renamemailbox(oldmboxname, newmboxname, partition,
                                   uidvalidity, 1, sstate->userid,
                                   sstate->authstate, NULL, sstate->local_only, 1, 1);
@@ -3122,6 +3128,11 @@ int sync_apply_changesub(struct dlist *kin, struct sync_state *sstate)
         return IMAP_PROTOCOL_BAD_PARAMETERS;
     if (!dlist_getatom(kin, "USERID", &userid))
         return IMAP_PROTOCOL_BAD_PARAMETERS;
+
+    syslog(LOG_INFO, "sync: applying %sSUB %s => %s",
+                     add ? "" : "UN",
+                     userid,
+                     mboxname);
 
     return mboxlist_changesub(mboxname, userid, sstate->authstate, add, add, 0);
 }
@@ -3152,6 +3163,12 @@ int sync_apply_annotation(struct dlist *kin, struct sync_state *sstate)
     if (!dlist_getmap(kin, "VALUE", &mapval, &maplen))
         return IMAP_PROTOCOL_BAD_PARAMETERS;
     buf_init_ro(&value, mapval, maplen);
+
+    syslog(LOG_INFO, "sync: applying ANNOTATION %s:%s %s => %s",
+                     userid ? userid : "",
+                     mboxname,
+                     entry,
+                     buf_cstring(&value));
 
     r = mailbox_open_iwl(mboxname, &mailbox);
     if (!r) r = sync_mailbox_version_check(&mailbox);
@@ -3203,6 +3220,11 @@ int sync_apply_unannotation(struct dlist *kin, struct sync_state *sstate)
     if (!dlist_getatom(kin, "USERID", &userid))
         return IMAP_PROTOCOL_BAD_PARAMETERS;
 
+    syslog(LOG_INFO, "sync: applying UNANNOTATION %s:%s %s",
+                     userid ? userid : "",
+                     mboxname,
+                     entry);
+
     r = mailbox_open_iwl(mboxname, &mailbox);
     if (!r)
         r = sync_mailbox_version_check(&mailbox);
@@ -3251,6 +3273,8 @@ int sync_apply_sieve(struct dlist *kin,
     if (!dlist_getmap(kin, "CONTENT", &content, &len))
         return IMAP_PROTOCOL_BAD_PARAMETERS;
 
+    syslog(LOG_INFO, "sync: applying SIEVE %s %s", userid, filename);
+
     return sync_sieve_upload(userid, filename, last_update, content, len);
 }
 
@@ -3264,6 +3288,8 @@ int sync_apply_unsieve(struct dlist *kin,
         return IMAP_PROTOCOL_BAD_PARAMETERS;
     if (!dlist_getatom(kin, "FILENAME", &filename))
         return IMAP_PROTOCOL_BAD_PARAMETERS;
+
+    syslog(LOG_INFO, "sync: applying UNSIEVE %s %s", userid, filename);
 
     return sync_sieve_delete(userid, filename);
 }
@@ -3279,6 +3305,8 @@ int sync_apply_activate_sieve(struct dlist *kin,
     if (!dlist_getatom(kin, "FILENAME", &filename))
         return IMAP_PROTOCOL_BAD_PARAMETERS;
 
+    syslog(LOG_INFO, "sync: applying ACTIVATE_SIEVE %s %s", userid, filename);
+
     return sync_sieve_activate(userid, filename);
 }
 
@@ -3289,6 +3317,8 @@ int sync_apply_unactivate_sieve(struct dlist *kin,
 
     if (!dlist_getatom(kin, "USERID", &userid))
         return IMAP_PROTOCOL_BAD_PARAMETERS;
+
+    syslog(LOG_INFO, "sync: applying UNACTIVATE_SIEVE %s", userid);
 
     return sync_sieve_deactivate(userid);
 }
@@ -3316,6 +3346,8 @@ int sync_apply_seen(struct dlist *kin,
     if (!dlist_getatom(kin, "SEENUIDS", &seenuids))
         return IMAP_PROTOCOL_BAD_PARAMETERS;
     sd.seenuids = xstrdup(seenuids);
+
+    syslog(LOG_INFO, "sync: applying SEEN %s", userid);
 
     r = seen_open(userid, SEEN_CREATE, &seendb);
     if (r) return r;
@@ -3346,6 +3378,8 @@ int sync_apply_unuser(struct dlist *kin, struct sync_state *sstate)
         syslog(LOG_WARNING, "ignoring attempt to %s() without userid", __func__);
         return 0;
     }
+
+    syslog(LOG_INFO, "sync: applying UNUSER %s", userid);
 
     /* Nuke subscriptions */
     /* ignore failures here - the subs file gets deleted soon anyway */
