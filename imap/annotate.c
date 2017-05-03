@@ -657,7 +657,7 @@ error:
     return r;
 }
 
-HIDDEN int annotate_getdb(const char *mboxname, annotate_db_t **dbp)
+EXPORTED int annotate_getdb(const char *mboxname, annotate_db_t **dbp)
 {
     if (!mboxname || !*mboxname) {
         syslog(LOG_ERR, "IOERROR: annotate_getdb called with no mboxname");
@@ -694,7 +694,7 @@ static void annotate_closedb(annotate_db_t *d)
     free(d);
 }
 
-HIDDEN void annotate_putdb(annotate_db_t **dbp)
+EXPORTED void annotate_putdb(annotate_db_t **dbp)
 {
     annotate_db_t *d;
 

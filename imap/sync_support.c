@@ -2403,9 +2403,14 @@ static int sync_mailbox_compare_update(struct mailbox *mailbox,
     struct dlist *ki;
     struct sync_annot_list *mannots = NULL;
     struct sync_annot_list *rannots = NULL;
+    annotate_db_t *annot_db = NULL;
     int r;
     int i;
     int has_append = 0;
+
+    /* Keep an open reference on the per-mailbox db to avoid
+     * doing too many slow database opens during the compare/update */
+    annotate_getdb(mailbox->name, &annot_db);
 
     struct mailbox_iter *iter = mailbox_iter_init(mailbox, 0, 0);
 
@@ -2541,6 +2546,7 @@ static int sync_mailbox_compare_update(struct mailbox *mailbox,
 
 out:
     mailbox_iter_done(&iter);
+    annotate_putdb(&annot_db);
     sync_annot_list_free(&mannots);
     sync_annot_list_free(&rannots);
     return r;
