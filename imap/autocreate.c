@@ -637,6 +637,7 @@ int autocreate_user(struct namespace *namespace,
                                /*dbonly*/0, /*notify*/1,
                                /*mailboxptr*/NULL);
 
+    syslog(LOG_DEBUG, "%s: mboxlist_createmailbox(%s): %s", __func__, inboxname, error_message(r));
     if (!r) r = mboxlist_changesub(inboxname, userid, auth_state, 1, 1, 1);
     if (r) {
         syslog(LOG_ERR, "autocreateinbox: User %s, INBOX failed. %s",

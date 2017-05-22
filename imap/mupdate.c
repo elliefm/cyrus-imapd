@@ -1476,6 +1476,9 @@ static struct mbent *database_lookup(const char *name, const mbentry_t *mbentry,
         strcpy(out->acl, mbentry->acl);
     }
 
+    syslog(LOG_DEBUG, "%s: mbentry->server=%s, mbentry->partition=%s",
+                      __func__, mbentry->server, mbentry->partition);
+
     if (mbentry->server && mbentry->partition)
         location = strconcat(mbentry->server, "!", mbentry->partition, NULL);
     else if (mbentry->server)
@@ -1488,6 +1491,9 @@ static struct mbent *database_lookup(const char *name, const mbentry_t *mbentry,
     out->mailbox = (pool) ? mpool_strdup(pool, name) : xstrdup(name);
     out->location = (pool) ? mpool_strdup(pool, location)
                          : xstrdup(location);
+
+    syslog(LOG_DEBUG, "%s: out->mailbox=%s, out->location=%s",
+                      __func__, out->mailbox, out->location);
 
     free(location);
     if (my_mbentry) mboxlist_entry_free(&my_mbentry);
@@ -1615,7 +1621,7 @@ static void cmd_set(struct conn *C,
         EXISTS, NOTACTIVE, DOESNTEXIST, ISOK, NOOUTPUT
     } msg = NOOUTPUT;
 
-    syslog(LOG_DEBUG, "cmd_set(fd:%d, %s)", C->fd, mailbox);
+    syslog(LOG_DEBUG, "cmd_set(fd:%d, %s, %s)", C->fd, mailbox, location);
 
     pthread_mutex_lock(&mailboxes_mutex); /* LOCK */
 
@@ -1627,6 +1633,7 @@ static void cmd_set(struct conn *C,
              * reservations twice. Suppress bailing out on the second one
              * (the replica).
              */
+            syslog(LOG_DEBUG, "%s: m->location = %s", __func__, m->location);
             if (strcmp(m->location, location)) {
                 /* failed; mailbox already exists */
                 msg = EXISTS;
