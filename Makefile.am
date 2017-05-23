@@ -788,6 +788,7 @@ noinst_HEADERS += \
 	lib/ptrarray.h \
 	lib/util.h \
 	lib/xsha1.h \
+	lib/xstreq.h \
 	lib/xstrlcat.h \
 	lib/xstrlcpy.h \
 	lib/xstrnchr.h
