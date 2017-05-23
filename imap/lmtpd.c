@@ -1000,7 +1000,7 @@ int autocreate_inbox(const mbname_t *mbname)
     if (!config_getswitch(IMAPOPT_AUTOCREATE_POST))
         return IMAP_MAILBOX_NONEXISTENT;
 
-    return autocreate_user(&lmtpd_namespace, userid);
+    return autocreate_user(&lmtpd_namespace, userid, isproxy);
 }
 #endif // USE_AUTOCREATE
 

@@ -46,6 +46,8 @@
 #include "config.h"
 #include "mboxname.h"
 
-extern int autocreate_user(struct namespace *namespace, const char *userid);
+extern int autocreate_user(struct namespace *namespace,
+                           const char *userid,
+                           int is_remote);
 
 #endif /* INCLUDED_AUTOCREATE_H */

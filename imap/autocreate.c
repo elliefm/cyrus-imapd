@@ -560,7 +560,8 @@ static void autocreate_specialuse_cb(const char *key, const char *val, void *roc
 }
 
 int autocreate_user(struct namespace *namespace,
-                    const char *userid)
+                    const char *userid,
+                    int is_remote)
 {
     int r = IMAP_MAILBOX_NONEXISTENT; /* default error if we break early */
     int autocreatequota = config_getint(IMAPOPT_AUTOCREATE_QUOTA);
@@ -571,6 +572,7 @@ int autocreate_user(struct namespace *namespace,
     strarray_t *subscribe = NULL;
     int numcrt = 0;
     int numsub = 0;
+    int mbtype = is_remote ? MBTYPE_REMOTE : 0;
 #ifdef USE_SIEVE
     const char *source_script;
 #endif
@@ -631,7 +633,7 @@ int autocreate_user(struct namespace *namespace,
         goto done;
     }
 
-    r = mboxlist_createmailbox(inboxname, /*mbtype*/0, /*partition*/NULL,
+    r = mboxlist_createmailbox(inboxname, mbtype, /*partition*/NULL,
                                /*isadmin*/1, userid, auth_state,
                                /*localonly*/0, /*forceuser*/0,
                                /*dbonly*/0, /*notify*/1,

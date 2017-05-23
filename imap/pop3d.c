@@ -1838,7 +1838,7 @@ int openinbox(void)
     if (r == IMAP_MAILBOX_NONEXISTENT) {
         /* NOTE - if we have a subfolder, autocreateinbox should still create
          * it if it's an autocreate folder - otherwise tough luck */
-        r = autocreate_user(&popd_namespace, popd_userid);
+        r = autocreate_user(&popd_namespace, popd_userid, 0);
         if (!r) r = mboxlist_lookup(mbname_intname(mbname), &mbentry, NULL);
     }
 #endif

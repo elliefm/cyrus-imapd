@@ -2479,7 +2479,7 @@ static void autocreate_inbox(void)
         int r = mboxlist_lookup(inboxname, NULL, NULL);
         free(inboxname);
         if (r != IMAP_MAILBOX_NONEXISTENT) return;
-        autocreate_user(&imapd_namespace, imapd_userid);
+        autocreate_user(&imapd_namespace, imapd_userid, 0);
     }
 }
 #endif // USE_AUTOCREATE
