@@ -73,6 +73,7 @@ struct backup {
     char *oldindex_fname;
     sqldb_t *db;
     struct backup_append_state *append_state;
+    int writelocked;
 };
 
 enum backup_open_reindex {
