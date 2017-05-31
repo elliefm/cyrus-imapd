@@ -217,6 +217,7 @@ HIDDEN int backup_real_open(struct backup **backupp,
         }
 
         backup->oldindex_fname = xstrdup(oldindex_fname);
+        backup->writelocked = 1;
     }
     else {
         // if there's data in the data file but the index file is empty
