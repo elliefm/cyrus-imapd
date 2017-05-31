@@ -519,7 +519,7 @@ EXPORTED int backup_acquire_writelock(struct backup *backup)
     int r;
 
     assert(!backup->writelocked);
-    assert(!backup->append_state);
+    assert(!backup->append_state || backup->append_state->mode == BACKUP_APPEND_INACTIVE);
 
     r = lock_reopen_ex(backup->fd, backup->data_fname, NULL, &failaction, &changed);
 
@@ -545,6 +545,9 @@ EXPORTED int backup_release_writelock(struct backup **backupp)
 {
     struct backup *backup = *backupp;
     int r;
+
+    assert(backup->writelocked);
+    assert(!backup->append_state || backup->append_state->mode == BACKUP_APPEND_INACTIVE);
 
     sqldb_close(&backup->db);
 
