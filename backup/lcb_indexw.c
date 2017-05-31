@@ -111,6 +111,7 @@ HIDDEN int backup_index(struct backup *backup, struct dlist *dlist,
 static int _index_expunge(struct backup *backup, struct dlist *dl,
                           time_t ts, off_t dl_offset)
 {
+    assert(backup->writelocked);
     syslog(LOG_DEBUG, "indexing EXPUNGE at " OFF_T_FMT "...\n", dl_offset);
 
     const char *mboxname;
@@ -184,6 +185,7 @@ static int _get_magic_flags(struct dlist *flags, int *is_expunged)
 static int _index_mailbox(struct backup *backup, struct dlist *dl,
                           time_t ts, off_t dl_offset)
 {
+    assert(backup->writelocked);
     syslog(LOG_DEBUG, "indexing MAILBOX at " OFF_T_FMT "...\n", dl_offset);
 
     const char *uniqueid = NULL;
@@ -423,6 +425,7 @@ error:
 static int _index_unmailbox(struct backup *backup, struct dlist *dl,
                             time_t ts, off_t dl_offset)
 {
+    assert(backup->writelocked);
     syslog(LOG_DEBUG, "indexing UNMAILBOX at " OFF_T_FMT "...\n", dl_offset);
 
     const char *mboxname = dl->sval;
@@ -446,6 +449,7 @@ static int _index_unmailbox(struct backup *backup, struct dlist *dl,
 static int _index_message(struct backup *backup, struct dlist *dl,
                           time_t ts, off_t dl_offset, size_t dl_len)
 {
+    assert(backup->writelocked);
     syslog(LOG_DEBUG, "indexing MESSAGE at " OFF_T_FMT " (" SIZE_T_FMT " bytes)...\n", dl_offset, dl_len);
     (void) ts;
 
@@ -493,6 +497,7 @@ static int _index_message(struct backup *backup, struct dlist *dl,
 static int _index_rename(struct backup *backup, struct dlist *dl,
                          time_t ts, off_t dl_offset)
 {
+    assert(backup->writelocked);
     syslog(LOG_DEBUG, "indexing RENAME at " OFF_T_FMT "\n", dl_offset);
     (void) ts;
 
@@ -539,6 +544,7 @@ static int _index_rename(struct backup *backup, struct dlist *dl,
 static int _index_seen(struct backup *backup, struct dlist *dl,
                        time_t ts, off_t dl_offset)
 {
+    assert(backup->writelocked);
     syslog(LOG_DEBUG, "indexing %s at " OFF_T_FMT "\n", dl->name, dl_offset);
     (void) ts;
 
@@ -592,6 +598,7 @@ static int _index_seen(struct backup *backup, struct dlist *dl,
 static int _index_sub(struct backup *backup, struct dlist *dl,
                       time_t ts, off_t dl_offset)
 {
+    assert(backup->writelocked);
     syslog(LOG_DEBUG, "indexing %s at " OFF_T_FMT "\n", dl->name, dl_offset);
 
     const char *mboxname = NULL;
@@ -638,6 +645,7 @@ static int _index_sub(struct backup *backup, struct dlist *dl,
 static int _index_sieve(struct backup *backup, struct dlist *dl,
                         time_t ts, off_t dl_offset)
 {
+    assert(backup->writelocked);
     syslog(LOG_DEBUG, "indexing %s at " OFF_T_FMT "\n", dl->name, dl_offset);
 
     const char *filename;
