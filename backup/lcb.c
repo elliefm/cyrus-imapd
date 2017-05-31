@@ -126,14 +126,8 @@ EXPORTED void backup_cleanup_staging_path(void)
 }
 
 /*
- * use cases:
- *  - backupd needs to be able to append to data stream and update index (exclusive)
- *  - backupd maybe needs to create a new backup from scratch (exclusive)
- *  - reindex needs to gzuc data stream and rewrite index (exclusive)
- *  - compact needs to rewrite data stream and index (exclusive)
- *  - restore needs to read data stream and index (shared)
- *
- * with only one shared case, might as well always lock exclusively...
+ * backup is opened holding a read lock, unless we're opening for reindexing,
+ * in which case it is opened already holding a write lock.
  */
 HIDDEN int backup_real_open(struct backup **backupp,
                             const char *data_fname, const char *index_fname,
@@ -180,7 +174,7 @@ HIDDEN int backup_real_open(struct backup **backupp,
             goto error;
         }
 
-        r = lock_setlock(fd, /*excl*/ 1, nonblock, backup->data_fname);
+        r = lock_setlock(fd, /*excl*/ reindex, nonblock, backup->data_fname);
         if (r) {
             if (errno == EWOULDBLOCK || errno == EAGAIN) {
                 r = IMAP_MAILBOX_LOCKED;
@@ -515,6 +509,67 @@ EXPORTED int backup_unlink(struct backup **backupp)
     unlink(backup->data_fname);
 
     return backup_close(backupp);
+}
+
+EXPORTED int backup_acquire_writelock(struct backup *backup)
+{
+    const char *failaction = NULL;
+    int changed;
+    int r;
+
+    assert(!backup->writelocked);
+    assert(!backup->append_state);
+
+    r = lock_reopen_ex(backup->fd, backup->data_fname, NULL, &failaction, &changed);
+
+    if (r) {
+        syslog(LOG_ERR, "IOERROR: unable to obtain write lock on %s (%s): %m",
+                        backup->data_fname, failaction);
+        return IMAP_IOERROR;
+    }
+
+    if (changed) {
+        sqldb_close(&backup->db);
+        backup->db = sqldb_open(backup->index_fname, backup_index_initsql,
+                                backup_index_version, backup_index_upgrade);
+        if (!backup->db)
+            return IMAP_INTERNAL; // FIXME what does it mean to error here?
+    }
+
+    backup->writelocked = 1;
+    return 0;
+}
+
+EXPORTED int backup_release_writelock(struct backup **backupp)
+{
+    struct backup *backup = *backupp;
+    int r;
+
+    sqldb_close(&backup->db);
+
+    lock_unlock(backup->fd, backup->data_fname);
+
+    r = lock_setlock(backup->fd, /*excl*/ 0, /*nonblock*/ 0, backup->data_fname);
+    if (r) {
+        syslog(LOG_ERR, "IOERROR: lock_setlock: %s: %m", backup->data_fname);
+        r = IMAP_IOERROR;
+        goto error;
+    }
+
+    backup->db = sqldb_open(backup->index_fname, backup_index_initsql,
+                            backup_index_version, backup_index_upgrade);
+    if (!backup->db) {
+        r = IMAP_INTERNAL;
+        goto error;
+    }
+
+    backup->writelocked = 0;
+    return 0;
+
+error:
+    /* unable to recover a read lock, close the backup completely */
+    backup_close(backupp);
+    return r;
 }
 
 EXPORTED const char *backup_get_data_fname(const struct backup *backup)

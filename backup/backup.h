@@ -90,8 +90,8 @@ int backup_open_paths(struct backup **backupp,
 int backup_close(struct backup **backupp); // also ends index/append ops
 int backup_unlink(struct backup **backupp);
 
-int backup_acquire_writelock(struct backup *backup, enum backup_nonblock nonblock);
-int backup_release_writelock(struct backup *backup);
+int backup_acquire_writelock(struct backup *backup);
+int backup_release_writelock(struct backup **backup);
 
 /* verifying backups */
 enum {
