@@ -98,6 +98,8 @@ HIDDEN int backup_real_append_start(struct backup *backup,
 {
     int r;
 
+    assert(backup->writelocked);
+
     if (backup->append_state != NULL
         && backup->append_state->mode != BACKUP_APPEND_INACTIVE) {
         fatal("backup append already started", EC_SOFTWARE);
@@ -166,6 +168,8 @@ EXPORTED int backup_append_start(struct backup *backup,
                                  const time_t *tsp,
                                  enum backup_append_flush flush)
 {
+    assert(backup->writelocked);
+
     char file_sha1[2 * SHA1_DIGEST_LENGTH + 1];
     off_t offset = lseek(backup->fd, 0, SEEK_END);
     time_t ts = tsp ? *tsp : time(NULL);
@@ -182,6 +186,8 @@ EXPORTED int backup_append(struct backup *backup,
 {
     if (!backup->append_state || backup->append_state->mode == BACKUP_APPEND_INACTIVE)
         fatal("backup append not started", EC_SOFTWARE);
+
+    assert(backup->writelocked);
 
     off_t start = backup->append_state->wrote;
     size_t len = 0;
@@ -249,6 +255,8 @@ HIDDEN int backup_real_append_end(struct backup *backup, time_t ts)
 {
     int r;
 
+    assert(backup->writelocked);
+
     if (!backup->append_state)
         fatal("backup append not started", EC_SOFTWARE);
     if (backup->append_state->mode == BACKUP_APPEND_INACTIVE)
@@ -296,12 +304,16 @@ done:
 
 EXPORTED int backup_append_end(struct backup *backup, const time_t *tsp)
 {
+    assert(backup->writelocked);
+
     time_t ts = tsp ? *tsp : time(NULL);
     return backup_real_append_end(backup, ts);
 }
 
 EXPORTED int backup_append_abort(struct backup *backup)
 {
+    assert(backup->writelocked);
+
     if (!backup->append_state)
         fatal("backup append not started", EC_SOFTWARE);
     if (backup->append_state == BACKUP_APPEND_INACTIVE)
@@ -320,4 +332,3 @@ EXPORTED int backup_append_abort(struct backup *backup)
     backup->append_state->mode = BACKUP_APPEND_INACTIVE;
     return 0;
 }
-
