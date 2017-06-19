@@ -6329,6 +6329,7 @@ EXPORTED int mailbox_reconstruct(const char *name, int flags)
 
         /* bogus annotations? */
         while (annots.pos < annots.nused && annots.found[annots.pos].uid < record.uid) {
+            assert(annots.found[annots.pos].uid != 0);
             add_found(&delannots, annots.found[annots.pos].uid, /*isarchive*/0);
             annots.pos++;
         }
@@ -6402,6 +6403,7 @@ EXPORTED int mailbox_reconstruct(const char *name, int flags)
 
         /* bogus annotations? */
         while (annots.pos < annots.nused && annots.found[annots.pos].uid < uid) {
+            assert(annots.found[annots.pos].uid != 0);
             add_found(&delannots, annots.found[annots.pos].uid, /*isarchive*/0);
             annots.pos++;
         }
@@ -6414,6 +6416,7 @@ EXPORTED int mailbox_reconstruct(const char *name, int flags)
 
     /* bogus annotations after the end? */
     while (annots.pos < annots.nused) {
+        assert(annots.found[annots.pos].uid != 0);
         add_found(&delannots, annots.found[annots.pos].uid, /*isarchive*/0);
         annots.pos++;
     }
