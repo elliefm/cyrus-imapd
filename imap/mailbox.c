@@ -5306,6 +5306,8 @@ struct found_uids {
 #define FOUND_UIDS_INITIALIZER \
     { NULL, 0, 0, 0 }
 
+static void dump_found_uids(const struct found_uids *found, const char *d1, const char *d2);
+
 static int sort_found(const void *a, const void *b)
 {
     struct found_uid *fa = (struct found_uid *)a;
@@ -5396,6 +5398,8 @@ static int find_files(struct mailbox *mailbox, struct found_uids *files,
             if (!strncmp(p, "cyrus.", 6)) continue; /* cyrus.* files */
 
             r = parse_datafilename(p, &uid);
+            syslog(LOG_DEBUG, "%s: parsedatafilename(%s) => %u (r = %i)",
+                              __func__, p, uid, r);
 
             if (r) {
                 /* check if it's a directory */
@@ -5424,6 +5428,7 @@ static int find_files(struct mailbox *mailbox, struct found_uids *files,
         closedir(dirp);
     }
 
+    dump_found_uids(files, __func__, "before qsort");
     /* make sure UIDs are sorted for comparison */
     qsort(files->found, files->nused, sizeof(unsigned long), sort_found);
 
@@ -6207,6 +6212,7 @@ static int find_annots(struct mailbox *mailbox, struct found_uids *annots)
                              addannot_uid, annots);
     if (r) return r;
 
+    dump_found_uids(annots, __func__, "before qsort");
     /* make sure UIDs are sorted for comparison */
     qsort(annots->found, annots->nused, sizeof(unsigned long), sort_found);
 
