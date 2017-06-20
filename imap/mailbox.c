@@ -5290,7 +5290,7 @@ EXPORTED int mailbox_copyfile(const char *from, const char *to, int nolink)
 /*                      RECONSTRUCT SUPPORT                               */
 /* ---------------------------------------------------------------------- */
 
-#define UIDGROW 300
+#define UIDGROW 16
 
 struct found_uid {
     uint32_t uid;
@@ -6177,11 +6177,11 @@ static int mailbox_wipe_index_record(struct mailbox *mailbox,
     return 0;
 }
 
-static int addannot_uid(const char *mailbox __attribute__((unused)),
+static int addannot_uid(const char *mailbox,
                         uint32_t uid,
-                        const char *entry __attribute__((unused)),
+                        const char *entry,
                         const char *userid __attribute__((unused)),
-                        const struct buf *value __attribute__((unused)),
+                        const struct buf *value,
                         void *rock)
 {
     struct found_uids *annots = (struct found_uids *)rock;
@@ -6190,6 +6190,8 @@ static int addannot_uid(const char *mailbox __attribute__((unused)),
      * will be together in a 'foreach' response */
     if (!annots->nused || annots->found[annots->nused-1].uid != uid) {
         /* we don't support an archive annotations DB yet */
+        syslog(LOG_DEBUG, "%s: adding found annot: uid=%u mailbox=%s %s=%.20s...",
+                          __func__, uid, mailbox, entry, buf_cstring(value));
         add_found(annots, uid, /*isarchive*/0);
     }
 
@@ -6240,6 +6242,20 @@ out:
     return r;
 }
 
+static void dump_found_uids(const struct found_uids *found, const char *d1, const char *d2)
+{
+    unsigned z;
+    syslog(LOG_DEBUG, "%s: %s: nalloc=%u nused=%u pos=%u",
+                      d1, d2, found->nalloc, found->nused, found->pos);
+    for (z = 0; z < found->nused; z++) {
+        syslog(LOG_DEBUG, "%s: %s: found uid=%u isarchive=%u",
+                          d1, d2, found->found[z].uid, found->found[z].isarchive);
+    }
+    for (; z < found->nalloc; z++) {
+        syslog(LOG_DEBUG, "%s: %s: empty uid=%u isarchive=%u",
+                          d1, d2, found->found[z].uid, found->found[z].isarchive);
+    }
+}
 
 /*
  * Reconstruct the single mailbox named 'name'
@@ -6306,9 +6322,11 @@ EXPORTED int mailbox_reconstruct(const char *name, int flags)
 
     r = find_files(mailbox, &files, flags);
     if (r) goto close;
+    dump_found_uids(&files, __func__, "find files");
 
     r = find_annots(mailbox, &annots);
     if (r) goto close;
+    dump_found_uids(&annots, __func__, "find annots");
 
     uint32_t recno;
     struct index_record record;
@@ -6328,6 +6346,7 @@ EXPORTED int mailbox_reconstruct(const char *name, int flags)
         last_seen_uid = record.uid;
 
         /* bogus annotations? */
+        syslog(LOG_DEBUG, "%s: want to delete annotations with uid < %u", __func__, record.uid);
         while (annots.pos < annots.nused && annots.found[annots.pos].uid < record.uid) {
             assert(annots.found[annots.pos].uid != 0);
             add_found(&delannots, annots.found[annots.pos].uid, /*isarchive*/0);
@@ -6336,10 +6355,12 @@ EXPORTED int mailbox_reconstruct(const char *name, int flags)
 
         /* skip over current */
         while (annots.pos < annots.nused && annots.found[annots.pos].uid == record.uid) {
+            syslog(LOG_DEBUG, "%s: skipping annotation with uid == %u", __func__, record.uid);
             annots.pos++;
         }
 
         /* lower UID file exists */
+        syslog(LOG_DEBUG, "%s: discover files with uid < %u", __func__, record.uid);
         while (files.pos < files.nused && files.found[files.pos].uid < record.uid) {
             add_found(&discovered, files.found[files.pos].uid, files.found[files.pos].isarchive);
             files.pos++;
@@ -6385,6 +6406,7 @@ EXPORTED int mailbox_reconstruct(const char *name, int flags)
     }
 
     /* add discovered messages before last_uid to the list in order */
+    syslog(LOG_DEBUG, "%s: discover files with uid <= %u", __func__, mailbox->i.last_uid);
     while (files.pos < files.nused && files.found[files.pos].uid <= mailbox->i.last_uid) {
         add_found(&discovered, files.found[files.pos].uid, files.found[files.pos].isarchive);
         files.pos++;
@@ -6402,6 +6424,7 @@ EXPORTED int mailbox_reconstruct(const char *name, int flags)
         /* we can keep this annotation too... */
 
         /* bogus annotations? */
+        syslog(LOG_DEBUG, "%s: want to delete annotations with uid < %u", __func__, uid);
         while (annots.pos < annots.nused && annots.found[annots.pos].uid < uid) {
             assert(annots.found[annots.pos].uid != 0);
             add_found(&delannots, annots.found[annots.pos].uid, /*isarchive*/0);
@@ -6410,11 +6433,13 @@ EXPORTED int mailbox_reconstruct(const char *name, int flags)
 
         /* skip over current */
         while (annots.pos < annots.nused && annots.found[annots.pos].uid == uid) {
+            syslog(LOG_DEBUG, "%s: skipping annotation with uid == %u", __func__, uid);
             annots.pos++;
         }
     }
 
     /* bogus annotations after the end? */
+    syslog(LOG_DEBUG, "%s: want to delete remaining annotations", __func__);
     while (annots.pos < annots.nused) {
         assert(annots.found[annots.pos].uid != 0);
         add_found(&delannots, annots.found[annots.pos].uid, /*isarchive*/0);
@@ -6422,6 +6447,7 @@ EXPORTED int mailbox_reconstruct(const char *name, int flags)
     }
 
     /* handle new list - note, we don't copy annotations for these */
+    dump_found_uids(&discovered, __func__, "discovered files");
     while (discovered.pos < discovered.nused) {
         r = mailbox_reconstruct_append(mailbox, discovered.found[discovered.pos].uid,
                                        discovered.found[discovered.pos].isarchive, flags);
@@ -6429,6 +6455,7 @@ EXPORTED int mailbox_reconstruct(const char *name, int flags)
         discovered.pos++;
     }
 
+    dump_found_uids(&delannots, __func__, "delannots");
     if (delannots.nused) {
         r = reconstruct_delannots(mailbox, &delannots, flags);
         if (r) goto close;
