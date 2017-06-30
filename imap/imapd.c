@@ -12313,8 +12313,11 @@ static int getdatetime(time_t *date)
     buf[i] = '\0';
 
     r = time_from_rfc3501(buf, date);
-    if (r < 0)
+    if (r < 0) {
+        syslog(LOG_DEBUG, "%s: time_from_rfc3501 rejected date string: '%s'",
+                          __func__, buf);
         goto baddate;
+    }
 
     c = prot_getc(imapd_in);
     return c;
