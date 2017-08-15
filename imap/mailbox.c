@@ -98,6 +98,7 @@
 #include "mboxlist.h"
 #include "parseaddr.h"
 #include "proc.h"
+#include "prometheus.h"
 #include "retry.h"
 #include "seen.h"
 #include "util.h"
@@ -1890,25 +1891,32 @@ static int _commit_one(struct mailbox *mailbox, struct index_change *change)
         return IMAP_IOERROR;
     }
 
-    /* audit logging */
-    if (config_auditlog) {
-        if (change->flags & CHANGE_ISAPPEND)
+    /* metrics and audit logging */
+    if (change->flags & CHANGE_ISAPPEND) {
+        prometheus_increment(CYRUS_MESSAGE_APPEND_TOTAL);
+        if (config_auditlog)
             syslog(LOG_NOTICE, "auditlog: append sessionid=<%s> "
                    "mailbox=<%s> uniqueid=<%s> uid=<%u> modseq=<%llu> "
                    "sysflags=<%s> guid=<%s>",
                    session_id(), mailbox->name, mailbox->uniqueid, record->uid,
                    record->modseq, flags_to_str(record->system_flags),
                    message_guid_encode(&record->guid));
+    }
 
-        if ((record->system_flags & FLAG_EXPUNGED) && !(change->flags & CHANGE_WASEXPUNGED))
+    if ((record->system_flags & FLAG_EXPUNGED) && !(change->flags & CHANGE_WASEXPUNGED)) {
+        prometheus_increment(CYRUS_MESSAGE_EXPUNGE_TOTAL);
+        if (config_auditlog)
             syslog(LOG_NOTICE, "auditlog: expunge sessionid=<%s> "
                    "mailbox=<%s> uniqueid=<%s> uid=<%u> modseq=<%llu> "
                    "sysflags=<%s> guid=<%s>",
                    session_id(), mailbox->name, mailbox->uniqueid, record->uid,
                    record->modseq, flags_to_str(record->system_flags),
                    message_guid_encode(&record->guid));
+    }
 
-        if ((record->system_flags & FLAG_UNLINKED) && !(change->flags & CHANGE_WASUNLINKED))
+    if ((record->system_flags & FLAG_UNLINKED) && !(change->flags & CHANGE_WASUNLINKED)) {
+        prometheus_increment(CYRUS_MESSAGE_UNLINK_TOTAL);
+        if (config_auditlog)
             syslog(LOG_NOTICE, "auditlog: unlink sessionid=<%s> "
                    "mailbox=<%s> uniqueid=<%s> uid=<%u> modseq=<%llu> "
                    "sysflags=<%s> guid=<%s>",
@@ -3616,6 +3624,7 @@ EXPORTED int mailbox_rewrite_index_record(struct mailbox *mailbox,
     r = _store_change(mailbox, record, changeflags);
     if (r) return r;
 
+    prometheus_increment(CYRUS_MESSAGE_TOUCH_TOTAL);
     if (config_auditlog)
         syslog(LOG_NOTICE, "auditlog: touched sessionid=<%s> "
                "mailbox=<%s> uniqueid=<%s> uid=<%u> guid=<%s> cid=<%s> "
@@ -3753,6 +3762,7 @@ static void mailbox_record_cleanup(struct mailbox *mailbox,
         /* try to delete both */
 
         if (unlink(spoolfname) == 0) {
+            prometheus_increment(CYRUS_MESSAGE_UNLINK_TOTAL);
             if (config_auditlog)
                 syslog(LOG_NOTICE, "auditlog: unlink sessionid=<%s> "
                        "mailbox=<%s> uniqueid=<%s> uid=<%u> sysflags=<%s>",
@@ -3762,6 +3772,7 @@ static void mailbox_record_cleanup(struct mailbox *mailbox,
 
         if (strcmp(spoolfname, archivefname)) {
             if (unlink(archivefname) == 0) {
+                prometheus_increment(CYRUS_MESSAGE_UNLINKARCHIVE_TOTAL);
                 if (config_auditlog)
                     syslog(LOG_NOTICE, "auditlog: unlinkarchive sessionid=<%s> "
                            "mailbox=<%s> uniqueid=<%s> uid=<%u> sysflags=<%s>",
@@ -4314,6 +4325,7 @@ EXPORTED void mailbox_archive(struct mailbox *mailbox,
     while ((msg = mailbox_iter_step(iter))) {
         const struct index_record *record = msg_record(msg);
         const char *action = NULL;
+        enum prom_metric_id metric = 0;
         if (decideproc(mailbox, record, deciderock)) {
             if (record->system_flags & FLAG_ARCHIVED)
                 continue;
@@ -4345,6 +4357,7 @@ EXPORTED void mailbox_archive(struct mailbox *mailbox,
 #endif
             copyrecord.system_flags |= FLAG_ARCHIVED | FLAG_NEEDS_CLEANUP;
             action = "archive";
+            metric = CYRUS_MESSAGE_ARCHIVE_TOTAL;
         }
         else
         {
@@ -4378,6 +4391,7 @@ EXPORTED void mailbox_archive(struct mailbox *mailbox,
             copyrecord.system_flags &= ~FLAG_ARCHIVED;
             copyrecord.system_flags |= FLAG_NEEDS_CLEANUP;
             action = "unarchive";
+            metric = CYRUS_MESSAGE_UNARCHIVE_TOTAL;
         }
 
         if (!object_storage_enabled){
@@ -4407,6 +4421,7 @@ EXPORTED void mailbox_archive(struct mailbox *mailbox,
             continue;
         mailbox->i.options |= OPT_MAILBOX_NEEDS_UNLINK;
 
+        prometheus_increment(metric);
         if (config_auditlog)
             syslog(LOG_NOTICE, "auditlog: %s sessionid=<%s> mailbox=<%s> "
                    "uniqueid=<%s> uid=<%u> guid=<%s> cid=<%s> sysflags=<%s>",

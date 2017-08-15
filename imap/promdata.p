@@ -76,3 +76,11 @@ metric counter cyrus_lmtp_sieve_keep_total              The number of sieve KEEP
 metric counter cyrus_lmtp_sieve_notify_total            The number of sieve NOTIFYs
 metric counter cyrus_lmtp_sieve_autorespond_total       The number of sieve AUTORESPONDs considered
 metric counter cyrus_lmtp_sieve_autorespond_sent_total  The number of sieve AUTORESPONDs sent
+
+metric counter cyrus_message_append_total               The total number of messages appended
+metric counter cyrus_message_archive_total              The total number of messages archived
+metric counter cyrus_message_expunge_total              The total number of messages expunged
+metric counter cyrus_message_touch_total                The total number of messages touched
+metric counter cyrus_message_unarchive_total            The total number of messages unarchived
+metric counter cyrus_message_unlink_total               The total number of messages unlinked
+metric counter cyrus_message_unlinkarchive_total        The total number of archived messages unlinked
