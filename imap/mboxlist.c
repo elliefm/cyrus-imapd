@@ -66,6 +66,7 @@
 #include "util.h"
 #include "mailbox.h"
 #include "mboxevent.h"
+#include "prometheus.h"
 #include "exitcodes.h"
 #include "xmalloc.h"
 #include "xstrlcpy.h"
@@ -1912,6 +1913,7 @@ EXPORTED int mboxlist_renamemailbox(const char *oldname, const char *newname,
         else if (partitionmove) {
             char *oldpartition = xstrdup(oldmailbox->part);
             char *olduniqueid = xstrdup(oldmailbox->uniqueid);
+            prometheus_increment(CYRUS_MAILBOX_PARTITIONMOVE_TOTAL);
             if (config_auditlog)
                 syslog(LOG_NOTICE, "auditlog: partitionmove sessionid=<%s> "
                        "mailbox=<%s> uniqueid=<%s> oldpart=<%s> newpart=<%s>",

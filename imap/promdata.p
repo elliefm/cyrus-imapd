@@ -84,3 +84,9 @@ metric counter cyrus_message_touch_total                The total number of mess
 metric counter cyrus_message_unarchive_total            The total number of messages unarchived
 metric counter cyrus_message_unlink_total               The total number of messages unlinked
 metric counter cyrus_message_unlinkarchive_total        The total number of archived messages unlinked
+
+metric counter cyrus_mailbox_create_total               The total number of mailboxes created
+metric counter cyrus_mailbox_delete_total               The total number of mailboxes deleted
+metric counter cyrus_mailbox_modseq_total               The total number of mailbox modseq changes
+metric counter cyrus_mailbox_partitionmove_total        The total number of mailbox partition moves
+metric counter cyrus_mailbox_rename_total               The total number of mailboxes renamed

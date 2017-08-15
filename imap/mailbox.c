@@ -2646,11 +2646,14 @@ EXPORTED int mailbox_commit(struct mailbox *mailbox)
         return IMAP_IOERROR;
     }
 
-    if (config_auditlog && mailbox->modseq_dirty)
-        syslog(LOG_NOTICE, "auditlog: modseq sessionid=<%s> "
-               "mailbox=<%s> uniqueid=<%s> highestmodseq=<" MODSEQ_FMT ">",
-            session_id(), mailbox->name, mailbox->uniqueid,
-            mailbox->i.highestmodseq);
+    if (mailbox->modseq_dirty) {
+        prometheus_increment(CYRUS_MAILBOX_MODSEQ_TOTAL);
+        if (config_auditlog)
+            syslog(LOG_NOTICE, "auditlog: modseq sessionid=<%s> "
+                   "mailbox=<%s> uniqueid=<%s> highestmodseq=<" MODSEQ_FMT ">",
+                   session_id(), mailbox->name, mailbox->uniqueid,
+                   mailbox->i.highestmodseq);
+    }
 
     /* remove all dirty flags! */
     mailbox->i.dirty = 0;
@@ -4786,6 +4789,7 @@ EXPORTED int mailbox_create(const char *name,
     r = mailbox_commit(mailbox);
     if (r) goto done;
 
+    prometheus_increment(CYRUS_MAILBOX_CREATE_TOTAL);
     if (config_auditlog)
         syslog(LOG_NOTICE, "auditlog: create sessionid=<%s> "
                            "mailbox=<%s> uniqueid=<%s> uidvalidity=<%u>",
@@ -5001,6 +5005,7 @@ static int mailbox_delete_internal(struct mailbox **mailboxptr)
 
     syslog(LOG_NOTICE, "Deleted mailbox %s", mailbox->name);
 
+    prometheus_increment(CYRUS_MAILBOX_DELETE_TOTAL);
     if (config_auditlog)
         syslog(LOG_NOTICE, "auditlog: delete sessionid=<%s> "
                            "mailbox=<%s> uniqueid=<%s>",
@@ -5388,6 +5393,7 @@ HIDDEN int mailbox_rename_copy(struct mailbox *oldmailbox,
     r = mailbox_commit(newmailbox);
     if (r) goto fail;
 
+    prometheus_increment(CYRUS_MAILBOX_RENAME_TOTAL);
     if (config_auditlog)
         syslog(LOG_NOTICE, "auditlog: rename sessionid=<%s> "
                            "oldmailbox=<%s> newmailbox=<%s> uniqueid=<%s>",
