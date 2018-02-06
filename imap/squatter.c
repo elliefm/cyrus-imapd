@@ -825,6 +825,7 @@ int main(int argc, char **argv)
     const char *fromfile = NULL;
     strarray_t *srctiers = NULL;
     const char *desttier = NULL;
+    char *errstr = NULL;
     enum { UNKNOWN, INDEXER, INDEXFROM, SEARCH, ROLLING, SYNCLOG,
            START_DAEMON, STOP_DAEMON, RUN_DAEMON, COMPACT } mode = UNKNOWN;
 
@@ -964,12 +965,6 @@ int main(int argc, char **argv)
     if (mode == UNKNOWN)
         mode = INDEXER;
 
-    /* fork and close fds if required */
-    if (mode == ROLLING && background) {
-        become_daemon();
-        init_flags &= ~CYRUSINIT_PERROR;
-    }
-
     if (mode == COMPACT && (!desttier || !srctiers)) {
         /* need both src and dest for compact */
         usage("squatter");
@@ -987,6 +982,14 @@ int main(int argc, char **argv)
 
     mboxlist_init(0);
     mboxlist_open(NULL);
+
+    /* make sure we're correctly configured */
+    if ((r = search_check_config(&errstr))) {
+        if (errstr)
+            fatal(errstr, EC_CONFIG);
+        else
+            fatal(error_message(r), EC_CONFIG);
+    }
 
     if (mode == ROLLING || mode == SYNCLOG) {
         signals_set_shutdown(&shut_down);
@@ -1015,6 +1018,8 @@ int main(int argc, char **argv)
         r = do_search(query, !multi_folder, &mboxnames);
         break;
     case ROLLING:
+        if (background)
+            become_daemon();
         do_rolling(channel);
         /* never returns */
         break;
