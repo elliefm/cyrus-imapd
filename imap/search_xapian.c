@@ -97,22 +97,25 @@ static int xapian_basedir(const char *tier, const char *mboxname, const char *pa
                           const char *root, char **basedir);
 
 /* ====================================================================== */
-static int check_config(void)
+static int check_config(char **errstr)
 {
-    int r = 0;
     const char *s;
 
     if (!config_getswitch(IMAPOPT_CONVERSATIONS)) {
         syslog(LOG_ERR, "ERROR: conversations required but not enabled");
+        if (errstr)
+            *errstr = xstrdup("xapian: conversations required but not enabled");
         return IMAP_NOTFOUND;
     }
     s = config_getstring(IMAPOPT_DEFAULTSEARCHTIER);
     if (!s || !strlen(s)) {
         syslog(LOG_ERR, "ERROR: no default search tier configured");
-        r = IMAP_PARTITION_UNKNOWN;
+        if (errstr)
+            *errstr = xstrdup("xapian: no default search tier configured");
+        return IMAP_PARTITION_UNKNOWN;
     }
 
-    return r;
+    return 0;
 }
 
 /* ====================================================================== */
@@ -983,7 +986,7 @@ static int run(search_builder_t *bx, search_hit_cb_t proc, void *rock)
     }
 
     /* Validate config */
-    r = check_config();
+    r = check_config(NULL);
     if (r) return r;
 
     optimise_nodes(NULL, bb->root);
@@ -1081,7 +1084,7 @@ static search_builder_t *begin_search(struct mailbox *mailbox, int opts)
     strarray_t *active = NULL;
     int r;
 
-    r = check_config();
+    r = check_config(NULL);
     if (r) goto out;
 
     bb = xzmalloc(sizeof(xapian_builder_t));
@@ -1631,7 +1634,7 @@ static search_text_receiver_t *begin_update(int verbose)
 {
     xapian_update_receiver_t *tr;
 
-    if (check_config()) return NULL;
+    if (check_config(NULL)) return NULL;
 
     tr = xzmalloc(sizeof(xapian_update_receiver_t));
     tr->super.super.begin_mailbox = begin_mailbox_update;
@@ -1792,7 +1795,7 @@ static search_text_receiver_t *begin_snippets(void *internalised,
 {
     xapian_snippet_receiver_t *tr;
 
-    if (check_config()) return NULL;
+    if (check_config(NULL)) return NULL;
 
     tr = xzmalloc(sizeof(xapian_snippet_receiver_t));
     tr->super.super.begin_mailbox = begin_mailbox_snippets;
@@ -2220,7 +2223,7 @@ static int compact_dbs(const char *userid, const char *tempdir,
         goto out;
     }
 
-    r = check_config();
+    r = check_config(NULL);
     if (r) goto out;
 
     /* take an exclusive lock on the activefile file */
@@ -2560,6 +2563,7 @@ const struct search_engine xapian_search_engine = {
     /*stop_daemon*/NULL,
     list_files,
     compact_dbs,
-    delete_user  /* XXX: fixme */
+    delete_user,  /* XXX: fixme */
+    check_config,
 };
 

@@ -144,6 +144,7 @@ struct search_engine {
                    const strarray_t *srctiers, const char *desttier,
                    int flags);
     int (*deluser)(const char *userid);
+    int (*check_config)(char **errstr);
 };
 
 /*
@@ -180,6 +181,7 @@ int search_list_files(const char *userid, strarray_t *);
 int search_compact(const char *userid, const char *tempdir,
                    const strarray_t *srctiers, const char *desttier, int verbose);
 int search_deluser(const char *userid);
+int search_check_config(char **errstr);
 
 
 /* for debugging */
