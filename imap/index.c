@@ -3952,6 +3952,16 @@ static int index_fetchreply(struct index_state *state, uint32_t msgno,
     }
     int ischanged = im->told_modseq < record.modseq;
 
+    /* Load the cache if we're going to need it */
+    if (fetchitems & (FETCH_ENVELOPE|FETCH_BODYSTRUCTURE|FETCH_BODY)) {
+        r = mailbox_cacherecord(mailbox, &record);
+        if (r) {
+            syslog(LOG_ERR, "unable to fetch cache record: %s", error_message(r));
+            /* won't be able to fetch these items */
+            fetchitems &= ~(FETCH_ENVELOPE|FETCH_BODYSTRUCTURE|FETCH_BODY);
+        }
+    }
+
     /* display flags if asked _OR_ if they've changed */
     if (fetchitems & FETCH_FLAGS || ischanged) {
         index_fetchflags(state, msgno);
@@ -4084,25 +4094,19 @@ static int index_fetchreply(struct index_state *state, uint32_t msgno,
         sepchar = ' ';
     }
     if (fetchitems & FETCH_ENVELOPE) {
-        if (!mailbox_cacherecord(mailbox, &record)) {
-            prot_printf(state->out, "%cENVELOPE ", sepchar);
-            sepchar = ' ';
-            prot_putbuf(state->out, cacheitem_buf(&record, CACHE_ENVELOPE));
-        }
+        prot_printf(state->out, "%cENVELOPE ", sepchar);
+        sepchar = ' ';
+        prot_putbuf(state->out, cacheitem_buf(&record, CACHE_ENVELOPE));
     }
     if (fetchitems & FETCH_BODYSTRUCTURE) {
-        if (!mailbox_cacherecord(mailbox, &record)) {
-            prot_printf(state->out, "%cBODYSTRUCTURE ", sepchar);
-            sepchar = ' ';
-            prot_putbuf(state->out, cacheitem_buf(&record, CACHE_BODYSTRUCTURE));
-        }
+        prot_printf(state->out, "%cBODYSTRUCTURE ", sepchar);
+        sepchar = ' ';
+        prot_putbuf(state->out, cacheitem_buf(&record, CACHE_BODYSTRUCTURE));
     }
     if (fetchitems & FETCH_BODY) {
-        if (!mailbox_cacherecord(mailbox, &record)) {
-            prot_printf(state->out, "%cBODY ", sepchar);
-            sepchar = ' ';
-            prot_putbuf(state->out, cacheitem_buf(&record, CACHE_BODY));
-        }
+        prot_printf(state->out, "%cBODY ", sepchar);
+        sepchar = ' ';
+        prot_putbuf(state->out, cacheitem_buf(&record, CACHE_BODY));
     }
 
     if (fetchitems & FETCH_HEADER) {
