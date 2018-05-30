@@ -1968,11 +1968,13 @@ EXPORTED int mboxlist_setacl(const struct namespace *namespace __attribute__((un
                     const struct auth_state *auth_state)
 {
     mbentry_t *mbentry = NULL;
+    mbname_t *mbname = NULL;
     int r;
     int myrights;
     int mode = ACL_MODE_SET;
     int isusermbox = 0;
     int isidentifiermbox = 0;
+    int isgroupidentifier = 0;
     int anyoneuseracl = 1;
     int ensure_owner_rights = 0;
     int mask;
@@ -1983,10 +1985,14 @@ EXPORTED int mboxlist_setacl(const struct namespace *namespace __attribute__((un
 
     init_internal();
 
-    /* round trip identifier to potentially strip domain */
-    mbname_t *mbname = mbname_from_userid(identifier);
-    /* XXX - enforce cross domain restrictions */
-    identifier = mbname_userid(mbname);
+    isgroupidentifier = !strncmp(identifier, "group:", 6);
+
+    if (!isgroupidentifier) {
+        /* round trip identifier to potentially strip domain */
+        mbname = mbname_from_userid(identifier);
+        /* XXX - enforce cross domain restrictions */
+        identifier = mbname_userid(mbname);
+    }
 
     /* checks if the mailbox belongs to the user who is trying to change the
        access rights */
@@ -1995,7 +2001,7 @@ EXPORTED int mboxlist_setacl(const struct namespace *namespace __attribute__((un
     anyoneuseracl = config_getswitch(IMAPOPT_ANYONEUSERACL);
 
     /* checks if the identifier is the mailbox owner */
-    if (mboxname_userownsmailbox(identifier, name))
+    if (!isgroupidentifier && mboxname_userownsmailbox(identifier, name))
         isidentifiermbox = 1;
 
     /* who is the mailbox owner? */
