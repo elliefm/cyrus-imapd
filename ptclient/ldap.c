@@ -965,11 +965,15 @@ static int ptsmodule_get_dn(
                     if ((vals = ldap_get_values(ptsm->ld, entry, ptsm->domain_name_attribute)) != NULL) {
                         syslog(LOG_DEBUG, "we have a domain %s", vals[0]);
                         ptsmodule_standard_root_dn(vals[0], (const char **) &temp_base);
+                        syslog(LOG_DEBUG, "searching for '%s' in '%s'", filter, temp_base);
                         rc = ldap_search_st(ptsm->ld, temp_base, ptsm->scope, filter, attrs, 0, &(ptsm->timeout), &res2);
                         if (rc == LDAP_SUCCESS && ldap_count_entries(ptsm->ld, res2) == 1) {
                             syslog(LOG_DEBUG, "Found %s in %s", canon_id, temp_base);
                             base = temp_base;
                             count_matches++;
+                        }
+                        else {
+                            syslog(LOG_DEBUG, "rc: %d, entries %d", rc, ldap_count_entries(ptsm->ld, res2));
                         }
                     }
                 }
@@ -1110,6 +1114,7 @@ static int ptsmodule_make_authstate_attribute(
         return rc;
     }
 
+    syslog(LOG_DEBUG, "gonna try and get a dn...");
     rc = ptsmodule_get_dn(canon_id, size, &dn);
     if (rc != PTSM_OK) {
         *reply = "identifier not found";
@@ -1537,6 +1542,8 @@ static struct auth_state *myauthstate(
         return NULL;
     }
     size = strlen(canon_id);
+
+    syslog(LOG_DEBUG, "making authstate for identifier %s", canon_id);
 
 retry:;
 
