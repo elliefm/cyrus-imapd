@@ -819,6 +819,8 @@ static int process_recipient(char *addr,
 {
     assert(addr != NULL && msg != NULL);
 
+    syslog(LOG_DEBUG, "%s: processing address '%s'", __func__, addr);
+
     if (*addr == '<') addr++;
 
     /* Skip at-domain-list */
@@ -837,7 +839,10 @@ static int process_recipient(char *addr,
 
     if (sl) {
         char *rcpt = xstrndup(addr, sl);
+        syslog(LOG_DEBUG, "%s: got recipient '%s'", __func__, rcpt);
         mbname = mbname_from_recipient(rcpt, msg->ns);
+        syslog(LOG_DEBUG, "%s: localpart=%s domain=%s", __func__,
+                          mbname_localpart(mbname), mbname_domain(mbname));
         free(rcpt);
 
         int forcedowncase = config_getswitch(IMAPOPT_LMTP_DOWNCASE_RCPT);
@@ -848,11 +853,15 @@ static int process_recipient(char *addr,
             mbname_set_localpart(mbname, NULL);
             if (!config_virtdomains || !strcmpsafe(mbname_domain(mbname), config_defdomain))
                 mbname_set_domain(mbname, NULL);
+            syslog(LOG_DEBUG, "%s: username is postuser! localpart=%s domain=%s",
+                              __func__, mbname_localpart(mbname), mbname_domain(mbname));
         }
 
         if ((r = verify_user(mbname,
                         (quota_t) (ignorequota ? -1 : msg->size),
                         ignorequota ? -1 : 1, msg->authstate))) {
+            syslog(LOG_DEBUG, "%s: verify_user returned %d (%s)",
+                              __func__, r, error_message(r));
             mbname_free(&mbname);
         }
     }
@@ -860,11 +869,17 @@ static int process_recipient(char *addr,
     if (!mbname) {
         const char *catchall = config_getstring(IMAPOPT_LMTP_CATCHALL_MAILBOX);
         if (catchall) {
+            syslog(LOG_DEBUG, "%s: using catchall mailbox %s", __func__, catchall);
             mbname = mbname_from_userid(catchall);
+            syslog(LOG_DEBUG, "%s: catchall mailbox localpart=%s domain=%s",
+                              __func__, mbname_localpart(mbname), mbname_domain(mbname));
+
             if ((r = verify_user(mbname,
                             ignorequota ? -1 : msg->size,
                             ignorequota ? -1 : 1, msg->authstate))) {
                 mbname_free(&mbname);
+                syslog(LOG_DEBUG, "%s: verify_user returned %d (%s)",
+                                __func__, r, error_message(r));
             }
         }
     }
@@ -876,6 +891,9 @@ static int process_recipient(char *addr,
         }
         return IMAP_MAILBOX_NONEXISTENT;
     }
+
+    syslog(LOG_DEBUG, "%s: returning success, localpart=%s domain=%s",
+                      __func__, mbname_localpart(mbname), mbname_domain(mbname));
 
     address_data_t *ret = (address_data_t *) xmalloc(sizeof(address_data_t));
     ret->mbname = mbname;
