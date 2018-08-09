@@ -93,11 +93,35 @@ extern int mysasl_config(void *context,
                          unsigned *len);
 extern sasl_security_properties_t *mysasl_secprops(int flags);
 
-#if GCC_VERSION >= 80000
-typedef void mysasl_cb_ft;  /* shut up GCC */
-#else
 typedef int (mysasl_cb_ft)(void);
-#endif
+
+/* The sasl_callback_t->proc type voids out the arguments, because it
+ * can actually be a bunch of different function signatures, but this
+ * plays havoc with GCC's aliasing protections.
+ *
+ * So, let's declare our own type that's a union of all the actual
+ * SASL callback types, and then strict alias checking can actually
+ * protect us instead of just annoying us.
+ *
+ * It'd be cool if SASL adopted this approach in its API but I guess
+ * that would break binary compatibility, so I won't hold my breath.
+ */
+typedef union mysasl_cb_u {
+    int (*as_void)(void);
+    sasl_getopt_t *as_getopt;
+    sasl_log_t *as_log;
+    sasl_getpath_t *as_getpath;
+    sasl_verifyfile_t *as_verifyfile;
+    sasl_getconfpath_t *as_getconfpath;
+    sasl_getsimple_t *as_getsimple;
+    sasl_getsecret_t *as_getsecret;
+    sasl_chalprompt_t *as_chalprompt;
+    sasl_getrealm_t *as_getrealm;
+    sasl_authorize_t *as_authorize;
+    sasl_server_userdb_checkpass_t *as_server_userdb_checkpass;
+    sasl_server_userdb_setpass_t *as_server_userdb_setpass;
+    sasl_canon_user_t *as_canon_user;
+} mysasl_cb_ut;
 
 /* user canonification */
 extern const char *canonify_userid(char *user, const char *loginid,

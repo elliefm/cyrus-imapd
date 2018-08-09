@@ -97,15 +97,15 @@ static const char *callback_getdata(sasl_conn_t *conn,
             switch (cb->id) {
             case SASL_CB_USER:
             case SASL_CB_AUTHNAME: {
-                sasl_getsimple_t *simple_cb = (mysasl_cb_ft *) cb->proc;
-                simple_cb(cb->context, cb->id, &result, NULL);
+                mysasl_cb_ut proc = { .as_void = cb->proc };
+                proc.as_getsimple(cb->context, cb->id, &result, NULL);
                 break;
             }
 
             case SASL_CB_PASS: {
                 sasl_secret_t *pass;
-                sasl_getsecret_t *pass_cb = (mysasl_cb_ft *) cb->proc;
-                pass_cb(conn, cb->context, cb->id, &pass);
+                mysasl_cb_ut proc = { .as_void = cb->proc };
+                proc.as_getsecret(conn, cb->context, cb->id, &pass);
                 result = (const char *) pass->data;
                 break;
             }
