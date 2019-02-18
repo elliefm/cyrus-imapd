@@ -434,6 +434,11 @@ static int recovery(struct dbengine *db);
 static int recovery1(struct dbengine *db, int *count);
 static int recovery2(struct dbengine *db, int *count);
 
+/* direct-mmap-based mappedfile_ replacements */
+static ssize_t mymappedfile_pwrite(struct mappedfile *mf,
+                                   const void *base, size_t len,
+                                   off_t offset);
+
 /************** HELPER FUNCTIONS ****************/
 
 #define BASE(db) mappedfile_base((db)->mf)
@@ -2428,3 +2433,20 @@ HIDDEN struct cyrusdb_backend cyrusdb_twoskip =
     &mycheckpoint,
     &mycompar
 };
+
+/* direct-mmap-based mappedfile_ replacements */
+static ssize_t mymappedfile_pwrite(struct mappedfile *mf,
+                                   const void *base, size_t len,
+                                   off_t offset)
+{
+    assert(mf->is_rw);
+    assert(mf->fd != -1);
+    assert(base);
+
+    if (!len) return 0; /* nothing to write! */
+
+    /* XXX - memcmp and don't both writing if it matches? */
+
+    mf->dirty++;
+
+}
