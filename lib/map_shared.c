@@ -58,7 +58,7 @@ EXPORTED const char *map_method_desc = "shared";
 /*
  * Create/refresh mapping of file
  */
-EXPORTED void map_refresh(int fd, int onceonly, const char **base,
+EXPORTED void map_refresh(int fd, int onceonly, const char **base, // <- FIXME const?
                  size_t *len, size_t newlen,
                  const char *name, const char *mboxname)
 {
@@ -84,7 +84,7 @@ EXPORTED void map_refresh(int fd, int onceonly, const char **base,
         newlen = (newlen + 2*SLOP - 1) & ~(SLOP-1);
     }
 
-    *base = (char *)mmap((caddr_t)0, newlen, PROT_READ, MAP_SHARED
+    *base = (char *)mmap((caddr_t)0, newlen, PROT_READ|PROT_WRITE, MAP_SHARED
 #ifdef MAP_FILE
 | MAP_FILE
 #endif
