@@ -1347,6 +1347,7 @@ imap_unexpunge_LDADD = $(LD_UTILITY_ADD)
 # so do a tricky directory change
 %_err.h %_err.c: %_err.et $(COMPILE_ET_DEP)
 	$(AM_V_GEN)(cd $(@D) && $(COMPILE_ET) $(realpath $<))
+	$(AM_V_GEN)$(SED) -e 's/const struct error_table et_[a-zA-Z0-9_]\+_error_table /&__attribute__((__visibility__("default"))) /' $@ > $@.NEW && mv $@.NEW $@
 
 # xxd cannot have path details in its input filename, otherwise it junks up
 # the variable names in the output file.  so do a tricky directory change.
