@@ -191,6 +191,7 @@ sbin_PROGRAMS += \
 	imap/cyr_df \
 	imap/cyrdump \
 	imap/cyr_dbtool \
+	imap/mboxtree \
 	imap/cyr_deny \
 	imap/cyr_expire \
 	imap/cyr_info \
@@ -883,6 +884,9 @@ imap_cyrdump_LDADD = $(LD_UTILITY_ADD)
 
 imap_cyr_dbtool_SOURCES = imap/cli_fatal.c imap/cyr_dbtool.c imap/mutex_fake.c
 imap_cyr_dbtool_LDADD = $(LD_UTILITY_ADD)
+
+imap_mboxtree_SOURCES = imap/cli_fatal.c imap/mboxtree.c imap/mutex_fake.c
+imap_mboxtree_LDADD = $(LD_UTILITY_ADD)
 
 imap_cyr_deny_SOURCES = imap/cli_fatal.c imap/cyr_deny.c imap/mutex_fake.c
 imap_cyr_deny_LDADD = $(LD_UTILITY_ADD)
