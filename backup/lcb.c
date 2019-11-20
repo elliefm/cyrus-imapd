@@ -71,7 +71,7 @@
 #include "backup/lcb_internal.h"
 #include "backup/lcb_sqlconsts.h"
 
-static const char *NOUSERID = "\%SHARED";
+static const char *shared_backup_base = "\%SHARED";
 
 /* remove this process's staging directory.
  * will warn about and clean up files that are hanging around - these should
@@ -280,6 +280,27 @@ done:
     return r;
 }
 
+static const char *shared_mailbox_backup(const mbname_t *mbname)
+{
+    static char smb[PATH_MAX];
+    int granularity = config_getint(IMAPOPT_BACKUP_SHARED_MAILBOX_GRANULARITY);
+
+    /* absolutely should not be in here for a normal user mailbox */
+    assert(mbname_userid(mbname) == NULL);
+
+    if (granularity <= 0) {
+        snprintf(smb, sizeof(smb), "%s", shared_backup_base);
+    }
+    else {
+        snprintf(smb, sizeof(smb), "%s%%%s", shared_backup_base,
+                 strarray_nth(mbname_boxes(mbname), 0));
+    }
+
+    /* XXX treat values greater than 0 as a depth at which to subdivide? */
+
+    return smb;
+}
+
 /* Uses mkstemp() to create a new, unique, backup path for the given user.
  *
  * On success, the file is not unlinked, presuming that it will shortly be
@@ -301,7 +322,7 @@ static const char *_make_path(const mbname_t *mbname, int *out_fd)
     const char *partition = partlist_backup_select();
     const char *ret = NULL;
 
-    if (!userid) userid = NOUSERID;
+    if (!userid) userid = shared_mailbox_backup(mbname);
 
     if (!partition) {
         syslog(LOG_ERR,
@@ -375,7 +396,7 @@ EXPORTED int backup_get_paths(const mbname_t *mbname,
     const char *backup_path = NULL;
     size_t path_len = 0;
 
-    if (!userid) userid = NOUSERID;
+    if (!userid) userid = shared_mailbox_backup(mbname);
 
     r = cyrusdb_fetch(backups_db,
                       userid, strlen(userid),
@@ -677,9 +698,10 @@ struct _rename_meta {
     const char *userid;
     char *fname;
     char *ext_ptr;
+    char *freeme;
     int fd;
 };
-#define RENAME_META_INITIALIZER { NULL, NULL, NULL, -1 }
+#define RENAME_META_INITIALIZER { NULL, NULL, NULL, NULL, -1 }
 
 static void _rename_meta_set_fname(struct _rename_meta *meta, const char *data_fname)
 {
@@ -693,6 +715,7 @@ static void _rename_meta_set_fname(struct _rename_meta *meta, const char *data_f
 static void _rename_meta_fini(struct _rename_meta *meta)
 {
     if (meta->fname) free(meta->fname);
+    if (meta->freeme) free(meta->freeme);
     memset(meta, 0, sizeof(*meta));
     meta->fd = -1;
 }
@@ -709,12 +732,17 @@ EXPORTED int backup_rename(const mbname_t *old_mbname, const mbname_t *new_mbnam
     size_t path_len;
     int r;
 
-    if (!old.userid) old.userid = NOUSERID;
-    if (!new.userid) new.userid = NOUSERID;
+    if (!old.userid)
+        old.userid = old.freeme = xstrdup(shared_mailbox_backup(old_mbname));
+    if (!new.userid)
+        new.userid = new.freeme = xstrdup(shared_mailbox_backup(new_mbname));
 
     /* bail out if the names are the same */
-    if (strcmp(old.userid, new.userid) == 0)
+    if (strcmp(old.userid, new.userid) == 0) {
+        _rename_meta_fini(&old);
+        _rename_meta_fini(&new);
         return 0;
+    }
 
     /* exclusively open backups database */
     r = backupdb_open(&backups_db, &tid);

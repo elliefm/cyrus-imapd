@@ -501,6 +501,16 @@ Blank lines and lines beginning with ``#'' are ignored.
    tool will go ahead with the compaction.  If set to less than one, the value
    is treated as being one. */
 
+{ "backup_shared_mailbox_granularity", 0, INT }
+/* How granular backups of shared mailboxes should be.  A value of zero (or
+   less) means all shared mailboxes will be backed up to a single '%SHARED'
+   backup file.  A value of one (or more) means that each top level shared
+   mailbox and its descendants will be in its own '%SHARED.mailboxname'
+   backup.  This may be useful if your combined shared mailboxes are much
+   larger than a single user backup.
+.PP
+   In the future, numbers greater than one may indicate finer granularity. */
+
 { "backup_staging_path", NULL, STRING }
 /* The absolute path of the backup staging area.  If not specified,
    will be temp_path/backup */
