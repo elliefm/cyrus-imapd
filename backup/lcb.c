@@ -292,8 +292,15 @@ static const char *shared_mailbox_backup(const mbname_t *mbname)
         snprintf(smb, sizeof(smb), "%s", shared_backup_base);
     }
     else {
-        snprintf(smb, sizeof(smb), "%s%%%s", shared_backup_base,
-                 strarray_nth(mbname_boxes(mbname), 0));
+        char *box0 = xstrdup(strarray_nth(mbname_boxes(mbname), 0));
+        char *p;
+
+        for (p = box0; *p; p++) {
+            if (*p == '.') *p = '^';
+        }
+
+        snprintf(smb, sizeof(smb), "%s.%s", shared_backup_base, box0);
+        free(box0);
     }
 
     /* XXX treat values greater than 0 as a depth at which to subdivide? */
