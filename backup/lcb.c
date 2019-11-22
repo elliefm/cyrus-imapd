@@ -280,6 +280,24 @@ done:
     return r;
 }
 
+/* The criteria here is whether this is a sensible point to separate
+ * a shared mailbox heirarchy into separate backups.
+ * backup_shared_mailbox_granularity sets the maximum possible depth
+ * at which to split, this function further restricts it further on
+ * a case by case basis.
+ * If backup_shared_mailbox_granularity is 0, we skip this check
+ * entirely because everything just goes into '%SHARED'.
+ * Otherwise, we still skip this check for the top-level mailbox,
+ * because we need to put the backups _somewhere_.
+ */
+static int is_good_shared_mailbox_backup_name(const char *box)
+{
+    /* prefer to keep calendars/addressbooks/etc together */
+    if (box[0] == '#') return 0;
+
+    return 1;
+}
+
 static const char *shared_mailbox_backup(const mbname_t *mbname)
 {
     static char smb[PATH_MAX];
@@ -292,18 +310,37 @@ static const char *shared_mailbox_backup(const mbname_t *mbname)
         snprintf(smb, sizeof(smb), "%s", shared_backup_base);
     }
     else {
-        char *box0 = xstrdup(strarray_nth(mbname_boxes(mbname), 0));
-        char *p;
+        strarray_t *boxes = strarray_dup(mbname_boxes(mbname));
+        int i;
 
-        for (p = box0; *p; p++) {
-            if (*p == '.') *p = '^';
+        /* XXX maybe set an upper limit on the granularity values we'll accept? */
+        if (strarray_size(boxes) > granularity)
+            strarray_truncate(boxes, granularity);
+
+        /* Starting at the end:
+         * - discard bits we don't like (but not the first)
+         * - replace . with ^
+         */
+        for (i = strarray_size(boxes) - 1; i >= 0; i--) {
+            const char *box = strarray_nth(boxes, i);
+
+            if (i > 0 && !is_good_shared_mailbox_backup_name(box)) {
+                strarray_truncate(boxes, i);
+            }
+            else {
+                char *p;
+
+                /* n.b. casting away const to edit in place! */
+                for (p = (char *) box; *p; p++) {
+                    if (*p == '.') *p = '^';
+                }
+            }
         }
 
-        snprintf(smb, sizeof(smb), "%s.%s", shared_backup_base, box0);
-        free(box0);
+        char *joined = strarray_join(boxes, ".");
+        snprintf(smb, sizeof(smb), "%s.%s", shared_backup_base, joined);
+        free(joined);
     }
-
-    /* XXX treat values greater than 0 as a depth at which to subdivide? */
 
     return smb;
 }

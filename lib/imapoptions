@@ -504,12 +504,20 @@ Blank lines and lines beginning with ``#'' are ignored.
 { "backup_shared_mailbox_granularity", 0, INT }
 /* How granular backups of shared mailboxes should be.  A value of zero (or
    less) means all shared mailboxes will be backed up to a single '%SHARED'
-   backup file.  A value of one (or more) means that each top level shared
-   mailbox and its descendants will be in its own '%SHARED.mailboxname'
-   backup.  This may be useful if your combined shared mailboxes are much
-   larger than a single user backup.
+   backup file.  Positive values indicate the hierarchy depth at which the
+   backups should be separated.  For example, with
+   \fBbackup_shared_mailbox_granularity: 1\fR, "foo", "foo.bar", and
+   "foo.bar.baz" will all be in the '%SHARED.foo' backup, while "qux" and
+   "qux.quuz" will be in one named '%SHARED.qux'.  With
+   \fBbackup_shared_mailbox_granularity: 2\fR, the same set of mailboxes
+   will be in the backups '%SHARED.foo', '%SHARED.foo.bar', '%SHARED.qux',
+   and '%SHARED.qux.quuz'.
 .PP
-   In the future, numbers greater than one may indicate finer granularity. */
+   The main use for this setting is for systems with shared mailbox
+   hierarchies many times larger than typical user accounts.  Under these
+   circumstances it can be hard to tune the backup system to handle the
+   disparate sizes effectively, and backing up the large shared mailboxes
+   in smaller bites can be used to crudely address this.  */
 
 { "backup_staging_path", NULL, STRING }
 /* The absolute path of the backup staging area.  If not specified,
