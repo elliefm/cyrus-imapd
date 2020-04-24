@@ -203,6 +203,8 @@ sub hash_path {
             $tohash =~ s{/.*$}{};
         }
     }
+    # undo caret-escaping to match 3.0.0+ hashing
+    $tohash =~ tr/^/./;
 
     return "$path/" . dir_hash_c($tohash) . "/$item";
 }
