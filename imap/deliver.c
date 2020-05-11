@@ -169,32 +169,24 @@ int main(int argc, char **argv)
     char buf[1024];
     char *alt_config = NULL;
 
-    while ((opt = getopt(argc, argv, "C:df:r:m:a:F:eE:lqD")) != EOF) {
+    while ((opt = getopt(argc, argv, "C:DE:F:a:def:lm:qr:")) != EOF) {
         switch(opt) {
         case 'C': /* alt config file */
             alt_config = optarg;
-            break;
-
-        case 'd':
-            /* Ignore -- /bin/mail compatibility flags */
             break;
 
         case 'D':
             logdebug = 1;
             break;
 
-        case 'r':
-        case 'f':
-            return_path = optarg;
+        case 'E':
+            fprintf(stderr,"deliver: 'E' option no longer supported\n");
+            usage();
             break;
 
-        case 'm':
-            if (mailboxname) {
-                fprintf(stderr, "deliver: multiple -m options\n");
-                usage();
-                /* NOTREACHED */
-            }
-            if (*optarg) mailboxname = optarg;
+        case 'F': /* set IMAP flag. we no longer support this */
+            fprintf(stderr,"deliver: 'F' option no longer supported\n");
+            usage();
             break;
 
         case 'a':
@@ -206,22 +198,30 @@ int main(int argc, char **argv)
             authuser = optarg;
             break;
 
-        case 'F': /* set IMAP flag. we no longer support this */
-            fprintf(stderr,"deliver: 'F' option no longer supported\n");
-            usage();
+        case 'd':
+            /* Ignore -- /bin/mail compatibility flags */
             break;
 
         case 'e':
             /* duplicate delivery. ignore */
             break;
 
-        case 'E':
-            fprintf(stderr,"deliver: 'E' option no longer supported\n");
-            usage();
+        case 'r':
+        case 'f':
+            return_path = optarg;
             break;
 
         case 'l':
             lmtpflag = 1;
+            break;
+
+        case 'm':
+            if (mailboxname) {
+                fprintf(stderr, "deliver: multiple -m options\n");
+                usage();
+                /* NOTREACHED */
+            }
+            if (*optarg) mailboxname = optarg;
             break;
 
         case 'q':
