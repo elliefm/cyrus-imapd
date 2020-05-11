@@ -169,7 +169,7 @@ int main(int argc, char **argv)
     char buf[1024];
     char *alt_config = NULL;
 
-    while ((opt = getopt(argc, argv, "C:DE:F:a:def:lm:qr:")) != EOF) {
+    while ((opt = getopt(argc, argv, "C:DE:F:S:a:def:lm:qr:")) != EOF) {
         switch(opt) {
         case 'C': /* alt config file */
             alt_config = optarg;
@@ -187,6 +187,10 @@ int main(int argc, char **argv)
         case 'F': /* set IMAP flag. we no longer support this */
             fprintf(stderr,"deliver: 'F' option no longer supported\n");
             usage();
+            break;
+
+        case 'S':
+            sockaddr = optarg;
             break;
 
         case 'a':
@@ -241,7 +245,8 @@ int main(int argc, char **argv)
 
     cyrus_init(alt_config, "deliver", CYRUSINIT_NODB, CONFIG_NEED_PARTITION_DATA);
 
-    sockaddr = config_getstring(IMAPOPT_LMTPSOCKET);
+    if (!sockaddr)
+        sockaddr = config_getstring(IMAPOPT_LMTPSOCKET);
     if (!sockaddr) {
         strlcpy(buf, config_dir, sizeof(buf));
         strlcat(buf, "/socket/lmtp", sizeof(buf));

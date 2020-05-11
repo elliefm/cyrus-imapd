@@ -38,6 +38,10 @@ Options
 
     |cli-dash-c-text|
 
+.. option:: -S lmtpsocket
+
+    Connect to *lmtpsocket* instead of the one configured in
+    :cyrusman:`imapd.conf(5)`
 
 .. option:: -d
 
