@@ -24,6 +24,7 @@
  */
 
 #include <config.h>
+#include "assert.h"
 #include "crc32.h"
 #include "util.h"
 #include "string.h"
@@ -752,6 +753,9 @@ static uint32_t crc32_slice16(uint32_t prev, const void *data, size_t length)
 
 static uint32_t crc32(uint32_t prev, const void *data, size_t length)
 {
+    /* if uint32_t reads need to be aligned, whinge if they're not! */
+    assert((uintptr_t) data % ALIGNOF_UINT32_T == 0);
+
     if (length < 64)
         return crc32_slice8(prev, data, length);
     return crc32_slice16(prev, data, length);
