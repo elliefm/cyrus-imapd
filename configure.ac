@@ -1580,8 +1580,10 @@ dnl
 
                 AC_CHECK_LIB(xml2, xmlBufferDetach,
                         AC_DEFINE(HAVE_XML_BUFFERDETACH,[],
-                                [Do we have support for xmlBufferDetach()?]))
-                ])
+                                [Do we have support for xmlBufferDetach()?]),
+                        [], [${JANSSON_LIBS}])
+                ],
+                [], [${JANSSON_LIBS}])
 
         PKG_CHECK_MODULES([ICAL], [libical >= 3.0.0], [
                 AC_DEFINE(HAVE_ICAL,[],[Build CalDAV support into httpd?])
