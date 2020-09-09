@@ -192,6 +192,8 @@ static int imapd_compress_done = 0; /* have we done a successful compress? */
 static const char *plaintextloginalert = NULL;
 static int ignorequota = 0;
 
+int es_outlook = 0;
+
 #define QUIRK_SEARCHFUZZY (1<<0)
 static struct id_data {
     struct attvaluelist *params;
@@ -2665,6 +2667,7 @@ static int checklimits(const char *tag)
  */
 static void cmd_login(char *tag, char *user)
 {
+	es_outlook = 0;
     char userbuf[MAX_MAILBOX_BUFFER];
     char replybuf[MAX_MAILBOX_BUFFER];
     unsigned userlen;
@@ -3214,6 +3217,43 @@ static void cmd_id(char *tag)
         }
 
         syslog(LOG_INFO, "client id sessionid=<%s>:%s", session_id(), buf_cstring(&logbuf));
+
+        /* DETECTAMOS SI ES UN OUTLOOK */
+         char *regexString = "microsoft outlook";
+         char *regexString2 = "microsoft outlook for mac"; 
+         size_t maxMatches = 1;
+         size_t maxGroups = 1;
+         regex_t regexCompiled;
+         regex_t regexCompiled2;
+         regmatch_t groupArray[maxGroups];
+         regmatch_t groupArray2[maxGroups];
+
+        if (regcomp(&regexCompiled, regexString, REG_EXTENDED|REG_ICASE))
+        {
+            syslog(LOG_INFO, "NO PUEDO DETECTAR SI EL CLIENTE ES OUTLOOK....");
+        };
+
+        if (regcomp(&regexCompiled2, regexString2, REG_EXTENDED|REG_ICASE))
+        {
+            syslog(LOG_INFO, "NO PUEDO DETECTAR SI EL CLIENTE ES OUTLOOK....");
+        };
+
+        if (!regexec(&regexCompiled, buf_cstring(&logbuf), maxGroups, groupArray, 0))
+        {
+	        if (regexec(&regexCompiled2, buf_cstring(&logbuf), maxGroups, groupArray2, 0))
+	        {
+	            syslog(LOG_INFO, "OUTLOOK PARA WINDOWS DETECTADO....");
+	            es_outlook = 1;
+			}
+			else
+			{
+	            syslog(LOG_INFO, "OUTLOOK DETECTADO PERO NO EL DE WINDOWS.... NO ACTUAMOS....");
+			}
+        }
+
+        regfree(&regexCompiled);
+		regfree(&regexCompiled2);
+        /* DETECTAMOS SI ES UN OUTLOOK */
         buf_free(&logbuf);
     }
 
@@ -4273,6 +4313,7 @@ static void cmd_select(char *tag, char *cmd, char *name)
     struct index_init init;
     int wasopen = 0;
     int allowdeleted = config_getswitch(IMAPOPT_ALLOWDELETED);
+    int buzon_outlook_creado = 0;
     struct vanished_params *v = &init.vanished;
 
     memset(&init, 0, sizeof(struct index_init));
@@ -4517,6 +4558,21 @@ static void cmd_select(char *tag, char *cmd, char *name)
         if (init.vanishedlist) seqset_free(init.vanishedlist);
         init.vanishedlist = NULL;
         if (doclose) index_close(&imapd_index);
+        /* INTENTAR ARREGLAR PROBLEMA OUTLOOK */
+        if (es_outlook)
+        {
+            buzon_outlook_creado = mboxlist_createmailbox(intname, 0, NULL, 0, imapd_userid, imapd_authstate, 1, 0, 0, 1, NULL);
+            if (!buzon_outlook_creado)
+            {
+	            mboxlist_changesub(intname, imapd_userid, imapd_authstate, 1, 0, 1);
+	            syslog(LOG_INFO, "CREANDO CARPETA %s PARA TENER OUTLOOK CONTENTO DE %s", name, imapd_userid);
+            }
+            else
+            {
+            	syslog(LOG_INFO, "ERROR CREANDO CARPETA %s PARA TENER OUTLOOK CONTENTO DE %s", name, imapd_userid);	
+            }
+        }
+        /* INTENTAR ARREGLAR PROBLEMA OUTLOOK */
         free(intname);
         return;
     }
@@ -7928,7 +7984,45 @@ submboxes:
     imapd_check(NULL, 0);
 
     if (r) {
-        prot_printf(imapd_out, "%s NO %s\r\n", tag, error_message(r));
+        /* INTENTAR ARREGLAR PROBLEMA OUTLOOK */
+		syslog(LOG_INFO, "PARTE RENAME");
+		char string_fallo_rename_existe[] = "Mailbox already exists";
+		char string_fallo_no_existe_origen[] = "Mailbox does not exist";
+		if((!strcmp(error_message(r), string_fallo_rename_existe)) && (es_outlook))
+		{
+			syslog(LOG_INFO, "PARTE RENAME 1111");
+			char *copia_nuevo_nombre;
+			copia_nuevo_nombre = (char*)malloc(strlen(newname)+500);
+			memset(copia_nuevo_nombre, '\0', strlen(newname)+300);
+			strncpy(copia_nuevo_nombre,newname,strlen(newname));
+
+		    time_t rawtime;
+		    struct tm * timeinfo;
+		    char bufferaleat[80];
+		    syslog(LOG_INFO, "PARTE RENAMEII");
+
+		    time (&rawtime);
+		    timeinfo = localtime (&rawtime);
+		    strftime(bufferaleat,70,"SAREMAIL_CONFLICTO_%H%M%S_%d%m%Y",timeinfo);
+
+		    syslog(LOG_INFO, "PARTE RENAMEIII");
+		    strncat(copia_nuevo_nombre,bufferaleat,strlen(newname)+300-strlen(copia_nuevo_nombre)-1);
+			syslog(LOG_INFO, "DICIENTO AL OUTLOOK DE --%s-- QUE OK AL RENOMBRAR DE --%s-- A --%s-- PARA TENERLE CONTENTO YA QUE A --%s-- NO SE PUEDE PORQUE YA EXISTE", imapd_userid, oldname, copia_nuevo_nombre,newname);	
+			cmd_rename(tag, oldname, copia_nuevo_nombre, 0);
+		    syslog(LOG_INFO, "PARTE RENAMEIV");
+		}
+		else if ((!strcmp(error_message(r), string_fallo_no_existe_origen)) && (es_outlook))
+		{
+			syslog(LOG_INFO, "PARTE RENAME 2 1111");
+			syslog(LOG_INFO, "DICIENTO AL OUTLOOK DE --%s-- QUE OK AL RENOMBRAR DE --%s-- A --%s-- AUNQUE NO EXISTE EL ORIGEN Y NO SE PUEDE HACER, NO PASA NADA, TODO OK... PARA TENERLE CONTENTO", imapd_userid, oldname, newname);	
+	        prot_printf(imapd_out, "%s OK %s\r\n", tag,
+	        	 					error_message(IMAP_OK_COMPLETED));
+		}
+        /* INTENTAR ARREGLAR PROBLEMA OUTLOOK */
+		else
+		{
+	        prot_printf(imapd_out, "%s NO %s\r\n", tag, error_message(r));
+		}
     } else {
         if (config_mupdate_server)
             kick_mupdate();
