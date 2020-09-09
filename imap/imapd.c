@@ -3221,7 +3221,7 @@ static void cmd_id(char *tag)
         /* DETECTAMOS SI ES UN OUTLOOK */
          char *regexString = "microsoft outlook";
          char *regexString2 = "microsoft outlook for mac"; 
-         size_t maxMatches = 1;
+//         size_t maxMatches = 1;
          size_t maxGroups = 1;
          regex_t regexCompiled;
          regex_t regexCompiled2;
