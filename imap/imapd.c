@@ -4577,6 +4577,11 @@ static void cmd_select(char *tag, char *cmd, char *name)
         /* INTENTAR ARREGLAR PROBLEMA OUTLOOK */
         if (client_is_outlook)
         {
+            /* XXX Security flaw here?! An outlook user without permission to select
+             * XXX a mailbox will end up trying to create it! which will probably also
+             * XXX fail...
+             * XXX But we should only do this fallback for real nonexistence.
+             */
             buzon_outlook_creado = mboxlist_createmailbox(intname, 0, NULL, 0, imapd_userid, imapd_authstate, 1, 0, 0, 1, NULL);
             if (!buzon_outlook_creado)
             {
