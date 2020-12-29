@@ -340,6 +340,7 @@ static const char *shared_mailbox_backup(const mbname_t *mbname)
         char *joined = strarray_join(boxes, ".");
         snprintf(smb, sizeof(smb), "%s.%s", shared_backup_base, joined);
         free(joined);
+        strarray_free(boxes);
     }
 
     return smb;
