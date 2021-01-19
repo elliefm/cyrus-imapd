@@ -486,9 +486,6 @@ int sync_apply_message(struct dlist *kin,
 
 const char *sync_apply(struct dlist *kin, struct sync_reserve_list *reserve_list, struct sync_state *state);
 const char *sync_get(struct dlist *kin, struct sync_state *state);
-const char *sync_restore(struct dlist *kin,
-                         struct sync_reserve_list *reserve_list,
-                         struct sync_state *state);
 
 /* =====================  client-side sync  ============================= */
 

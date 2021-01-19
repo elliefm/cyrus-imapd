@@ -147,8 +147,6 @@ static void cmd_compress(char *alg);
 static void cmd_get(struct dlist *kl);
 static void cmd_apply(struct dlist *kl,
                       struct sync_reserve_list *reserve_list);
-static void cmd_restore(struct dlist *kin,
-                        struct sync_reserve_list *reserve_list);
 
 static void usage(void);
 void shut_down(int code) __attribute__ ((noreturn));
@@ -607,20 +605,6 @@ static void cmdloop(void)
                 prot_printf(sync_out, "OK Restarting\r\n");
                 continue;
             }
-            if (!sync_userid) goto nologin;
-            if (!strcmp(cmd.s, "Restore")) {
-                kl = sync_parseline(sync_in);
-                if (kl) {
-                    cmd_restore(kl, reserve_list);
-                    dlist_free(&kl);
-                }
-                else {
-                    xsyslog(LOG_ERR, "IOERROR: received bad command",
-                                     "command=<%s>", cmd.s);
-                    prot_printf(sync_out, "BAD IMAP_PROTOCOL_ERROR Failed to parse RESTORE line\r\n");
-                }
-                continue;
-            }
             break;
 
         case 'S':
@@ -982,21 +966,5 @@ static void cmd_get(struct dlist *kin)
     };
 
     const char *resp = sync_get(kin, &sync_state);
-    prot_printf(sync_out, "%s\r\n", resp);
-}
-
-static void cmd_restore(struct dlist *kin, struct sync_reserve_list *reserve_list)
-{
-    struct sync_state sync_state = {
-        sync_userid,
-        sync_userisadmin,
-        sync_authstate,
-        &sync_namespace,
-        sync_out,
-        0 /* local_only */
-    };
-
-    const char *resp = sync_restore(kin, reserve_list, &sync_state);
-    sync_checkpoint(sync_in);
     prot_printf(sync_out, "%s\r\n", resp);
 }

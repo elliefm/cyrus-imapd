@@ -475,8 +475,6 @@ static void cmd_syncapply(const char *tag, struct dlist *kl,
                       struct sync_reserve_list *reserve_list);
 static void cmd_syncrestart(const char *tag, struct sync_reserve_list **reserve_listp,
                        int realloc);
-static void cmd_syncrestore(const char *tag, struct dlist *kin,
-                            struct sync_reserve_list *reserve_list);
 static void cmd_xkillmy(const char *tag, const char *cmdname);
 static void cmd_xforever(const char *tag);
 static void cmd_xmeid(const char *tag, const char *id);
@@ -2095,17 +2093,6 @@ static void cmdloop(void)
 
                 /* just clear the GUID cache */
                 cmd_syncrestart(tag.s, &reserve_list, 1);
-            }
-            else if (!strcmp(cmd.s, "Syncrestore")) {
-                if (!imapd_userisadmin) goto badcmd;
-
-                struct dlist *kl = sync_parseline(imapd_in);
-
-                if (kl) {
-                    cmd_syncrestore(tag.s, kl, reserve_list);
-                    dlist_free(&kl);
-                }
-                else goto extraargs;
             }
             else goto badcmd;
             break;
@@ -14347,34 +14334,6 @@ static void cmd_syncrestart(const char *tag, struct sync_reserve_list **reserve_
     }
     else
         *reserve_listp = NULL;
-}
-
-static void cmd_syncrestore(const char *tag, struct dlist *kin,
-                            struct sync_reserve_list *reserve_list)
-{
-    struct sync_state sync_state = {
-        imapd_userid,
-        imapd_userisadmin || imapd_userisproxyadmin,
-        imapd_authstate,
-        &imapd_namespace,
-        imapd_out,
-        0 /* local_only */
-    };
-
-    /* administrators only please */
-    if (!imapd_userisadmin) {
-        syslog(LOG_ERR, "SYNCERROR: invalid user %s trying to sync", imapd_userid);
-        prot_printf(imapd_out, "%s NO only administrators may use sync commands\r\n", tag);
-        return;
-    }
-
-    const char *resp = sync_restore(kin, reserve_list, &sync_state);
-    index_release(imapd_index);
-    sync_checkpoint(imapd_in);
-    prot_printf(imapd_out, "%s %s\r\n", tag, resp);
-
-    /* Reset inactivity timer in case we spent a long time processing data */
-    prot_resettimeout(imapd_in);
 }
 
 static void cmd_xapplepushservice(const char *tag,
