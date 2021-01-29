@@ -1,0 +1,57 @@
+Making a New Major (x.y) Release
+
+todo: convert to rst
+
+Phase 1: preparation
+
+branch off from master as cyrus-imapd-x.y
+* add the new branch name to .travis.yml
+* update the version numbers in docsrc/conf.py
+* update docsrc/index.rst to describe this branch as stable, not dev
+* create release notes indexes
+* update version information in upgrade documentation
+* update backend_version() in imap/backend.c to recognise the new
+  stable and dev version numbers
+* commit and push
+* protect the branch
+* create a proper tag (as per release steps) called cyrus-imapd-x.y-alpha0
+  so that builds from this branch have the correct version
+* push the tag
+
+back on master:
+* also add the new branch name to .travis.yml (could be ordered better...)
+* update the version numbers in docsrc/conf.py - this is the next odd number
+* cherry-pick the new stable release notes indexes (could be ordered better...)
+* create new stub release notes for the dev version
+* update version information in upgrade documentation
+* cherry-pick the backend_version updates
+* create a proper tag (as per release steps) called cyrus-imapd-x.y+1-alpha0
+  so that builds from this branch have the correct version
+
+on every other stable and oldstable branch:
+* cherry-pick the backend_version updates.  older versions will require
+  some handholding as this function was in a different file; see comments in
+  the file.
+* sometime before the actual release, release a new build from each of these
+  branches containing the backend_version fixes, so that there is an upgrade
+  path for murder users
+
+on cyrusimap.org repo, update run-gp.sh to also build the website for the
+new version number.  leave the root website as the previous stable website
+for now
+
+Phase 2: betas
+
+* find and fix anything wrong
+* pay close attention to changes required for upgrade documentation
+* follow release process to build beta releases
+* contact known package maintainers to have experimental packages built and
+  tested.  Debian is especially useful for this, as their build farm targets
+  lots of platforms.
+
+Phase 3: release
+
+* on cyrusimap.org repo, update run-gp.sh to build the root website from
+  the new branch
+* build new release following usual process, and this time update all the
+  docsrc/conf.py's to regard this version as the stable version, etc.
