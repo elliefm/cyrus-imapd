@@ -2,6 +2,11 @@ Making a New Major (x.y) Release
 
 todo: convert to rst
 
+uncategorised things:
+* search for e.g. |master-new-feature| et al in documentation
+  and update/remove/etc as appropriate
+
+
 Phase 1: preparation
 
 branch off from master as cyrus-imapd-x.y
