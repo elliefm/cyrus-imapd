@@ -360,7 +360,7 @@ while (<>) {
     } elsif ($mode == 1) {
         # passthru; look for */ to end
         if (m|\s*(.*)\*/|) {
-            print print_man2rst($1);
+            print print_man2rst("$1\n");
             if ($enums) { print_values($enums); }
             $mode = 0; # back to search mode
             if ($opt ne '') {
