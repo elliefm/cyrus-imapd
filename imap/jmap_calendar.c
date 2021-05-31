@@ -820,8 +820,9 @@ static int setcalendars_update(jmap_req_t *req,
 
     r = mailbox_get_annotate_state(mbox, 0, &astate);
     if (r) {
-        syslog(LOG_ERR, "IOERROR: failed to open annotations %s: %s",
-                mbox->name, error_message(r));
+        xsyslog(LOG_ERR, "IOERROR: mailbox_get_annotation_state failed",
+                         "mailbox=<%s> error=<%s>",
+                         mbox->name, error_message(r));
     }
     /* name */
     if (!r && props->name) {
@@ -1184,8 +1185,9 @@ static int jmap_calendar_set(struct jmap_req *req)
                 if (r) {
                     free(acl);
                     free(newacl);
-                    syslog(LOG_ERR, "IOERROR: failed to set_acl for calendar create (%s, %s) %s",
-                                    userid, req->accountid, error_message(r));
+                    xsyslog(LOG_ERR, "IOERROR: cyrus_acl_set failed",
+                                     "userid=<%s> accountid=<%s> error=<%s>",
+                                     userid, req->accountid, error_message(r));
                     goto done;
                 }
             }
@@ -1204,8 +1206,9 @@ static int jmap_calendar_set(struct jmap_req *req)
                                 /*mailboxptr*/NULL);
         free(newacl);
         if (r) {
-            syslog(LOG_ERR, "IOERROR: failed to create %s (%s)",
-                   mboxname, error_message(r));
+            xsyslog(LOG_ERR, "IOERROR: mboxlist_createsync failed",
+                             "mailbox=<%s> error=<%s>",
+                             mboxname, error_message(r));
             if (r == IMAP_PERMISSION_DENIED) {
                 json_t *err = json_pack("{s:s}", "type", "accountReadOnly");
                 json_object_set_new(set.not_created, key, err);

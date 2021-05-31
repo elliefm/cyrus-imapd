@@ -1031,7 +1031,8 @@ static void _contacts_set(struct jmap_req *req, unsigned kind)
                 }
                 r = jmap_openmbox(req, mboxname, &newmailbox, 1);
                 if (r) {
-                    syslog(LOG_ERR, "IOERROR: failed to open %s", mboxname);
+                    xsyslog(LOG_ERR, "IOERROR: jmap_openmbox failed",
+                                     "mailbox=<%s>", mboxname);
                     goto done;
                 }
                 do_move = 1;
@@ -1054,8 +1055,8 @@ static void _contacts_set(struct jmap_req *req, unsigned kind)
             jmap_closembox(req, &mailbox);
             r = jmap_openmbox(req, cdata->dav.mailbox, &mailbox, 1);
             if (r) {
-                syslog(LOG_ERR, "IOERROR: failed to open %s",
-                       cdata->dav.mailbox);
+                xsyslog(LOG_ERR, "IOERROR: jmap_openmbox failed",
+                                 "mailbox=<%s>", cdata->dav.mailbox);
                 goto done;
             }
         }

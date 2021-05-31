@@ -1085,8 +1085,9 @@ static int _email_find_cb(const conv_guidrec_t *rec, void *rock)
     r = jmap_openmbox(req, rec->mboxname, &mbox, 0);
     if (r) {
         // we want to keep looking and see if we can find a mailbox we can open
-        syslog(LOG_ERR, "IOERROR: email_find_cb failed to open %s: %s",
-               rec->mboxname, error_message(r));
+        xsyslog(LOG_ERR, "IOERROR: jmap_openmbox failed",
+                         "mailbox=<%s> error_message=<%s>",
+                         rec->mboxname, error_message(r));
         goto done;
     }
     if (mbox->mbtype != MBTYPE_EMAIL) {

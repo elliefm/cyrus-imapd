@@ -357,7 +357,8 @@ static int restore_collection_cb(const mbentry_t *mbentry, void *rock)
 
     r = jmap_openmbox(rrock->req, mbentry->name, &mailbox, /*rw*/1);
     if (r) {
-        syslog(LOG_ERR, "IOERROR: failed to open mailbox %s", mbentry->name);
+        xsyslog(LOG_ERR, "IOERROR: jmap_openmbox failed",
+                         "mailbox=<%s>", mbentry->name);
         return r;
     }
 
@@ -759,7 +760,8 @@ static int restore_addressbook_cb(const mbentry_t *mbentry, void *rock)
     /* Open mailbox here since we need it later and it gets referenced counted */
     r = jmap_openmbox(rrock->req, mbentry->name, &mailbox, /*rw*/1);
     if (r) {
-        syslog(LOG_ERR, "IOERROR: failed to open mailbox %s", mbentry->name);
+        xsyslog(LOG_ERR, "IOERROR: jmap_openmbox failed",
+                         "mailbox=<%s>", mbentry->name);
         return r;
     }
 
@@ -1105,8 +1107,9 @@ static int recreate_calendar(const mbentry_t *mbentry,
         mboxname_release(&namespacelock);
 
         if (r) {
-            syslog(LOG_ERR, "IOERROR: failed to create mailbox %s: %s",
-                   newmboxname, error_message(r));
+            xsyslog(LOG_ERR, "IOERROR: mboxlist_createmailbox failed",
+                             "mailbox=<%s> error=<%s>",
+                             newmboxname, error_message(r));
         }
         else {
             /* Set the displayname */
@@ -1161,7 +1164,8 @@ static int recreate_ical_resources(const mbentry_t *mbentry,
 
     r = jmap_openmbox(req, mbentry->name, &mailbox, /*rw*/1);
     if (r) {
-        syslog(LOG_ERR, "IOERROR: failed to open mailbox %s", mbentry->name);
+        xsyslog(LOG_ERR, "IOERROR: jmap_openmbox failed",
+                         "mailbox=<%s>", mbentry->name);
         return r;
     }
 
@@ -1456,7 +1460,8 @@ static int restore_message_list_cb(const mbentry_t *mbentry, void *rock)
 
     r = jmap_openmbox(rrock->req, mbentry->name, &mailbox, /*rw*/1);
     if (r) {
-        syslog(LOG_ERR, "IOERROR: failed to open mailbox %s", mbentry->name);
+        xsyslog(LOG_ERR, "IOERROR: jmap_openmbox failed",
+                         "mailbox=<%s>", mbentry->name);
         return r;
     }
 
@@ -1727,8 +1732,9 @@ static void restore_mailbox_cb(const char *mboxname, void *data, void *rock)
             r = mailbox_open_iwl(newmboxname, &newmailbox);
 
             if (r) {
-                syslog(LOG_ERR, "IOERROR: failed to open mailbox %s: %s",
-                       newmboxname, error_message(r));
+                xsyslog(LOG_ERR, "IOERROR: mailbox_open_iwl failed",
+                                 "mailbox=<%s> error=<%s>",
+                                 newmboxname, error_message(r));
             }
         }
         else {
@@ -1801,8 +1807,9 @@ static void restore_mailbox_cb(const char *mboxname, void *data, void *rock)
             mboxname_release(&namespacelock);
 
             if (r) {
-                syslog(LOG_ERR, "IOERROR: failed to create mailbox %s: %s",
-                       newmboxname, error_message(r));
+                xsyslog(LOG_ERR, "IOERROR: mboxlist_createmailbox failed",
+                                 "mailbox=<%s> error=<%s>",
+                                 newmboxname, error_message(r));
             }
             else {
                 /* Copy over any role (/specialuse) */
@@ -1830,8 +1837,9 @@ static void restore_mailbox_cb(const char *mboxname, void *data, void *rock)
     if (!r) {
         r = jmap_openmbox(req, mboxname, &mailbox, /*rw*/newmailbox == NULL);
         if (r) {
-            syslog(LOG_ERR, "IOERROR: failed to open mailbox %s: %s",
-                   mboxname, error_message(r));
+            xsyslog(LOG_ERR, "IOERROR: jmap_openmbox failed",
+                             "mailbox=<%s> error=<%s>",
+                             mboxname, error_message(r));
         }
     }
     if (r) goto done;

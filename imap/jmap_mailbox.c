@@ -2349,8 +2349,9 @@ static void _mbox_create(jmap_req_t *req, struct mboxset_args *args,
             1, /* keep_intermediaries */
             args->shareWith ? &mailbox : NULL);
     if (r) {
-        syslog(LOG_ERR, "IOERROR: failed to create %s (%s)",
-                mboxname, error_message(r));
+        xsyslog(LOG_ERR, "IOERROR: mboxlist_createsync failed",
+                         "mailbox=<%s> error=<%s>",
+                         mboxname, error_message(r));
         goto done;
     }
     strarray_add(update_intermediaries, mboxname);

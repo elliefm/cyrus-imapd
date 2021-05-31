@@ -344,8 +344,9 @@ static int ensure_submission_collection(const char *accountid,
                                         httpd_authstate,
                                         options, 0, 0, 0, 0, NULL, NULL);
         if (r) {
-            syslog(LOG_ERR, "IOERROR: failed to create %s (%s)",
-                   mbentry->name, error_message(r));
+            xsyslog(LOG_ERR, "IOERROR: mboxlist_createmailbox_opts failed",
+                             "mailbox=<%s> error=<%s>",
+                             mbentry->name, error_message(r));
         }
     }
 

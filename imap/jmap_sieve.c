@@ -240,8 +240,10 @@ static int create_id_link(const char *sievedir, const char *id, const char *name
 
     r = unlink(link);
     if (r) {
-        if (errno == ENOENT) r = 0;
-        else syslog(LOG_ERR, "IOERROR: unlink(%s): %m", link);
+        if (errno == ENOENT)
+            r = 0;
+        else
+            xsyslog(LOG_ERR, "IOERROR: unlink failed", "filename=<%s>", link);
     }
 
     if (!r) {
@@ -255,7 +257,11 @@ static int create_id_link(const char *sievedir, const char *id, const char *name
         }
 
         r = symlink(name, link);
-        if (r) syslog(LOG_ERR, "IOERROR: symlink(%s, %s): %m", name, link);
+        if (r) {
+            xsyslog(LOG_ERR, "IOERROR: symlink failed",
+                             "target=<%s> link=<%s>",
+                             name, link);
+        }
     }
 
     return r;
@@ -815,7 +821,8 @@ static void set_destroy(const char *id,
         snprintf(path, sizeof(path), "%s/%s%s", sievedir, SCRIPT_ID_PREFIX, id);
         r = unlink(path);
         if (r) {
-            syslog(LOG_ERR, "IOERROR: unlink(%s): %m", path);
+            xsyslog(LOG_ERR, "IOERROR: unlink failed",
+                             "filename=<%s>", path);
         }
         else {
             r = sievedir_delete_script(sievedir, script);

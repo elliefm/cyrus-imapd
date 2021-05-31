@@ -222,8 +222,9 @@ static int ensure_notes_collection(const char *accountid, mbentry_t **mbentryp)
                                    httpd_authstate,
                                    0, 0, 0, 0, NULL);
         if (r) {
-            syslog(LOG_ERR, "IOERROR: failed to create %s (%s)",
-                   mbentry->name, error_message(r));
+            xsyslog(LOG_ERR, "IOERROR: mboxlist_createmailbox failed",
+                             "mailbox=<%s> error=<%s>",
+                             mbentry->name, error_message(r));
         }
         else {
             char *userid = mboxname_to_userid(mbentry->name);
