@@ -3292,7 +3292,7 @@ static const mbentry_t *_mbentry_by_uniqueid(jmap_req_t *req,
         req->mbentry_byid = xzmalloc(sizeof(struct hash_table));
         construct_hash_table(req->mbentry_byid, 1024, 0);
     }
-    else mbentry = hash_lookup(id, req->mbentry_byid);
+    mbentry = hash_lookup(id, req->mbentry_byid);
 
     if (!mbentry) {
         int r = mboxlist_lookup_by_uniqueid(id, &mbentry, NULL);
