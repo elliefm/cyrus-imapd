@@ -6143,6 +6143,9 @@ static int do_annotation_cb(const char *mailbox __attribute__((unused)),
 {
     struct sync_annot_list *l = (struct sync_annot_list *) rock;
 
+    xsyslog(LOG_DEBUG, "XXX adding annotation to (master?) list",
+                       "list=<%p> entry=<%s> userid=<%s> value=<%s>",
+                       l, entry, userid, buf_cstring(value));
     sync_annot_list_add(l, entry, userid, value, mdata->modseq);
 
     return 0;
@@ -6206,6 +6209,8 @@ int sync_do_annotation(struct sync_client_state *sync_cs, const char *mboxname)
     struct sync_annot *ma, *ra;
     int n;
 
+    xsyslog(LOG_DEBUG, "XXX in sync_do_annotation...", NULL);
+
     char *userid = mboxname_to_userid(mboxname);
     // XXX: we should pipe the channel through to here
     struct mboxlock *synclock = sync_lock(sync_cs, userid);
@@ -6217,6 +6222,8 @@ int sync_do_annotation(struct sync_client_state *sync_cs, const char *mboxname)
     r = do_getannotation(sync_cs, mboxname, replica_annot);
     if (r) goto bail;
 
+    xsyslog(LOG_DEBUG, "XXX adding master annotations to list",
+                       "list=<%p>", master_annot);
     r = annotatemore_findall_pattern(mboxname, 0, "*", /*modseq*/0, &do_annotation_cb,
                              master_annot, /*flags*/0);
     if (r) {
@@ -6231,6 +6238,9 @@ int sync_do_annotation(struct sync_client_state *sync_cs, const char *mboxname)
     ma = master_annot->head;
     ra = replica_annot->head;
     while (ma || ra) {
+        xsyslog(LOG_DEBUG, "XXX considering annotation pair",
+                           "ma=<%s> ra=<%s>",
+                           ma ? ma->entry : NULL, ra ? ra->entry : NULL);
         if (!ra) n = -1;                /* add all master annotations */
         else if (!ma) n = 1;            /* remove all replica annotations */
         else if ((n = strcmp(ma->entry, ra->entry)) == 0)
@@ -6238,6 +6248,9 @@ int sync_do_annotation(struct sync_client_state *sync_cs, const char *mboxname)
 
         if (n > 0) {
             /* remove replica annotation */
+            xsyslog(LOG_DEBUG, "XXX removing replica annotation",
+                               "n=<%d> ra=<%s>",
+                               n, ra ? ra->entry : NULL);
             r = folder_unannotation(sync_cs, mboxname, ra->entry, ra->userid);
             if (r) goto bail;
             ra = ra->next;
@@ -6245,8 +6258,12 @@ int sync_do_annotation(struct sync_client_state *sync_cs, const char *mboxname)
         }
 
         if (n == 0) {
+            xsyslog(LOG_DEBUG, "XXX annotation already present, checking value",
+                               "ra=<%s> ma=<%s>",
+                               buf_cstring(&ra->value), buf_cstring(&ma->value));
             /* already have the annotation, but is the value different? */
             if (!buf_cmp(&ra->value, &ma->value)) {
+                xsyslog(LOG_DEBUG, "XXX value matches, continuing", NULL);
                 ra = ra->next;
                 ma = ma->next;
                 continue;
@@ -6255,6 +6272,9 @@ int sync_do_annotation(struct sync_client_state *sync_cs, const char *mboxname)
         }
 
         /* add the current client annotation */
+        xsyslog(LOG_DEBUG, "XXX annotation not present, uploading it",
+                           "key=<%s> value=<%s>",
+                           ma->entry, buf_cstring(&ma->value));
         r = folder_setannotation(sync_cs, mboxname, ma->entry, ma->userid, &ma->value);
         if (r) goto bail;
 

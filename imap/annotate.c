@@ -1150,16 +1150,30 @@ static int _findall(struct findall_data *data, void *rock)
     char key[MAX_MAILBOX_PATH+1], *p;
     size_t keylen;
 
+    xsyslog(LOG_DEBUG, "XXX start of callback",
+                       "data=<%p> exactmatch=<%d>",
+                       data, data ? data->is_exactmatch : -1);
+
     if (!data || !data->is_exactmatch) return 0;
+
+    xsyslog(LOG_DEBUG, "XXX in callback",
+                       "extname=<%s> category=<%d> mbentry=<%p>",
+                       data->extname, data->mb_category, data->mbentry);
 
     if (data->mbentry) {
         mboxname = data->mbentry->name;
         mboxid = data->mbentry->uniqueid;
     }
+    xsyslog(LOG_DEBUG, "XXX calculate mboxname/id",
+                       "mboxname=<%s> mboxid=<%s>",
+                       mboxname, mboxid);
 
     /* Find fixed-string pattern prefix */
     keylen = make_key(mboxname, mboxid, frock->uid,
                       frock->entry, NULL, key, sizeof(key));
+    xsyslog(LOG_DEBUG, "XXX made a key",
+                       "key=<%s> keylen=<%zu>",
+                       key, keylen);
 
     for (p = key; keylen; p++, keylen--) {
         if (*p == '*' || *p == '%') break;
@@ -1167,6 +1181,10 @@ static int _findall(struct findall_data *data, void *rock)
     keylen = p - key;
 
     frock->mbentry = data->mbentry;
+
+    xsyslog(LOG_DEBUG, "XXX about to cyrusdb_foreach",
+                       "key=<%s> keylen=<%zu>",
+                       key, keylen);
 
     return cyrusdb_foreach(frock->d->db, key, keylen,
                            &find_p, &find_cb, frock, tid(frock->d));
@@ -1202,6 +1220,8 @@ static int annotatemore_findall_full(const char *pattern, /* internal */
 
     r = _annotate_getdb(mailbox ? mailbox_uniqueid(mailbox) : NULL, mailbox, uid, 0, &frock.d);
     if (r) {
+        xsyslog(LOG_DEBUG, "XXX _annotate_getdb failed",
+                           "r=<%d>", r);
         if (r == CYRUSDB_NOTFOUND)
             r = 0;
         goto out;
@@ -1224,6 +1244,7 @@ static int annotatemore_findall_full(const char *pattern, /* internal */
     }
     else {
         /* Mailbox pattern */
+        xsyslog(LOG_DEBUG, "XXX doing a pattern search...", NULL);
         r = mboxlist_findall(NULL, pattern, 1, NULL, NULL, &_findall, &frock);
     }
 
