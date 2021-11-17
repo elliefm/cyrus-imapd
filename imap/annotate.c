@@ -1244,7 +1244,9 @@ static int annotatemore_findall_full(const char *pattern, /* internal */
     }
     else {
         /* Mailbox pattern */
-        xsyslog(LOG_DEBUG, "XXX doing a pattern search...", NULL);
+        xsyslog(LOG_DEBUG, "XXX doing a pattern search",
+                           "pattern=<%s>",
+                           pattern);
         r = mboxlist_findall(NULL, pattern, 1, NULL, NULL, &_findall, &frock);
     }
 
