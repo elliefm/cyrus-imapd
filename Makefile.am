@@ -130,7 +130,7 @@ if COND_CASSANDANE
 endif
 
 SUBDIRS = . $(MAYBE_CASSANDANE)
-DIST_SUBDIRS = . perl/annotator perl/imap perl/sieve/managesieve
+DIST_SUBDIRS = . cassandane perl/annotator perl/imap perl/sieve/managesieve
 dist_sbin_SCRIPTS =
 dist_sysconf_DATA =
 lib_LTLIBRARIES = lib/libcyrus_min.la lib/libcyrus.la
