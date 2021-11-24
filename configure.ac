@@ -2057,6 +2057,17 @@ AC_SUBST(LIB_UUID)
 AC_SUBST(PERL)
 
 dnl
+dnl Enable/disable building of Cassandane components.  Enabled by default.
+dnl Enabling this does not run Cassandane for you, it just ensures that
+dnl when you run Cassandane, its binary components are already build.
+dnl In other words, it saves you running `make` in the cassandane directory.
+dnl
+AC_ARG_ENABLE(cassandane,
+              [AS_HELP_STRING([--disable-cassandane],
+                              [do not build cassandane components])])
+AM_CONDITIONAL([COND_CASSANDANE], [test "x$enable_cassandane" != "xno" ])
+
+dnl
 dnl Enable/disable unit tests.  These are disabled by default, as
 dnl they require an additional library (the CUnit library).
 dnl

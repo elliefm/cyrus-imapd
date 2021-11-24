@@ -125,7 +125,11 @@ MAINTAINERCLEANFILES = \
 	sieve/addr.h \
 	sieve/sieve.h
 
-SUBDIRS = .
+if COND_CASSANDANE
+    MAYBE_CASSANDANE = cassandane
+endif
+
+SUBDIRS = . $(MAYBE_CASSANDANE)
 DIST_SUBDIRS = . perl/annotator perl/imap perl/sieve/managesieve
 dist_sbin_SCRIPTS =
 dist_sysconf_DATA =
