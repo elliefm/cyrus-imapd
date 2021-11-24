@@ -56,11 +56,10 @@ SCRIPTS := $(shell find . -type f -name '*.pl' \
 
 MODULES := $(shell find . -type f -name '*.pm' | sort)
 
-# define NOCYRUS to skip utils/annotator.pl, allowing the rest of the
-# checks to proceed when no Cyrus install exists
-ifndef NOCYRUS
+# if we have cyrus perl paths, we can also syntax check annotator.pl
+CYRUS_PERL_PATHS := $(shell $(PERL) utils/cyrus-perl-paths.pl)
+ifdef CYRUS_PERL_PATHS
     SCRIPTS += $(shell find . -type f -name 'annotator.pl')
-    CYRUS_PERL_PATHS := $(shell $(PERL) utils/cyrus-perl-paths.pl)
 endif
 
 SYNTAX_rules =

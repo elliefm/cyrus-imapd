@@ -20,15 +20,14 @@ sub _cyrus_perl_search_path
     );
 
     my @paths;
-    my $found = 0;
     foreach (@inc) {
         my $p = $destdir . $prefix . $_;
-        $found++ if -d $p;
+        next if not -d $p;
         push @paths, "-I $p";
     }
 
     warn "warning: Cyrus perl paths not found on disk.  Is Cyrus installed?\n"
-        if not $found;
+        if not scalar @paths;
     return @paths;
 }
 
