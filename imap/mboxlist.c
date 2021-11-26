@@ -604,6 +604,10 @@ static int mboxlist_parse_entry(mbentry_t **mbentryptr,
     if (!datalen)
         goto done;
 
+    xsyslog(LOG_DEBUG, "XXX parsing mboxlist entry",
+                       "entry=<%.*s>",
+                       (int) datalen, data);
+
     if (name) {
       /* copy name */
         snprintf(mboxname, sizeof(mboxname), "%.*s",
@@ -2229,6 +2233,9 @@ EXPORTED int mboxlist_deletemailbox(const char *name, int isadmin,
             newmbentry->createdmodseq = mailbox->i.createdmodseq;
             newmbentry->foldermodseq = mailbox_modseq_dirty(mailbox);
         }
+        xsyslog(LOG_DEBUG, "XXX storing a DELETED marker",
+                           "mailbox=<%s> oldtype=<%u> newtype=<%u>",
+                           name, mbentry->mbtype, newmbentry->mbtype);
         r = mboxlist_update(newmbentry, /*localonly*/1);
 
         /* any other updated intermediates get the same modseq */
