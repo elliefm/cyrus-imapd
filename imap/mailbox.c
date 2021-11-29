@@ -3293,6 +3293,12 @@ EXPORTED void mailbox_annot_changed(struct mailbox *mailbox,
                            const struct buf *newval,
                            int silent)
 {
+    xsyslog(LOG_DEBUG, "XXXX mailbox_annot_changed",
+                       "mailbox=<%s> uid=<%u> entry=<%s> userid=<%s>"
+                       " oldval=<%s> newval=<%s> silent=<%d>",
+                       mailbox_name(mailbox), uid, entry, userid,
+                       buf_cstring(oldval), buf_cstring(newval), silent);
+
     /* update sync_crc - NOTE, only per-message annotations count */
     if (uid) {
         /* check that the record isn't already expunged */
@@ -3317,6 +3323,11 @@ EXPORTED void mailbox_annot_changed(struct mailbox *mailbox,
     /* we always dirty the quota */
     mailbox_quota_dirty(mailbox);
 
+    xsyslog(LOG_DEBUG, "XXXX about to update annot quota usage",
+                       "mailbox=<%s> quota_annot_used=<" QUOTA_T_FMT ">"
+                       " oldvallen=<" SIZE_T_FMT ">",
+                       mailbox_name(mailbox), mailbox->i.quota_annot_used,
+                       buf_len(oldval));
     /* corruption prevention - check we don't go negative */
     if (mailbox->i.quota_annot_used > (quota_t)oldval->len)
         mailbox->i.quota_annot_used -= oldval->len;
@@ -3324,6 +3335,22 @@ EXPORTED void mailbox_annot_changed(struct mailbox *mailbox,
         mailbox->i.quota_annot_used = 0;
 
     mailbox->i.quota_annot_used += newval->len;
+
+    xsyslog(LOG_DEBUG, "XXXX updated annot quota usage",
+                       "mailbox=<%s> quota_annot_used=<" QUOTA_T_FMT ">"
+                       " newvallen=<" SIZE_T_FMT ">",
+                       mailbox_name(mailbox), mailbox->i.quota_annot_used,
+                       buf_len(newval));
+
+    xsyslog(LOG_DEBUG, "XXXX about to return, dirtiness is",
+                       "mailbox=<%s> silentchanges=<%d>"
+                       " modseq_dirty=<%d> header_dirty=<%d>"
+                       " quota_dirty=<%d> has_changed=<%d>"
+                       " last_updated=<" TIME_T_FMT ">",
+                       mailbox_name(mailbox), mailbox->silentchanges,
+                       mailbox->modseq_dirty, mailbox->header_dirty,
+                       mailbox->quota_dirty, mailbox->has_changed,
+                       mailbox->last_updated);
 }
 
 static int calc_one_annot(const char *mboxname __attribute__((unused)),
