@@ -296,11 +296,6 @@ EXPORTED const char *mailbox_meta_fname(const struct mailbox *mailbox, int metaf
     uint32_t legacy_dirs = (mailbox_mbtype(mailbox) & MBTYPE_LEGACY_DIRS);
     const char *src;
 
-    xsyslog(LOG_DEBUG, "XXX lookup up mailbox meta path...",
-                       "mailbox=<%s> mbtype=<%u> legacy_dirs=<%u>",
-                       mailbox_name(mailbox), mailbox_mbtype(mailbox),
-                       legacy_dirs);
-
     src = mboxname_metapath(mailbox_partition(mailbox), mailbox_name(mailbox),
                             legacy_dirs ? NULL : mailbox_uniqueid(mailbox),
                             metafile, 0);
@@ -946,10 +941,6 @@ static int mailbox_open_index(struct mailbox *mailbox)
     if (!fname)
         return IMAP_MAILBOX_BADNAME;
 
-    xsyslog(LOG_DEBUG, "XXX trying to open index",
-                       "name=<%s> mbtype=<%u> fname=<%s>",
-                       mailbox_name(mailbox), mailbox_mbtype(mailbox), fname);
-
     mailbox->index_fd = open(fname, openflags, 0);
     if (mailbox->index_fd == -1)
         return IMAP_IOERROR;
@@ -1029,10 +1020,6 @@ static int mailbox_open_advanced(const char *name,
         listitem->nopen++;
         mailbox = &listitem->m;
 
-        xsyslog(LOG_DEBUG, "XXX using already opened mailbox",
-                           "mailbox=<%s> mbtype=<%u>",
-                           mailbox_name(mailbox), mailbox_mbtype(mailbox));
-
         goto lockindex;
     }
 
@@ -1064,9 +1051,6 @@ static int mailbox_open_advanced(const char *name,
         remove_listitem(listitem);
         return r;
     }
-    xsyslog(LOG_DEBUG, "XXX looked up mbentry",
-                       "name=<%s> mbtype=<%u>",
-                       mbentry->name, mbentry->mbtype);
 
     uint32_t legacy_dirs = (mbentry->mbtype & MBTYPE_LEGACY_DIRS);
     r = mboxname_lock(legacy_dirs ? name : mbentry->uniqueid, &listitem->l, locktype);
