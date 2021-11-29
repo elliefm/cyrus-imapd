@@ -6242,6 +6242,9 @@ HIDDEN int mailbox_rename_copy(struct mailbox *oldmailbox,
      * amount, because we already counted that usage.  XXX horrible
      * hack */
     quota_t annotused = newmailbox->i.quota_annot_used;
+    xsyslog(LOG_DEBUG, "XXXX about to apply horrible annot quota hack!",
+                       "mailbox=<%s> annotused=<" QUOTA_T_FMT ">",
+                       mailbox_name(newmailbox), annotused);
     r = annotate_rename_mailbox(oldmailbox, newmailbox);
     if (r) goto fail;
     newmailbox->i.quota_annot_used = annotused;
