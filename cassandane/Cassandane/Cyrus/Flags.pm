@@ -77,6 +77,7 @@ sub tear_down
 #    even when UIDs aren't contiguous anymore
 #
 sub test_deleted
+    :NoAutoExpunge
 {
     my ($self) = @_;
 
@@ -537,6 +538,7 @@ sub test_search_allflags
 #  - flags are persistent across sessions
 #
 sub test_multi_flags
+    :NoAutoExpunge
 {
     my ($self) = @_;
 
@@ -718,7 +720,7 @@ sub test_multi_flags_acl
 }
 
 sub test_explicit_store_acl
-    :NoAltNamespace
+    :NoAltNamespace :NoAutoExpunge
 {
     my ($self) = @_;
 
