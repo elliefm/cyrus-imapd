@@ -68,6 +68,7 @@ sub new
 
     my $config = Cassandane::Config->default()->clone();
     $config->set(event_groups => join(' ', @event_groups));
+    $config->set(event_extra_params => ''); # force defaults
 
     return $class->SUPER::new({
         config => $config,
