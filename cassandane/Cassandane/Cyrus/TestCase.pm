@@ -377,6 +377,12 @@ magic(HttpJWTAuthRSA => sub {
     $self->config_set(http_jwt_key_dir => '@basedir@/conf/certs/http_jwt');
     $self->want('install_certificates');
 });
+magic(AutoExpunge => sub {
+    shift->config_set(autoexpunge => 'yes');
+});
+magic(NoAutoExpunge => sub {
+    shift->config_set(autoexpunge => 'no');
+});
 
 # Run any magic handlers indicated by the test name or attributes
 sub _run_magic
