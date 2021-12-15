@@ -357,6 +357,7 @@ sub generate
         next unless defined $v;
         if (exists $bitfields{$n}) {
             my @bits = grep { $nv->{$n}->{$_} } sort keys %{$nv->{$n}};
+            next unless scalar @bits;
             print CONF "$n: " . join(q{ }, @bits) . "\n";
         }
         else {
