@@ -74,8 +74,13 @@ sub new
             "envelope relational regex subaddress copy date index " .
             "imap4flags body");
     }
+    else {
+        # modern cyrus? tests expect the default set
+        $config->set(sieve_extensions => '');
+    }
     $config->set(sievenotifier => 'mailto');
     $config->set(caldav_realm => 'Cassandane');
+    $config->set(caldav_create_default => 'yes');
     $config->set(httpmodules => 'caldav');
     $config->set(calendar_user_address_set => 'example.com');
     $config->set(httpallowcompress => 'no');
