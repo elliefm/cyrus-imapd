@@ -108,11 +108,11 @@ sub populate_user
             }
             if ($n % 5 == 0) {
                 # buzz
-                $talk->store("$uid", '+flags', '(\\Deleted)');
+                $talk->store("$uid", '+flags', '(\\Draft)');
                 $self->assert_str_equals(
                     'ok', $talk->get_last_completion_response()
                 );
-                push @flags, '\\Deleted';
+                push @flags, '\\Draft';
             }
 
             $msg->set_attribute('flags', \@flags) if scalar @flags;
