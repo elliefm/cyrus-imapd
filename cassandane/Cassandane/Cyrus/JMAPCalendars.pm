@@ -64,6 +64,7 @@ sub new
 
     $config->set(caldav_realm => 'Cassandane',
                  caldav_historical_age => -1,
+                 caldav_create_default => 'yes',
                  conversations => 'yes',
                  httpmodules => 'carddav caldav jmap',
                  httpallowcompress => 'no',
@@ -87,6 +88,10 @@ sub new
             "fileinto reject vacation vacation-seconds imap4flags notify " .
             "envelope relational regex subaddress copy date index " .
             "imap4flags body");
+    }
+    else {
+        # modern cyrus? tests expect the default set
+        $config->set(sieve_extensions => '');
     }
     $config->set(sievenotifier => 'mailto');
     $config->set(calendar_user_address_set => 'example.com');
