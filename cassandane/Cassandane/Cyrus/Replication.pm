@@ -52,7 +52,11 @@ use Cassandane::Config;
 sub new
 {
     my $class = shift;
-    return $class->SUPER::new({ replica => 1 }, @_);
+
+    my $config = Cassandane::Config->default()->clone();
+    $config->set(delete_unsubscribe => 'no');
+
+    return $class->SUPER::new({ config => $config, replica => 1 }, @_);
 }
 
 sub set_up
