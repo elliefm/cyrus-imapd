@@ -79,9 +79,9 @@ sub new
     $config->set(virtdomains => 'userid');
     $config->set(unixhierarchysep => 'on');
     $config->set(altnamespace => 'yes');
+    $config->set(delete_unsubscribe => 'no');
 
     return $class->SUPER::new({ config => $config }, @_);
-
 }
 
 sub set_up
