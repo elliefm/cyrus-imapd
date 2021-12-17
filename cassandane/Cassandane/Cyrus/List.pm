@@ -57,6 +57,7 @@ sub new
     my ($class, @args) = @_;
 
     my $config = Cassandane::Config->default()->clone();
+    $config->set(delete_unsubscribe => 'no');
 
     return $class->SUPER::new({ config => $config, adminstore => 1 }, @args);
 }
