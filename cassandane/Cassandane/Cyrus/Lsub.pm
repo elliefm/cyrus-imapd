@@ -49,7 +49,11 @@ use base qw(Cassandane::Cyrus::TestCase);
 sub new
 {
     my $class = shift;
-    return $class->SUPER::new({ adminstore => 1 }, @_);
+
+    my $config = Cassandane::Config->default()->clone();
+    $config->set(delete_unsubscribe => 'no');
+
+    return $class->SUPER::new({ config => $config, adminstore => 1 }, @_);
 }
 
 sub set_up
