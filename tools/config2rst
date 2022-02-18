@@ -307,21 +307,21 @@ while (<>) {
     if ($mode == 0) {
         # look for { option, default, type [enums] }; don't output until we
         # hit a comment
-        # n.b. we explicitly do not match deprecated options here
         if (m|
-                {           # opening curly
-                \s*         # skip leading whitespace
-                \"(.*?)\"   # $1: option name (don't capture quotes)
-                \s*,\s*     # comma, optional whitespace
-                \"?(.*?)\"? # $2: default value (don't capture quotes)
-                \s*,\s*     # comma, optional whitespace
-                (.*?)       # $3: option type
-                \s*         # optional whitespace
-                (\(.*\))?   # $4: list of permitted values, n.b. perl syntax!
-                \s*,\s*     # comma, optional whitespace
-                \"([^\"]+)\" # $5: last modified version (don't capture quotes)
-                \s*         # optional whitespace
-                }           # closing curly
+                {               # opening curly
+                \s*             # skip leading whitespace
+                \"([^\"]+)\"    # $1: option name (don't capture quotes)
+                \s*,\s*         # comma, optional whitespace
+                \"?([^\",]*)\"? # $2: default value (don't capture quotes)
+                \s*,\s*         # comma, optional whitespace
+                ([^\s\(,]+)     # $3: option type
+                \s*             # optional whitespace
+                (\([^\)]+\))?   # $4: list of permitted values, n.b. perl syntax!
+                \s*,\s*         # comma, optional whitespace
+                \"([^\"]+)\"    # $5: last modified version (don't capture quotes)
+                \s*             # optional whitespace
+                (,.*)?          # $6: deprecation info
+                }               # closing curly
             |x) {
             $opt = $1;
             my $def = $2 eq "NULL" ? "<none>" : $2;
