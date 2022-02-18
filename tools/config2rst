@@ -328,8 +328,10 @@ while (<>) {
             if ($def eq "") { $def = "<empty string>" }
             # Drop a tag into the output so we can find this section
             # later, from an include directive.
-            $save = "\n    .. startblob $opt\n\n";
-            $save .= print_man2rst('\fC' . $opt . ':\fR ' . $def . "\n");
+            $save = "\n.. startblob $opt\n\n";
+            my $opt_heading = "$opt: $def";
+            $save .= "$opt_heading\n";
+            $save .= '-' x length($opt_heading) . "\n\n";
             # XXX report version this option was last modified by
             $enums = $4;
         }
@@ -337,20 +339,17 @@ while (<>) {
         # look for single-line comment
         elsif (m|/\*\s*(.*)\s*\*/|) {
             print $save; $save = "";
-            if ($opt ne '') { $tabs++; }
-            print print_man2rst("$1\n");
+            print "$1\n";
             if ($enums) { print_values($enums); }
-            print "\n    .. endblob $opt\n";
+            print "\n.. endblob $opt\n";
             $opt = '';
-            $tabs--;
         }
 
         # look for /* to shift into passthrough mode; print current
         # cached option header if any
         elsif (m|/\*\s*(.*)|) {
             print $save; $save = "";
-            if ($opt ne '') { $tabs++; }
-            print print_man2rst($1);
+            print "$1\n";
             $mode = 1;
         }
         else {
@@ -359,19 +358,17 @@ while (<>) {
         }
     } elsif ($mode == 1) {
         # passthru; look for */ to end
-        if (m|\s*(.*)\*/|) {
-            print print_man2rst($1);
+        if (m|\s*(.*)\*/\s*$|) {
+            print "$1\n";
             if ($enums) { print_values($enums); }
             $mode = 0; # back to search mode
             if ($opt ne '') {
-                print "\n    .. endblob $opt\n";
+                print "\n.. endblob $opt\n";
             }
-            $tabs = 0;
             $opt = '';
         } elsif (m|\s*(.*)\s*|) {
-            my $stripped = $1;
-            chomp($stripped);
-            print print_man2rst($stripped);
+            # XXX leading/trailing whitespace is significant when input is rst!
+            print "$1\n";
         }
     }
 }
