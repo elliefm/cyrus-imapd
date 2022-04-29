@@ -5413,6 +5413,15 @@ static int _foreach_cb(void *rock,
     mbentry->name = xstrndup(key, keylen);
     mbentry->mbtype |= MBTYPE_LEGACY_DIRS;
 
+    /* can't do anything without a uniqueid */
+    if (!mbentry->uniqueid) {
+        xsyslog(LOG_ERR, "mbentry is missing uniqueid, cannot upgrade",
+                         "name=<%s>",
+                         mbentry->name);
+        mboxlist_entry_free(&mbentry);
+        return CYRUSDB_INTERNAL;
+    }
+
     int idx = 0;
     ptrarray_t *pa = hash_lookup(mbentry->uniqueid, urock->ids);
     if (!pa) {
