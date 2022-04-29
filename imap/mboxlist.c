@@ -432,7 +432,6 @@ static int mboxlist_read_name(const char *dbname,
     case CYRUSDB_NOTFOUND:
         r = IMAP_MAILBOX_NONEXISTENT;
         break;
-
     default:
     {
         char *intname = mboxname_from_dbname(dbname);
@@ -5408,11 +5407,19 @@ static int _foreach_cb(void *rock,
     }
 
     r = mboxlist_parse_entry(&mbentry, NULL, 0, data, datalen);
-    if (r) return r;
+    if (r) {
+        syslog(LOG_DEBUG, "%s: mboxlist_parse_entry returned %d",
+                          __func__, r);
+        return r;
+    }
+    syslog(LOG_DEBUG, "%s: original mbentry->name was '%s'",
+                      __func__, mbentry->name);
 
     mbentry->name = xstrndup(key, keylen);
     mbentry->mbtype |= MBTYPE_LEGACY_DIRS;
 
+    syslog(LOG_DEBUG, "%s: mbentry name=<%s> uniqueid=<%s>",
+                      __func__, mbentry->name, mbentry->uniqueid);
     /* can't do anything without a uniqueid */
     if (!mbentry->uniqueid) {
         xsyslog(LOG_ERR, "mbentry is missing uniqueid, cannot upgrade",

@@ -1051,6 +1051,8 @@ static int mailbox_open_advanced(const char *name,
     }
 
     r = mboxlist_lookup_allow_all(name, &mbentry, NULL);
+    syslog(LOG_DEBUG, "%s: mboxlist_lookup_allow_all %s returned %s",
+                      __func__, name, error_message(r));
 
     if (!r && mbentry->mbtype & MBTYPE_DELETED)
         r = IMAP_MAILBOX_NONEXISTENT;
