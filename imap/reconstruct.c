@@ -517,9 +517,9 @@ static int do_reconstruct(struct findall_data *data, void *rock)
     int mbentry_dirty = 0;
 
     // fix any uniqueid related mixups first!
-    if (strcmpsafe(mailbox_uniqueid(mailbox), mbentry_byname->uniqueid)) {
+    if (strcmpsafe(mailbox->h.uniqueid, mbentry_byname->uniqueid)) {
         printf("Wrong uniqueid in mbentry, fixing %s (%s -> %s)\n",
-               name, mbentry_byname->uniqueid, mailbox_uniqueid(mailbox));
+               name, mbentry_byname->uniqueid, mailbox->h.uniqueid);
         xzfree(mbentry_byname->uniqueid);
         mbentry_byname->uniqueid = xstrdupnull(mailbox_uniqueid(mailbox));
         mbentry_dirty = 1;
