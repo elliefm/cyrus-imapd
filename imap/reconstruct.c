@@ -517,6 +517,21 @@ static int do_reconstruct(struct findall_data *data, void *rock)
     int mbentry_dirty = 0;
 
     // fix any uniqueid related mixups first!
+    if (!mailbox->h.uniqueid) {
+        if (prefer_mbentry && mbentry_byname->uniqueid) {
+            mailbox->h.uniqueid = xstrdup(mbentry_byname->uniqueid);
+            mailbox->header_dirty = 1;
+            printf("Mailbox header missing uniqueid,"
+                   " using mailboxes.db one %s (%s)",
+                   name, mbentry_byname->uniqueid);
+        }
+        else {
+            mailbox_make_uniqueid(mailbox);
+            printf("Mailbox header missing uniqueid, creating one %s (%s)\n",
+                name, mailbox->h.uniqueid);
+        }
+    }
+    // n.b. not "else if"!
     if (strcmpsafe(mailbox->h.uniqueid, mbentry_byname->uniqueid)) {
         printf("Wrong uniqueid in mbentry, fixing %s (%s -> %s)\n",
                name, mbentry_byname->uniqueid, mailbox->h.uniqueid);
