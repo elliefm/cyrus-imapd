@@ -1443,6 +1443,13 @@ static int _parse_header_data(struct mailbox *mailbox,
     struct parseentry_rock rock = { &mailbox->h, BUF_INITIALIZER, 0, 0, 0 };
     int r = dlist_parsesax(data, datalen, 0, parseentry_cb, &rock);
 
+    if (!mailbox->h.uniqueid) {
+        /* "I" field missing, or contained "NIL" */
+        xsyslog(LOG_NOTICE, "mailbox header has no uniqueid, needs reconstruct",
+                            "mboxname=<%s>",
+                            mailbox_name(mailbox));
+    }
+
     buf_free(&rock.aclbuf); // should be noop, but cleans up after errors
 
     return r;
@@ -1542,7 +1549,12 @@ static int mailbox_read_header(struct mailbox *mailbox)
         if (!tab || tab > eol) tab = eol;
         mailbox->h.uniqueid = xstrndup(p, tab - p);
     }
-    /* else, uniqueid needs to be generated when we know the uidvalidity */
+    else {
+        /* ancient cyrus.header file without a uniqueid field! */
+        xsyslog(LOG_NOTICE, "mailbox header has no uniqueid, needs reconstruct",
+                            "mboxname=<%s>",
+                            mailbox_name(mailbox));
+    }
 
     /* Read names of user flags */
     p = eol + 1;
