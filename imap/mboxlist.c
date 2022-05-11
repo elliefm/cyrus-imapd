@@ -5463,11 +5463,11 @@ EXPORTED int mboxlist_upgrade(int *upgraded)
 {
     int r, r2 = 0, do_upgrade = 0;
     struct buf buf = BUF_INITIALIZER;
-    struct db *backup = NULL;
+    struct db *orig_db = NULL;
     struct txn *tid = NULL;
     hash_table ids = HASH_TABLE_INITIALIZER;
     struct upgrade_rock urock = { NULL, NULL, NULL, &tid, &ids, &r };
-    char *fname;
+    char *orig_fname = NULL, *new_fname = NULL, *backup_fname = NULL;
 
     if (upgraded) *upgraded = 0;
 
@@ -5480,35 +5480,31 @@ EXPORTED int mboxlist_upgrade(int *upgraded)
     else if (!do_upgrade) return 0;
 
     /* create db file names */
-    fname = mboxlist_fname();
-    buf_setcstr(&buf, fname);
-    buf_appendcstr(&buf, ".OLD");
+    orig_fname = mboxlist_fname();
+    buf_setcstr(&buf, orig_fname);
+    buf_appendcstr(&buf, ".NEW");
+    new_fname = buf_release(&buf);
 
-    /* rename db file to backup */
-    r = rename(fname, buf_cstring(&buf));
-    free(fname);
-    if (r) goto done;
-
-    /* open backup db file */
-    r = cyrusdb_open(DB, buf_cstring(&buf), 0, &backup);
+    /* open original db file */
+    r = cyrusdb_open(DB, orig_fname, 0, &orig_db);
 
     if (r) {
-        syslog(LOG_ERR, "DBERROR: opening %s: %s", buf_cstring(&buf),
-               cyrusdb_strerror(r));
+        syslog(LOG_ERR, "DBERROR: opening %s: %s",
+                        orig_fname, cyrusdb_strerror(r));
         fatal("can't open mailboxes file", EX_TEMPFAIL);
     }
 
     /* open a new db file */
-    mboxlist_open(NULL);
+    mboxlist_open(new_fname);
 
-    /* perform upgrade from backup to new db */
+    /* perform upgrade from orig db to new db */
     construct_hash_table(&ids, 4096, 0);
-    r = cyrusdb_foreach(backup, "", 0, NULL, _foreach_cb, &urock, NULL);
+    r = cyrusdb_foreach(orig_db, "", 0, NULL, _foreach_cb, &urock, NULL);
 
-    r2 = cyrusdb_close(backup);
+    r2 = cyrusdb_close(orig_db);
     if (r2) {
-        syslog(LOG_ERR, "DBERROR: error closing %s: %s", buf_cstring(&buf),
-               cyrusdb_strerror(r2));
+        syslog(LOG_ERR, "DBERROR: error closing %s: %s",
+                        orig_fname, cyrusdb_strerror(r2));
     }
 
     hash_enumerate(&ids, &_upgrade_cb, &urock);
@@ -5530,10 +5526,34 @@ EXPORTED int mboxlist_upgrade(int *upgraded)
 
     mboxlist_close();
 
+    /* success - swap to new db file */
+    buf_setcstr(&buf, orig_fname);
+    buf_appendcstr(&buf, ".OLD");
+    backup_fname = buf_release(&buf);
+
+    r = rename(orig_fname, backup_fname);
+    if (r) {
+        xsyslog(LOG_ERR, "IOERROR: rename failed",
+                         "oldfname=<%s>, newfname=<%s>",
+                         orig_fname, backup_fname);
+        goto done;
+    }
+
+    r = rename(new_fname, orig_fname);
+    if (r) {
+        xsyslog(LOG_ERR, "IOERROR: rename failed",
+                         "oldfname=<%s>, newfname=<%s>",
+                         new_fname, orig_fname);
+        /* whoops, better try to put the backup back! */
+        rename(backup_fname, orig_fname);
+    }
+
     if (!r && upgraded) *upgraded = 1;
 
   done:
-    buf_free(&buf);
+    free(orig_fname);
+    free(new_fname);
+    free(backup_fname);
 
     return r;
 }
