@@ -5422,11 +5422,13 @@ static int _foreach_cb(void *rock,
                       __func__, mbentry->name, mbentry->uniqueid);
     /* can't do anything without a uniqueid */
     if (!mbentry->uniqueid) {
-        xsyslog(LOG_ERR, "mbentry is missing uniqueid, cannot upgrade",
-                         "name=<%s>",
-                         mbentry->name);
+        /* XXX great idea, if reconstruct can fix it...! */
+        xsyslog(LOG_ERR, "no uniqueid for mailbox, reconstruct required"
+                         "mboxname=<%s>",
+                         mbentry->name); /* XXX extname? */
         mboxlist_entry_free(&mbentry);
-        return CYRUSDB_INTERNAL;
+        /* let it try to process everyone else, at least */
+        return CYRUSDB_OK;
     }
 
     int idx = 0;
