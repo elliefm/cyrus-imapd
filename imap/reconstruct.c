@@ -310,7 +310,11 @@ int main(int argc, char **argv)
 
             /* don't notify mailbox creation here */
             mbentry.name = intname;
+            mbentry.uniqueid = xstrdup(makeuuid());
             mbentry.mbtype = MBTYPE_EMAIL;
+            if (config_getswitch(IMAPOPT_MAILBOX_LEGACY_DIRS)) {
+                mbentry.mbtype |= MBTYPE_LEGACY_DIRS;
+            }
             mbentry.partition = start_part;
             r = mboxlist_createmailboxlock(&mbentry, 0/*options*/, 0/*highestmodseq*/,
                                        1/*isadmin*/, NULL/*userid*/, NULL/*authstate*/,
@@ -381,8 +385,12 @@ int main(int argc, char **argv)
         /* partition is defined by the parent mailbox */
         /* don't notify mailbox creation here */
         mbentry.name = name;
+        mbentry.uniqueid = xstrdup(makeuuid());
         mbentry.mbtype = MBTYPE_EMAIL;
         mbentry.partition = NULL;
+        if (config_getswitch(IMAPOPT_MAILBOX_LEGACY_DIRS)) {
+            mbentry.mbtype |= MBTYPE_LEGACY_DIRS;
+        }
         r = mboxlist_createmailboxlock(&mbentry, 0/*options*/, 0/*highestmodseq*/,
                                        1/*isadmin*/, NULL/*userid*/, NULL/*authstate*/,
                                        flags, NULL/*mailboxptr*/);
