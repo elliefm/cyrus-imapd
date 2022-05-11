@@ -5496,26 +5496,29 @@ EXPORTED int mboxlist_upgrade(int *upgraded)
 
     /* open original db file */
     r = cyrusdb_open(DB, orig_fname, 0, &orig_db);
-
     if (r) {
         syslog(LOG_ERR, "DBERROR: opening %s: %s",
                         orig_fname, cyrusdb_strerror(r));
-        fatal("can't open mailboxes file", EX_TEMPFAIL);
+        fatal("can't open mailboxes file", EX_NOINPUT);
     }
 
-    /* open a new db file */
-    mboxlist_open(new_fname);
-
-    /* perform upgrade from orig db to new db */
+    /* build a ptrarray of entries in the original db */
     construct_hash_table(&ids, 4096, 0);
     r = cyrusdb_foreach(orig_db, "", 0, NULL, _foreach_cb, &urock, NULL);
-
     r2 = cyrusdb_close(orig_db);
     if (r2) {
         syslog(LOG_ERR, "DBERROR: error closing %s: %s",
                         orig_fname, cyrusdb_strerror(r2));
     }
+    if (r) {
+        /* problem processing entries in original db, cannot proceed */
+        fatal("can't upgrade mailboxes.db", EX_DATAERR);
+    }
 
+    /* open a new db file */
+    mboxlist_open(new_fname);
+
+    /* rebuild found entries in new db */
     hash_enumerate(&ids, &_upgrade_cb, &urock);
     free_hash_table(&ids, NULL);
 
