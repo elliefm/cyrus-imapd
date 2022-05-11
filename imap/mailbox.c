@@ -1068,8 +1068,10 @@ static int mailbox_open_advanced(const char *name,
         /* locked is not an error - just means we asked for NONBLOCKING */
         if (r != IMAP_MAILBOX_LOCKED)
             xsyslog(LOG_ERR, "IOERROR: lock failed",
-                             "mailbox=<%s> error=<%s>",
-                             name, error_message(r));
+                             "legacy_dirs=<%d> mailbox=<%s>"
+                             " uniqueid=<%s> error=<%s>",
+                             legacy_dirs, name,
+                             mbentry->uniqueid, error_message(r));
         if (mailbox->local_namespacelock)
             mboxname_release(&mailbox->local_namespacelock);
         mboxlist_entry_free(&mbentry);
