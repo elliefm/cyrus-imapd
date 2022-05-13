@@ -167,6 +167,8 @@ static int fixmbox(const mbentry_t *mbentry,
     /* make sure every mbentry has a uniqueid!
      *
      * n.b. won't help uuid-mailboxes upgrade, because the upgrade goes first
+     *
+     * XXX can't work, because you can't mailbox_open when there's no uniqueid!
      */
     if (!mbentry->uniqueid) {
         struct mailbox *mailbox = NULL;
