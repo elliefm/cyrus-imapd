@@ -5422,6 +5422,12 @@ static int _foreach_cb(void *rock,
                       __func__, mbentry->name, mbentry->uniqueid);
     /* can't do anything without a uniqueid */
     if (!mbentry->uniqueid) {
+        /* XXX this is the point where the patch on the debian bug report
+         * XXX just generates a new uniqueid with makeuuid(), without
+         * XXX checking anything else...
+         * XXX and maybe that's the only way? since nothing else works
+         * XXX without it.
+         */
         /* XXX great idea, if reconstruct can fix it...! */
         xsyslog(LOG_ERR, "no uniqueid for mailbox, reconstruct required"
                          "mboxname=<%s>",
