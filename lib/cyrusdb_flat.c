@@ -171,6 +171,10 @@ static int abort_txn(struct dbengine *db, struct txn *tid)
 
     assert(db && tid);
 
+    xsyslog(LOG_DEBUG, "XXX aborting transaction",
+                       "dbsize=<" SIZE_T_FMT "> dbfname=<%s>",
+                       db->size, db->fname);
+
     /* cleanup done while lock is held */
     if (tid->fnamenew) {
         unlink(tid->fnamenew);
@@ -200,6 +204,9 @@ static int abort_txn(struct dbengine *db, struct txn *tid)
             map_refresh(db->fd, 0, &db->base, &db->len, sbuf.st_size,
                         db->fname, 0);
             db->size = sbuf.st_size;
+            xsyslog(LOG_DEBUG, "XXX refreshed mmap",
+                               "dbsize=<" SIZE_T_FMT ">",
+                               db->size);
         }
     }
 
@@ -268,6 +275,10 @@ static int starttxn_or_refetch(struct dbengine *db, struct txn **mytid)
         /* we now have the latest & greatest open */
         db->size = sbuf.st_size;
         db->ino = sbuf.st_ino;
+
+        xsyslog(LOG_DEBUG, "XXX started transaction",
+                           "dbsize=<" SIZE_T_FMT "> dbfname=<%s>",
+                           db->size, db->fname);
     }
 
     if (!mytid) {
@@ -306,6 +317,10 @@ static int starttxn_or_refetch(struct dbengine *db, struct txn **mytid)
         map_refresh(db->fd, 0, &db->base, &db->len,
                     sbuf.st_size, db->fname, 0);
         db->size = sbuf.st_size;
+
+        xsyslog(LOG_DEBUG, "XXX refreshed mmap",
+                           "dbsize=<" SIZE_T_FMT "> dbfname=<%s>",
+                           db->size, db->fname);
     }
 
     return 0;
@@ -637,6 +652,15 @@ static int mystore(struct dbengine *db,
     struct buf keybuf = BUF_INITIALIZER;
     struct buf databuf = BUF_INITIALIZER;
 
+    xsyslog(LOG_DEBUG, "XXX storing an entry",
+                       "key=<%.*s> keylen=<" SIZE_T_FMT ">"
+                       " data=<%.*s> datalen=<" SIZE_T_FMT ">"
+                       " dbname=<%s> dbsize=<" SIZE_T_FMT ">",
+                       (int) keylen, key, keylen,
+                       (int) datalen, data, datalen,
+                       db->fname, db->size);
+
+
     /* lock file, if needed */
     if (!mytid || !*mytid) {
         r = lock_reopen(db->fd, db->fname, &sbuf, &lockfailaction);
@@ -653,6 +677,10 @@ static int mystore(struct dbengine *db,
             map_refresh(db->fd, 0, &db->base, &db->len,
                         sbuf.st_size, db->fname, 0);
             db->size = sbuf.st_size;
+
+            xsyslog(LOG_DEBUG, "XXX locked and reopened db file",
+                               "dbname=<%s> dbsize=<" SIZE_T_FMT ">",
+                               db->fname, db->size);
         }
 
         if (mytid) {
@@ -663,7 +691,13 @@ static int mystore(struct dbengine *db,
     encode(key, keylen, &keybuf);
 
     /* find entry, if it exists */
+    xsyslog(LOG_DEBUG, "XXX about to look for insertion offset",
+                       "key=<%s> keylen=<" SIZE_T_FMT "> strlen=<" SIZE_T_FMT ">",
+                       keybuf.s, keybuf.len, strlen(keybuf.s));
     offset = bsearch_mem_mbox(keybuf.s, db->base, db->size, 0, &len);
+
+    xsyslog(LOG_DEBUG, "XXX file position to write to and length to replace",
+                    "offset=<%d> len=<%lu>", offset, len);
 
     /* overwrite? */
     if (len && !overwrite) {
@@ -690,6 +724,12 @@ static int mystore(struct dbengine *db,
         buf_free(&databuf);
         return CYRUSDB_IOERROR;
     }
+    if (fstat(writefd, &sbuf) != -1) {
+        xsyslog(LOG_DEBUG, "XXX opened file for writing",
+                           "fname=<%s> size=<" OFF_T_FMT ">",
+                           fnamebuf, sbuf.st_size);
+    }
+
 
     niov = 0;
     if (offset) {
@@ -722,13 +762,21 @@ static int mystore(struct dbengine *db,
         buf_free(&databuf);
         return CYRUSDB_IOERROR;
     }
+    xsyslog(LOG_DEBUG, "XXX write succeeded",
+                       "wrote=<%d> oldsize=<" SIZE_T_FMT ">",
+                       r, db->size);
     r = 0;
 
     if (mytid) {
         /* setup so further accesses will be against fname.NEW */
         if (fstat(writefd, &sbuf) == -1) {
             /* xxx ? */
+            xsyslog(LOG_ERR, "XXX IOERROR: fstat failed",
+                             "fname=<%s>", fnamebuf);
         }
+        xsyslog(LOG_DEBUG, "XXX continuing transaction",
+                           "fname=<%s> size=<" OFF_T_FMT ">",
+                           fnamebuf, sbuf.st_size);
 
         if (!(*mytid)->fnamenew) (*mytid)->fnamenew = xstrdup(fnamebuf);
         if ((*mytid)->fd) close((*mytid)->fd);
@@ -750,6 +798,9 @@ static int mystore(struct dbengine *db,
             buf_free(&databuf);
             return CYRUSDB_IOERROR;
         }
+        xsyslog(LOG_DEBUG, "XXX commiting transaction immediately",
+                           "fname=<%s> size=<" OFF_T_FMT ">",
+                           fnamebuf, sbuf.st_size);
 
         close(db->fd);
         db->fd = writefd;
@@ -814,6 +865,10 @@ static int commit_txn(struct dbengine *db, struct txn *tid)
     struct stat sbuf;
 
     assert(db && tid);
+
+    xsyslog(LOG_DEBUG, "XXX committing transaction",
+                       "dbsize=<" SIZE_T_FMT "> dbname=<%s>",
+                       db->size, db->fname);
 
     if (tid->fnamenew) {
         /* we wrote something */

@@ -52,7 +52,14 @@ extern ssize_t retry_writev(int fd, const struct iovec *iov, int iovcnt);
 
 /* add a buffer 's' of length 'len' to iovec 'iov' */
 #define WRITEV_ADD_TO_IOVEC(iov, num_iov, s, len) \
-    do { (iov)[(num_iov)].iov_base = (char *)(s); \
+    do {                                                                \
+       if (len > 8 && 0 == strncmp((const char *) s+len-8, "cassanda", 8)) {         \
+        xsyslog(LOG_DEBUG, "WRITEV_ADD_TO_IOVEC truncated cassandane?", \
+                           "num_iov=<%d> s=<%s> len=<%llu> strlen=<%llu> line=%d",                         \
+                           num_iov, s, (unsigned long long) len, (unsigned long long) strlen((const char *) s), __LINE__);                \
+       }                                                                \
+                                                                        \
+        (iov)[(num_iov)].iov_base = (char *)(s); \
          (iov)[(num_iov)++].iov_len = (len); } while (0)
 
 /* add a string 's' to iovec 'iov' */
