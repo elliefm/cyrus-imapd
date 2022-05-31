@@ -784,6 +784,7 @@ static int mystore(struct dbengine *db,
         map_free(&db->base, &db->len);
         map_refresh(writefd, 0, &db->base, &db->len, sbuf.st_size,
                     fnamebuf, 0);
+        db->ino = sbuf.st_ino;
         db->size = sbuf.st_size;
     } else {
         /* commit immediately */
