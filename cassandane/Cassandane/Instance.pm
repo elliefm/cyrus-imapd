@@ -2641,7 +2641,21 @@ sub read_mailboxes_db
                 \x20                    # one space
                 ([^\x20]+)              # (server!)partition
                 \x20                    # one space
-                (.*)                    # acl
+                ([^>]*)                 # acl
+                (?:                     # extended fields
+                    >                   # one gt sign
+                    ([^\x20]+)          # uniqueid
+                    \x20                # one space
+                    (\d+)               # mtime
+                    \x20                # one space
+                    (\d+)               # uidvalidity
+                    \x20                # one space
+                    (\d+)               # foldermodseq
+                    \x20                # one space
+                    (\d+)               # createdmodseq
+                    \x20                # one space
+                    (.*)                # legacy_specialuse
+                )?
                 $
             }x)
         {
@@ -2659,6 +2673,12 @@ sub read_mailboxes_db
                 server => $server,
                 partition => $partition,
                 acl => { split /\t/, $4 },
+                uniqueid => $5,
+                mtime => $6,
+                uidvalidity => $7,
+                foldermodseq => $8,
+                createdmodseq => $9,
+                legacy_specialuse => $10,
             };
         }
         else {
