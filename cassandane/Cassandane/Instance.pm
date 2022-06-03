@@ -2644,7 +2644,7 @@ sub read_mailboxes_db
                 ([^>]*)                 # acl
                 (?:                     # extended fields
                     >                   # one gt sign
-                    ([^\x20]+)          # uniqueid
+                    ([^\x20]*)          # uniqueid
                     \x20                # one space
                     (\d+)               # mtime
                     \x20                # one space

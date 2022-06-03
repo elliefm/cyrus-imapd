@@ -184,9 +184,10 @@ static int dump_cb(const mbentry_t *mbentry, void *rockp)
             if (mbentry->server) printf("%s!", mbentry->server);
             printf("%s %s>%s " TIME_T_FMT " %" PRIu32 " %llu %llu %s\n",
                 mbentry->partition, mbentry->acl,
-                mbentry->uniqueid, mbentry->mtime, mbentry->uidvalidity,
+                mbentry->uniqueid ? mbentry->uniqueid : "",
+                mbentry->mtime, mbentry->uidvalidity,
                 mbentry->foldermodseq, mbentry->createdmodseq,
-                mbentry->legacy_specialuse);
+                mbentry->legacy_specialuse ? mbentry->legacy_specialuse : "");
             if (d->purge) {
                 namespacelock = mboxname_usernamespacelock(mbentry->name);
                 mboxlist_delete(mbentry->name);
@@ -591,6 +592,9 @@ static void do_undump(void)
             */
             mboxlist_entry_free(&newmbentry);
             newmbentry = mboxlist_entry_create();
+            /* XXX need to convert uniqueid from %ms to %m[...] for set of
+             * XXX valid uniqueid characters!
+             */
             sscanf(buf, "%m[^\t]\t%d %ms >%ms " TIME_T_FMT " %" SCNu32
                    " %llu %llu %m[^\n]\n", &newmbentry->name, &newmbentry->mbtype,
                    &newmbentry->partition, &newmbentry->uniqueid,
