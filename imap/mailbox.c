@@ -6935,6 +6935,15 @@ static int mailbox_reconstruct_create(const char *name, struct mailbox **mbptr)
         if (r) goto done;
     }
 
+    /* generate a new uniqueid if the header didn't have one */
+    if (!mailbox->h.uniqueid) {
+        mailbox_make_uniqueid(mailbox);
+        printf("Mailbox header missing uniqueid, creating one %s (%s)\n",
+            name, mailbox->h.uniqueid);
+        r = mailbox_commit(mailbox);
+        if (r) goto done;
+    }
+
     if (mailbox->header_file_crc != mailbox->i.header_file_crc) {
         mailbox->i.header_file_crc = mailbox->header_file_crc;
         printf("%s: header file CRC mismatch, correcting\n", mailbox_name(mailbox));
