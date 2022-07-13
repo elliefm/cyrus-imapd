@@ -503,7 +503,7 @@ static int do_reconstruct(struct findall_data *data, void *rock)
         }
     }
     else {
-        r = mailbox_reconstruct(name, reconstruct_flags, &mailbox);
+        r = mailbox_reconstruct(data->mbentry, reconstruct_flags, &mailbox);
         if (r) {
             com_err(name, r, "%s",
                     (r == IMAP_IOERROR) ? error_message(errno) : "Failed to reconstruct mailbox");

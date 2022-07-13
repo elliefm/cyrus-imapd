@@ -6892,6 +6892,7 @@ static int mailbox_reconstruct_create(const char *name, struct mailbox **mbptr)
 
     /* Start by looking up current data in mailbox list */
     /* XXX - no mboxlist entry?  Can we recover? */
+    /* XXX should we have plumbed mbentry through from caller? */
     r = mboxlist_lookup(name, &mbentry, NULL);
     if (r) goto done;
 
@@ -7632,7 +7633,9 @@ out:
 /*
  * Reconstruct the single mailbox named 'name'
  */
-EXPORTED int mailbox_reconstruct(const char *name, int flags, struct mailbox **mboxptr)
+EXPORTED int mailbox_reconstruct(const mbentry_t *mbe,
+                                 int flags,
+                                 struct mailbox **mboxptr)
 {
     /* settings */
     int make_changes = (flags & RECONSTRUCT_MAKE_CHANGES);
@@ -7651,14 +7654,17 @@ EXPORTED int mailbox_reconstruct(const char *name, int flags, struct mailbox **m
     struct buf buf = BUF_INITIALIZER;
 
     if (make_changes && !(flags & RECONSTRUCT_QUIET)) {
-        syslog(LOG_NOTICE, "reconstructing %s", name);
+        syslog(LOG_NOTICE, "reconstructing %s", mbe->name);
     }
 
-    r = mailbox_open_iwl(name, &mailbox);
+    /* XXX n.b. mailbox_open_from_mbe is a more aggressive lock than
+     * XXX mailbox_open_iwl was
+     */
+    r = mailbox_open_from_mbe(mbe, &mailbox);
     if (r) {
         if (!make_changes) return r;
         /* returns a locktype == LOCK_EXCLUSIVE mailbox */
-        r = mailbox_reconstruct_create(name, &mailbox);
+        r = mailbox_reconstruct_create(mbe->name, &mailbox);
     }
     if (r) return r;
 

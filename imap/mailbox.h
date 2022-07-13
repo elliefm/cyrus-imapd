@@ -665,7 +665,9 @@ extern int mailbox_rename_cleanup(struct mailbox **mailboxptr);
 
 extern int mailbox_copyfile(const char *from, const char *to, int nolink);
 
-extern int mailbox_reconstruct(const char *name, int flags, struct mailbox **mailboxp);
+extern int mailbox_reconstruct(const struct mboxlist_entry *mbe,
+                               int flags,
+                               struct mailbox **mailboxp);
 extern void mailbox_make_uniqueid(struct mailbox *mailbox);
 
 extern int mailbox_setversion(struct mailbox *mailbox, int version);
