@@ -43,9 +43,10 @@
 #include <stdio.h>
 #include <dirent.h>
 #include <stdlib.h>
-#include <assert.h>
 #include <errno.h>
 #include <syslog.h>
+
+#include "lib/assert.h"
 
 #include "mailbox.h"
 #include "mboxname.h"

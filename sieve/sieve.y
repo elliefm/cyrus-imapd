@@ -52,7 +52,6 @@
 #endif
 
 #include <stdlib.h>
-#include <assert.h>
 #include <string.h>
 #include "xmalloc.h"
 #include "sieve/bytecode.h"
@@ -63,6 +62,8 @@
 #include "sieve/flags.h"
 #include "sieve/grammar.h"
 #include "sieve/sieve_err.h"
+
+#include "lib/assert.h"
 
 #include "util.h"
 #include "imparse.h"

@@ -42,10 +42,10 @@
  */
 #include <config.h>
 
-#include <assert.h>
 #include <errno.h>
 #include <syslog.h>
 
+#include "lib/assert.h"
 #include "lib/gzuncat.h"
 #include "lib/libconfig.h"
 

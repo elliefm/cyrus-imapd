@@ -55,8 +55,9 @@
 #include <math.h>
 #include <string.h>
 #include <syslog.h>
-#include <assert.h>
 #include <errno.h>
+
+#include "lib/assert.h"
 
 #include "global.h"
 #include "hash.h"

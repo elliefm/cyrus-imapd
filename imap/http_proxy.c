@@ -46,13 +46,14 @@
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
-#include <assert.h>
 #include <ctype.h>
 #include <errno.h>
 #include <sysexits.h>
 #include <syslog.h>
 #include <sasl/sasl.h>
 #include <sasl/saslutil.h>
+
+#include "lib/assert.h"
 
 #include "httpd.h"
 #include "http_proxy.h"

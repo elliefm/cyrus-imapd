@@ -40,11 +40,11 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *
  */
-#include <assert.h>
 #include <errno.h>
 #include <syslog.h>
 #include <sysexits.h>
 
+#include "lib/assert.h"
 #include "lib/sqldb.h"
 #include "lib/xmalloc.h"
 #include "lib/xsha1.h"

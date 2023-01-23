@@ -47,7 +47,6 @@
 #include <sys/stat.h>
 #include <sys/wait.h>
 
-#include <assert.h>
 #include <errno.h>
 #include <getopt.h>
 #include <jansson.h>
@@ -57,6 +56,7 @@
 #include <sysexits.h>
 #include <unistd.h>
 
+#include "lib/assert.h"
 #include "lib/cyrusdb.h"
 #include "lib/util.h"
 #include "lib/xmalloc.h"

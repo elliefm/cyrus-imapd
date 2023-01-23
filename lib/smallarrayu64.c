@@ -1,6 +1,7 @@
-#include <assert.h>
 #include <config.h>
 #include <string.h>
+
+#include "lib/assert.h"
 
 #include "smallarrayu64.h"
 #include "xmalloc.h"

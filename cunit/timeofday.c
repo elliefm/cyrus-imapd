@@ -43,8 +43,10 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
-#include <assert.h>
 #include <time.h>
+
+#include "lib/assert.h"
+
 #include "timeofday.h"
 
 extern int verbose;

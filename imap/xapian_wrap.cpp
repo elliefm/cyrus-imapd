@@ -10,7 +10,8 @@
 #include <memory>
 
 extern "C" {
-#include <assert.h>
+#include "lib/assert.h"
+
 #include "libconfig.h"
 #include "util.h"
 #include "search_engines.h"

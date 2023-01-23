@@ -53,10 +53,11 @@
 #include <ctype.h>
 #include <string.h>
 #include <syslog.h>
-#include <assert.h>
 #include <sys/stat.h>
 #include <sys/statvfs.h>
 #include <sys/types.h>
+
+#include "lib/assert.h"
 
 #include "lib/times.h"
 #include "cyr_qsort_r.h"

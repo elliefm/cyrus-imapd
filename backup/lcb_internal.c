@@ -42,9 +42,9 @@
  */
 #include <config.h>
 
-#include <assert.h>
 #include <syslog.h>
 
+#include "lib/assert.h"
 #include "lib/map.h"
 
 #include "imap/dlist.h"

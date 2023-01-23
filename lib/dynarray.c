@@ -41,8 +41,9 @@
  *
  */
 
-#include <assert.h>
 #include <memory.h>
+
+#include "lib/assert.h"
 
 #include "dynarray.h"
 #include "util.h"

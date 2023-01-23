@@ -42,7 +42,6 @@
  */
 #include <config.h>
 
-#include <assert.h>
 #include <errno.h>
 #include <getopt.h>
 #include <stdio.h>
@@ -52,6 +51,7 @@
 #include <sysexits.h>
 #include <unistd.h>
 
+#include "lib/assert.h"
 
 #include "imap/global.h"
 #include "imap/imap_err.h"

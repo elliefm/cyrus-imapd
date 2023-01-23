@@ -40,9 +40,9 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *
  */
-#include <assert.h>
 #include <syslog.h>
 
+#include "lib/assert.h"
 #include "lib/xmalloc.h"
 
 #include "imap/dlist.h"

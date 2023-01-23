@@ -45,7 +45,6 @@
 #include <config.h>
 #endif
 
-#include <assert.h>
 #include <errno.h>
 #include <getopt.h>
 #include <ftw.h>
@@ -58,6 +57,8 @@
 #include <sys/stat.h>
 #include <time.h>
 #include <unistd.h>
+
+#include "lib/assert.h"
 
 #include "cyrusdb.h"
 #include "strarray.h"

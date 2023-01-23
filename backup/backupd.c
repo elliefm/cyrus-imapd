@@ -43,7 +43,6 @@
 
 #include <config.h>
 
-#include <assert.h>
 #include <signal.h>
 #include <stdlib.h>
 #include <sysexits.h>
@@ -53,6 +52,7 @@
 #include <netinet/tcp.h>
 #include <sys/types.h>
 
+#include "lib/assert.h"
 #include "lib/bsearch.h"
 #include "lib/imparse.h"
 #include "lib/map.h"

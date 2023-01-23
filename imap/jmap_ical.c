@@ -49,11 +49,12 @@
 #include <ctype.h>
 #include <string.h>
 #include <syslog.h>
-#include <assert.h>
 
 #ifdef HAVE_GUESSTZ
 #include <guesstz.h>
 #endif
+
+#include "lib/assert.h"
 
 #include "acl.h"
 #include "annotate.h"

@@ -40,7 +40,6 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#include <assert.h>
 #include <config.h>
 
 #ifdef HAVE_UNISTD_H
@@ -51,6 +50,8 @@
 #include <sys/wait.h>
 #include <sysexits.h>
 #include <syslog.h>
+
+#include "lib/assert.h"
 
 #include "backend.h"
 #include "xmalloc.h"

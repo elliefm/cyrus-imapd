@@ -4,7 +4,7 @@
 #include <signal.h>
 #include <sys/wait.h>
 #include <sys/mman.h>
-#include <assert.h>
+
 #include "cunit/cyrunit.h"
 #include "imap/saslclient.h"
 #include <sasl/saslutil.h>
@@ -14,6 +14,7 @@
 #include "prot.h"
 #include "imap/backend.h"
 
+#include "lib/assert.h"
 #include "lib/libconfig.h"
 #include "lib/libcyr_cfg.h"
 #include "lib/util.h"

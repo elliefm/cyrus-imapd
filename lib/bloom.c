@@ -12,7 +12,6 @@
 #include <config.h>
 #endif
 
-#include <assert.h>
 #include <fcntl.h>
 #include <math.h>
 #include <stdint.h>
@@ -22,6 +21,8 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
+
+#include "lib/assert.h"
 
 #include "bloom.h"
 #include "murmurhash2.h"

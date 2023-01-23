@@ -50,7 +50,8 @@
 #include <ctype.h>
 #include <string.h>
 #include <syslog.h>
-#include <assert.h>
+
+#include "lib/assert.h"
 
 #include "arrayu64.h"
 #include "cyr_qsort_r.h"

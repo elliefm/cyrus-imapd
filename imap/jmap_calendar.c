@@ -45,12 +45,13 @@
 
 #include <ctype.h>
 #include <errno.h>
-#include <assert.h>
 #include <string.h>
 #include <syslog.h>
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
+
+#include "lib/assert.h"
 
 #include "acl.h"
 #include "annotate.h"

@@ -50,12 +50,12 @@
 #include <ctype.h>
 #include <string.h>
 #include <syslog.h>
-#include <assert.h>
 #include <errno.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 
-#include "assert.h"
+#include "lib/assert.h"
+
 #include "map.h"
 #include "sievedir.h"
 #include "util.h"

@@ -40,9 +40,10 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#include <assert.h>
 #include <stdint.h>
 #include <syslog.h>
+
+#include "lib/assert.h"
 
 #include "mailbox.h"
 #include "msgrecord.h"

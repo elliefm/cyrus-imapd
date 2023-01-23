@@ -43,13 +43,13 @@
 
 #include <config.h>
 
-#include <assert.h>
 #include <dirent.h>
 #include <errno.h>
 #include <syslog.h>
 #include <sysexits.h>
 #include <zlib.h>
 
+#include "lib/assert.h"
 #include "lib/cyrusdb.h"
 #include "lib/cyr_lock.h"
 #include "lib/gzuncat.h"

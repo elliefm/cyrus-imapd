@@ -41,12 +41,13 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 #include <stdlib.h>
-#include <assert.h>
 #include <errno.h>
 #include <syslog.h>
 
 #include <core/oiourl.h>
 #include <oio_sds.h>
+
+#include "lib/assert.h"
 
 #include "mailbox.h"
 #include "mboxname.h"

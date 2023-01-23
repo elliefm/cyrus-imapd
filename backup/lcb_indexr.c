@@ -42,9 +42,9 @@
  */
 #include <config.h>
 
-#include <assert.h>
 #include <syslog.h>
 
+#include "lib/assert.h"
 #include "lib/xmalloc.h"
 
 #include "backup/backup.h"

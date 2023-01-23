@@ -55,8 +55,8 @@
 #include <syslog.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include <assert.h>
 
+#include "lib/assert.h"
 
 #if DUMPCODE
 void dump(bytecode_info_t *d, int level);

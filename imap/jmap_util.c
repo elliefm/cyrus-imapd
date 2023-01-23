@@ -45,10 +45,11 @@
 
 #include <string.h>
 #include <syslog.h>
-#include <assert.h>
 #include <errno.h>
 
 #include <sasl/saslutil.h>
+
+#include "lib/assert.h"
 
 #include "annotate.h"
 #include "append.h"

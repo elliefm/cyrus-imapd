@@ -49,9 +49,10 @@
 #include <ctype.h>
 #include <string.h>
 #include <syslog.h>
-#include <assert.h>
 #include <limits.h>
 #include <errno.h>
+
+#include "lib/assert.h"
 
 #include "acl.h"
 #include "append.h"
