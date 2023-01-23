@@ -46,9 +46,13 @@ AM_CFLAGS = @PERL_CCCDLFLAGS@ $(GCOV_CFLAGS)
 AM_CXXFLAGS = $(GCOV_CXXFLAGS)
 
 AM_CPPFLAGS = \
+    -Ibogus0 \
 	$(COM_ERR_CPPFLAGS) \
+    -Ibogus1 \
 	-I${top_builddir} \
+    -Ibogus2 \
 	-I${top_srcdir} \
+    -Ibogus3 \
 	-DLIBEXEC_DIR=\"$(libexecdir)\" \
 	-DSBIN_DIR=\"$(sbindir)\" \
 	-DSYSCONF_DIR=\"$(sysconfdir)\" \
