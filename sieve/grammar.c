@@ -9,8 +9,9 @@
 #include <config.h>
 #endif
 
-#include "grammar.h"
-#include "xmalloc.h"
+#include "lib/xmalloc.h"
+
+#include "sieve/grammar.h"
 
 
 HIDDEN int is_identifier(char *s)

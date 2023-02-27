@@ -50,14 +50,15 @@
 #include <ctype.h>
 #include <string.h>
 
-#include "comparator.h"
-#include "interp.h"
-#include "tree.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
+
+#include "sieve/comparator.h"
+#include "sieve/interp.h"
+#include "sieve/tree.h"
 #include "sieve/sieve_interface.h"
 #include "sieve/sieve.h"
-#include "bytecode.h"
-#include "util.h"
-#include "xmalloc.h"
+#include "sieve/bytecode.h"
 
 /*!!! uses B_CONTAINS not CONTAINS, etc, only works with bytecode*/
 

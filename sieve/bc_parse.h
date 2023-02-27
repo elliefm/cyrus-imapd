@@ -44,8 +44,8 @@
 #ifndef BC_PARSE_H
 #define BC_PARSE_H
 
-#include "bytecode.h"
-#include "tree.h"
+#include "sieve/bytecode.h"
+#include "sieve/tree.h"
 
 
 extern int bc_header_parse(bytecode_input_t *bc, int *version, int *requires);

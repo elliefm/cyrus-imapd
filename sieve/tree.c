@@ -46,12 +46,13 @@
 #endif
 
 #include <stdlib.h>
-#include "xmalloc.h"
 
-#include "tree.h"
-#include "script.h"
-#include "sieve/sieve_interface.h"
+#include "lib/xmalloc.h"
+
 #include "sieve/bytecode.h"
+#include "sieve/script.h"
+#include "sieve/sieve_interface.h"
+#include "sieve/tree.h"
 
 extern void sieveerror_c(sieve_script_t *parse_script, int code, ...);
 

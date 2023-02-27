@@ -9,11 +9,12 @@
 #include <config.h>
 #endif
 
-#include "flags.h"
-#include "imparse.h"
-#include "strarray.h"
-#include "util.h"
-#include "xmalloc.h"
+#include "lib/imparse.h"
+#include "lib/strarray.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
+
+#include "sieve/flags.h"
 
 static int verify_flag(char *f)
 {

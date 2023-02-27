@@ -48,14 +48,14 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "xmalloc.h"
-#include "xstrlcat.h"
+#include "lib/libconfig.h"
+#include "lib/times.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
+#include "lib/xstrlcat.h"
 
-#include "sieve_interface.h"
-#include "interp.h"
-#include "libconfig.h"
-#include "times.h"
-#include "util.h"
+#include "sieve/sieve_interface.h"
+#include "sieve/interp.h"
 
 /* build a sieve interpreter */
 EXPORTED sieve_interp_t *sieve_interp_alloc(void *interp_context)

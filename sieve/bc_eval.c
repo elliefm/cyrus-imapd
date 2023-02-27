@@ -44,27 +44,27 @@
 #include <config.h>
 #endif
 
-#include "sieve_interface.h"
-#include "grammar.h"
-#include "interp.h"
-#include "message.h"
-#include "script.h"
-#include "parseaddr.h"
-#include "flags.h"
-#include "variables.h"
-#include "varlist.h"
-
-#include "bytecode.h"
-#include "bc_parse.h"
-
-#include "gmtoff.h"
-#include "charset.h"
-#include "xmalloc.h"
-#include "xstrlcpy.h"
-#include "util.h"
-#include "times.h"
-
 #include <string.h>
+
+#include "sieve/sieve_interface.h"
+#include "sieve/grammar.h"
+#include "sieve/interp.h"
+#include "sieve/message.h"
+#include "sieve/script.h"
+#include "sieve/flags.h"
+#include "sieve/variables.h"
+#include "sieve/varlist.h"
+
+#include "sieve/bytecode.h"
+#include "sieve/bc_parse.h"
+
+#include "lib/gmtoff.h"
+#include "lib/charset.h"
+#include "lib/parseaddr.h"
+#include "lib/times.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
+#include "lib/xstrlcpy.h"
 
 /**************************************************************************/
 /**************************************************************************/

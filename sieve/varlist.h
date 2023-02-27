@@ -10,7 +10,7 @@
 
 #include <config.h>
 
-#include "strarray.h"
+#include "lib/strarray.h"
 
 typedef struct variable_list {
     char *name;

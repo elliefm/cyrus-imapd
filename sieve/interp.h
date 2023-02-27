@@ -44,7 +44,7 @@
 #ifndef SIEVE_INTERP_H
 #define SIEVE_INTERP_H
 
-#include "sieve_interface.h"
+#include "sieve/sieve_interface.h"
 
 struct sieve_interp {
     /* standard callbacks for actions */

@@ -45,15 +45,6 @@
 #include <config.h>
 #endif
 
-#include "sieve_interface.h"
-#include <syslog.h>
-
-#include "libconfig.h"
-#include "xmalloc.h"
-
-#include "script.h"
-#include "util.h"
-#include "assert.h"
 #include <getopt.h>
 #include <string.h>
 #include <stdlib.h>
@@ -63,6 +54,15 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <syslog.h>
+
+#include "lib/assert.h"
+#include "lib/libconfig.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
+
+#include "sieve/script.h"
+#include "sieve/sieve_interface.h"
 
 #define TIMSIEVE_FAIL -1
 #define TIMSIEVE_OK 0

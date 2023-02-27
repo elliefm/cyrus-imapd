@@ -59,28 +59,30 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "libconfig.h"
-#include "assert.h"
-#include "sieve_interface.h"
-#include "bytecode.h"
-#include "comparator.h"
-#include "tree.h"
-#include "sieve/sieve.h"
+#include "lib/assert.h"
+#include "lib/hash.h"
+#include "lib/libconfig.h"
+#include "lib/times.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
+#include "lib/xstrlcat.h"
+#include "lib/xstrlcpy.h"
+
 #include "imap/global.h"
 #include "imap/mailbox.h"
 #include "imap/mboxname.h"
 #include "imap/message.h"
 #include "imap/spool.h"
-#include "util.h"
-#include "xmalloc.h"
-#include "xstrlcat.h"
-#include "xstrlcpy.h"
-#include "hash.h"
-#include "times.h"
 
 #ifdef WITH_JMAP
 #include "imap/jmap_mail_query.h"
 #endif
+
+#include "sieve/bytecode.h"
+#include "sieve/comparator.h"
+#include "sieve/sieve.h"
+#include "sieve/sieve_interface.h"
+#include "sieve/tree.h"
 
 static char vacation_answer;
 

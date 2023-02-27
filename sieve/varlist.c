@@ -5,9 +5,9 @@
  *      Author: James Cassell
  */
 
-#include "varlist.h"
-#include "xmalloc.h"
+#include "lib/xmalloc.h"
 
+#include "sieve/varlist.h"
 
 variable_list_t *varlist_new(void)
 {

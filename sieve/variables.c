@@ -11,11 +11,12 @@
 #include <config.h>
 #endif
 
-#include "variables.h"
-#include "bytecode.h"
-#include "util.h"
-
 #include <ctype.h>
+
+#include "lib/util.h"
+
+#include "sieve/bytecode.h"
+#include "sieve/variables.h"
 
 #define buf_swap(b1, b2) { struct buf *temp = b1; b1 = b2; b2 = temp; }
 

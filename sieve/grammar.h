@@ -8,7 +8,7 @@
 #ifndef SIEVE_GRAMMAR_H_
 #define SIEVE_GRAMMAR_H_
 
-#include "varlist.h"
+#include "sieve/varlist.h"
 
 int is_identifier(char *s);
 char *parse_string(const char *s, variable_list_t *vars);

@@ -46,9 +46,10 @@
 
 #include <jansson.h>
 
-#include "comparator.h"
-#include "strarray.h"
-#include "arrayu64.h"
+#include "lib/strarray.h"
+#include "lib/arrayu64.h"
+
+#include "sieve/comparator.h"
 
 #define MAX_CMD_ARGS 12  /* bump if required (currently vacation needs 11) */
 

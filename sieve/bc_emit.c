@@ -47,16 +47,14 @@
 #include <config.h>
 #endif
 
-#include "sieve_interface.h"
-
-
-#include "bytecode.h"
-
 #include <syslog.h>
 #include <sys/types.h>
 #include <unistd.h>
 
 #include "lib/assert.h"
+
+#include "sieve/bytecode.h"
+#include "sieve/sieve_interface.h"
 
 #if DUMPCODE
 void dump(bytecode_info_t *d, int level);

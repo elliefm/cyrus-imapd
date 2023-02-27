@@ -46,10 +46,11 @@
 
 #include <sys/types.h>
 
-#include "sieve_interface.h"
-#include "interp.h"
-#include "tree.h"
-#include "util.h"
+#include "lib/util.h"
+
+#include "sieve/interp.h"
+#include "sieve/sieve_interface.h"
+#include "sieve/tree.h"
 
 struct sieve_script {
     sieve_interp_t interp;

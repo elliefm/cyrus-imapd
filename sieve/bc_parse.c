@@ -45,9 +45,10 @@
 #include <config.h>
 #endif
 
-#include "bc_parse.h"
-#include "strarray.h"
-#include "arrayu64.h"
+#include "lib/strarray.h"
+#include "lib/arrayu64.h"
+
+#include "sieve/bc_parse.h"
 
 #define MAX_ARGS  10  /* vacation currently uses 9 */
 

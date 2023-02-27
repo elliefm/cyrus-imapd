@@ -48,12 +48,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "md5.h"
-#include "sieve_interface.h"
-#include "interp.h"
-#include "message.h"
-#include "xmalloc.h"
-#include "util.h"
+#include "lib/md5.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
+
+#include "sieve/interp.h"
+#include "sieve/message.h"
+#include "sieve/sieve_interface.h"
 
 /* [e]reject message m with message msg
  *

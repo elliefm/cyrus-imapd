@@ -46,17 +46,15 @@
 #include <config.h>
 #endif
 
-#include "xmalloc.h"
-#include "sieve_interface.h"
-
-#include "script.h"
-#include "tree.h"
-
-#include "bytecode.h"
-
-#include "assert.h"
 #include <string.h>
 
+#include "lib/assert.h"
+#include "lib/xmalloc.h"
+
+#include "sieve/bytecode.h"
+#include "sieve/sieve_interface.h"
+#include "sieve/script.h"
+#include "sieve/tree.h"
 
 static int bc_test_generate(int codep, bytecode_info_t *retval, const test_t *t);
 

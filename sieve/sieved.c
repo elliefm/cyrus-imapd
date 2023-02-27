@@ -45,14 +45,6 @@
 #include <config.h>
 #endif
 
-#include "sieve_interface.h"
-
-#include "bc_parse.h"
-#include "bytecode.h"
-#include "script.h"
-#include "interp.h"
-
-#include "xmalloc.h"
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -60,11 +52,17 @@
 #include <unistd.h>
 #include <netinet/in.h>
 #include <inttypes.h>
-
 #include <string.h>
 
-#include "map.h"
-#include "times.h"
+#include "lib/map.h"
+#include "lib/times.h"
+#include "lib/xmalloc.h"
+
+#include "sieve/bc_parse.h"
+#include "sieve/bytecode.h"
+#include "sieve/interp.h"
+#include "sieve/script.h"
+#include "sieve/sieve_interface.h"
 
 static void dump2(bytecode_input_t *d, int len);
 static void generate_script(bytecode_input_t *d, int len);

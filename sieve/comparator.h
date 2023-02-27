@@ -59,8 +59,9 @@
 # endif /* HAVE_PCREPOSIX_H */
 #endif /* ENABLE_REGEX */
 
-#include "sieve_interface.h"
-#include "strarray.h"
+#include "lib/strarray.h"
+
+#include "sieve/sieve_interface.h"
 
 #define MAX_MATCH_VARS 9  /* MUST support ${1} through ${9} per RFC 5229 */
 

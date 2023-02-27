@@ -50,9 +50,10 @@
 /* error codes */
 #define SIEVE_OK (0)
 
-#include "arrayu64.h"
-#include "strarray.h"
-#include "util.h"
+#include "lib/arrayu64.h"
+#include "lib/strarray.h"
+#include "lib/util.h"
+
 #include "sieve/sieve_err.h"
 
 /* external sieve types */
