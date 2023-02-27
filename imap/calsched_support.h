@@ -46,8 +46,9 @@
 
 #include <libical/ical.h>
 
-#include "mailbox.h"
-#include "strarray.h"
+#include "lib/strarray.h"
+
+#include "imap/mailbox.h"
 
 #define CALDAV_CALUSERADDR_INITIALIZER { STRARRAY_INITIALIZER, 0 }
 

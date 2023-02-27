@@ -55,35 +55,35 @@
 #include <sys/wait.h>
 #include <sys/poll.h>
 
-#include "acl.h"
-#include "assert.h"
-#include "mailbox.h"
-#include "notify.h"
-#include "message.h"
-#include "msgrecord.h"
-#include "append.h"
-#include "global.h"
-#include "prot.h"
-#include "sync_log.h"
-#include "xmalloc.h"
-#include "xstrlcpy.h"
-#include "xstrlcat.h"
-#include "mboxlist.h"
-#include "seen.h"
-#include "retry.h"
-#include "quota.h"
-#include "util.h"
+#include "lib/assert.h"
+#include "lib/prot.h"
+#include "lib/strarray.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
+#include "lib/xstrlcat.h"
+#include "lib/xstrlcpy.h"
+
+#include "imap/acl.h"
+#include "imap/annotate.h"
+#include "imap/append.h"
+#include "imap/conversations.h"
+#include "imap/global.h"
+#include "imap/mailbox.h"
+#include "imap/mboxlist.h"
+#include "imap/message.h"
+#include "imap/message_guid.h"
+#include "imap/msgrecord.h"
+#include "imap/notify.h"
+#include "imap/quota.h"
+#include "imap/retry.h"
+#include "imap/seen.h"
+#include "imap/sync_log.h"
 
 /* generated headers are not necessarily in current directory */
 #include "imap/imap_err.h"
 
-#include "annotate.h"
-#include "message_guid.h"
-#include "strarray.h"
-#include "conversations.h"
-
 #if defined ENABLE_OBJECTSTORE
-#include "objectstore.h"
+#include "imap/objectstore.h"
 #endif
 
 struct stagemsg {

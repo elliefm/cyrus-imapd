@@ -68,16 +68,14 @@
 # endif
 #endif
 
-#include "assert.h"
-#include "xmalloc.h"
-#include "global.h"
-#include "util.h"
-#include "cyrusdb.h"
+#include "lib/assert.h"
+#include "lib/cyrusdb.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
 
-/* generated headers are not necessarily in current directory */
+#include "imap/duplicate.h"
+#include "imap/global.h"
 #include "imap/imap_err.h"
-
-#include "duplicate.h"
 
 #define DEBUG 0
 

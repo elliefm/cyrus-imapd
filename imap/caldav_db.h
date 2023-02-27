@@ -51,9 +51,9 @@ extern time_t caldav_eternity;
 
 #include <libical/ical.h>
 
-#include "dav_db.h"
-#include "ical_support.h"
-#include "mboxlist.h"
+#include "imap/dav_db.h"
+#include "imap/ical_support.h"
+#include "imap/mboxlist.h"
 
 /* Bitmask of calendar components */
 enum {

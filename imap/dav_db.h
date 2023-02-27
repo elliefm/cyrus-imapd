@@ -44,9 +44,10 @@
 #ifndef DAV_DB_H
 #define DAV_DB_H
 
-#include "sqldb.h"
-#include "mailbox.h"
-#include "util.h"
+#include "lib/util.h"
+
+#include "imap/mailbox.h"
+#include "imap/sqldb.h"
 
 #define FNAME_DAVSUFFIX "dav" /* per-user DAV DB extension */
 

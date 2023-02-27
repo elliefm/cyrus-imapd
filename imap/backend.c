@@ -65,15 +65,16 @@
 #include <sasl/sasl.h>
 #include <sasl/saslutil.h>
 
-#include "backend.h"
-#include "global.h"
-#include "iptostring.h"
-#include "nonblock.h"
-#include "tok.h"
-#include "util.h"
-#include "xmalloc.h"
-#include "xstrlcpy.h"
-#include "xstrlcat.h"
+#include "lib/iptostring.h"
+#include "lib/nonblock.h"
+#include "lib/tok.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
+#include "lib/xstrlcpy.h"
+#include "lib/xstrlcat.h"
+
+#include "imap/backend.h"
+#include "imap/global.h"
 
 #ifndef AI_V4MAPPED
 #define AI_V4MAPPED	0

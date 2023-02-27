@@ -49,13 +49,14 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <sysexits.h>
-#include "string.h"
+#include <string.h>
 #include <sys/statvfs.h>
 #include <sys/types.h>
 
-#include "global.h"
-#include "util.h"
-#include "xmalloc.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
+
+#include "imap/global.h"
 
 /* forward declarations */
 static void usage(void);

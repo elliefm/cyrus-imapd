@@ -56,21 +56,20 @@
 
 #include <libical/ical.h>
 
-#include "annotate.h"
-#include "global.h"
-#include "http_dav.h"
-#include "mailbox.h"
-#include "message.h"
-#include "message_guid.h"
-#include "mboxname.h"
-#include "mboxlist.h"
-#include "util.h"
-#include "xmalloc.h"
-#include "xstrlcat.h"
-#include "zoneinfo_db.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
+#include "lib/xstrlcat.h"
 
-/* generated headers are not necessarily in current directory */
+#include "imap/annotate.h"
+#include "imap/global.h"
+#include "imap/http_dav.h"
 #include "imap/imap_err.h"
+#include "imap/mailbox.h"
+#include "imap/mboxname.h"
+#include "imap/mboxlist.h"
+#include "imap/message.h"
+#include "imap/message_guid.h"
+#include "imap/zoneinfo_db.h"
 
 /* current namespace */
 static struct namespace recon_namespace;

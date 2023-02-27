@@ -53,13 +53,14 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 
-#include "global.h"
-#include "libcyr_cfg.h"
-#include "mailbox.h"
-#include "mboxlist.h"
-#include "seen.h"
-#include "util.h"
-#include "xmalloc.h"
+#include "lib/libcyr_cfg.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
+
+#include "imap/global.h"
+#include "imap/mailbox.h"
+#include "imap/mboxlist.h"
+#include "imap/seen.h"
 
 /* config.c stuff */
 static int do_remove = 0;

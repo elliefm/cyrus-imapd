@@ -57,24 +57,22 @@
 #include <dirent.h>
 #include <errno.h>
 
-#include "global.h"
-#include "assert.h"
-#include "mboxlist.h"
-#include "mailbox.h"
-#include "quota.h"
-#include "xmalloc.h"
-#include "seen.h"
-#include "mboxname.h"
-#include "map.h"
-#include "imapd.h"
-#include "message.h"
-#include "util.h"
-#include "prot.h"
+#include "lib/assert.h"
+#include "lib/map.h"
+#include "lib/prot.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
 
-/* generated headers are not necessarily in current directory */
+#include "imap/dlist.h"
+#include "imap/global.h"
+#include "imap/imapd.h"
 #include "imap/imap_err.h"
-
-#include "dlist.h"
+#include "imap/mailbox.h"
+#include "imap/mboxlist.h"
+#include "imap/mboxname.h"
+#include "imap/message.h"
+#include "imap/quota.h"
+#include "imap/seen.h"
 
 /* Parse routines */
 

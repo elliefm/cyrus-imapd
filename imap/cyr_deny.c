@@ -55,16 +55,15 @@
 #include <syslog.h>
 #include <signal.h>
 
-#include "global.h"
-#include "libcyr_cfg.h"
-#include "proc.h"
-#include "userdeny.h"
-#include "util.h"
-#include "ptrarray.h"
-#include "xmalloc.h"
+#include "lib/libcyr_cfg.h"
+#include "lib/util.h"
+#include "lib/ptrarray.h"
+#include "lib/xmalloc.h"
 
-/* generated headers are not necessarily in current directory */
+#include "imap/global.h"
 #include "imap/imap_err.h"
+#include "imap/proc.h"
+#include "imap/userdeny.h"
 
 static void usage(void)
 {

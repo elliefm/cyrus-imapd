@@ -58,17 +58,16 @@
 #include <time.h>
 #include <syslog.h>
 
-#include "global.h"
-#include "acl.h"
-#include "annotate.h"
-#include "util.h"
-#include "user.h"
-#include "xmalloc.h"
-#include "mailbox.h"
-#include "mboxlist.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
 
-/* generated headers are not necessarily in current directory */
+#include "imap/acl.h"
+#include "imap/annotate.h"
+#include "imap/global.h"
 #include "imap/imap_err.h"
+#include "imap/mailbox.h"
+#include "imap/mboxlist.h"
+#include "imap/user.h"
 
 #ifdef USE_SIEVE
 

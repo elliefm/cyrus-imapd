@@ -67,20 +67,19 @@
 
 #include <sasl/sasl.h>
 
-#include "annotate.h"
-#include "duplicate.h"
-#include "global.h"
-#include "hash.h"
-#include "libcyr_cfg.h"
-#include "mboxevent.h"
-#include "mboxlist.h"
-#include "conversations.h"
-#include "util.h"
-#include "xmalloc.h"
-#include "strarray.h"
+#include "lib/hash.h"
+#include "lib/libcyr_cfg.h"
+#include "lib/strarray.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
 
-/* generated headers are not necessarily in current directory */
+#include "imap/annotate.h"
+#include "imap/conversations.h"
+#include "imap/duplicate.h"
+#include "imap/global.h"
 #include "imap/imap_err.h"
+#include "imap/mboxevent.h"
+#include "imap/mboxlist.h"
 
 #define SECS_IN_A_MIN 60
 #define SECS_IN_AN_HR (60 * SECS_IN_A_MIN)

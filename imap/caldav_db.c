@@ -49,23 +49,22 @@
 
 #include <libical/ical.h>
 
-#include "caldav_alarm.h"
-#include "caldav_db.h"
-#include "cyrusdb.h"
-#include "dynarray.h"
-#include "hashset.h"
-#include "httpd.h"
-#include "http_dav.h"
-#include "ical_support.h"
-#include "jmap_ical.h"
-#include "libconfig.h"
-#include "mboxname.h"
-#include "util.h"
-#include "xstrlcat.h"
-#include "xmalloc.h"
+#include "lib/cyrusdb.h"
+#include "lib/dynarray.h"
+#include "lib/hashset.h"
+#include "lib/libconfig.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
+#include "lib/xstrlcat.h"
 
-/* generated headers are not necessarily in current directory */
+#include "imap/caldav_alarm.h"
+#include "imap/caldav_db.h"
+#include "imap/httpd.h"
+#include "imap/http_dav.h"
+#include "imap/ical_support.h"
 #include "imap/imap_err.h"
+#include "imap/jmap_ical.h"
+#include "imap/mboxname.h"
 
 struct caldav_db {
     sqldb_t *db;                        /* DB handle */

@@ -72,18 +72,19 @@
 # endif
 #endif
 
-#include "annotate.h"
-#include "cyrusdb.h"
-#include "duplicate.h"
-#include "global.h"
-#include "libcyr_cfg.h"
-#include "mboxlist.h"
-#include "seen.h"
-#include "statuscache.h"
-#include "tls.h"
-#include "util.h"
-#include "xmalloc.h"
-#include "xstrlcpy.h"
+#include "lib/cyrusdb.h"
+#include "lib/libcyr_cfg.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
+#include "lib/xstrlcpy.h"
+
+#include "imap/annotate.h"
+#include "imap/duplicate.h"
+#include "imap/global.h"
+#include "imap/mboxlist.h"
+#include "imap/seen.h"
+#include "imap/statuscache.h"
+#include "imap/tls.h"
 
 #ifdef ENABLE_BACKUP
 #include "backup/backup.h"

@@ -73,22 +73,21 @@
 #include <string.h>
 #include <sasl/sasl.h>
 
-#include "assert.h"
-#include "annotate.h"
-#include "dlist.h"
-#include "global.h"
-#include "json_support.h"
-#include "libcyr_cfg.h"
-#include "mboxlist.h"
-#include "mupdate.h"
-#include "user.h"
-#include "util.h"
-#include "xmalloc.h"
-#include "xstrlcpy.h"
+#include "lib/assert.h"
+#include "lib/libcyr_cfg.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
+#include "lib/xstrlcpy.h"
 
-/* generated headers are not necessarily in current directory */
+#include "imap/annotate.h"
+#include "imap/dlist.h"
+#include "imap/global.h"
 #include "imap/imap_err.h"
+#include "imap/json_support.h"
+#include "imap/mboxlist.h"
+#include "imap/mupdate.h"
 #include "imap/mupdate_err.h"
+#include "imap/user.h"
 
 enum mboxop { DUMP,
               M_POPULATE,

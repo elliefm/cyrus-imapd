@@ -57,12 +57,13 @@
 #include <unistd.h>
 #endif
 
-#include "index.h"
-#include "global.h"
-#include "mboxlist.h"
-#include "mailbox.h"
-#include "map.h"
-#include "xmalloc.h"
+#include "lib/map.h"
+#include "lib/xmalloc.h"
+
+#include "imap/index.h"
+#include "imap/global.h"
+#include "imap/mboxlist.h"
+#include "imap/mailbox.h"
 
 static void usage(void)
 {

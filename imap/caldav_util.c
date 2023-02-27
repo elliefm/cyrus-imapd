@@ -45,26 +45,24 @@
 
 #include <errno.h>
 #include <string.h>
+#include <syslog.h>
 
-#include "acl.h"
-#include "caldav_alarm.h"
-#include "caldav_db.h"
-#include "caldav_util.h"
-#include "http_dav.h"
-#include "jmap_ical.h"
-#include "mailbox.h"
-#include "proxy.h"
-#include "strarray.h"
-#include "strhash.h"
-#include "syslog.h"
-#include "times.h"
-#include "util.h"
-#include "zoneinfo_db.h"
+#include "lib/strarray.h"
+#include "lib/strhash.h"
+#include "lib/times.h"
+#include "lib/util.h"
 
-/* generated headers are not necessarily in current directory */
+#include "imap/acl.h"
+#include "imap/caldav_alarm.h"
+#include "imap/caldav_db.h"
+#include "imap/caldav_util.h"
+#include "imap/http_dav.h"
 #include "imap/http_err.h"
 #include "imap/imap_err.h"
-
+#include "imap/jmap_ical.h"
+#include "imap/mailbox.h"
+#include "imap/proxy.h"
+#include "imap/zoneinfo_db.h"
 
 static icaltimezone *utc_zone = NULL;
 

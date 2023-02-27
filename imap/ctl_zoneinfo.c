@@ -59,14 +59,15 @@
 #include <libical/ical.h>
 #include <libxml/tree.h>
 
-#include "annotate.h" /* for strlist functionality */
-#include "global.h"
-#include "hash.h"
-#include "map.h"
-#include "util.h"
-#include "xmalloc.h"
-#include "xml_support.h"
-#include "zoneinfo_db.h"
+#include "lib/hash.h"
+#include "lib/map.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
+
+#include "imap/annotate.h" /* for strlist functionality */
+#include "imap/global.h"
+#include "imap/xml_support.h"
+#include "imap/zoneinfo_db.h"
 
 /* config.c stuff */
 const int config_need_data = 0;

@@ -46,10 +46,11 @@
 #ifndef INCLUDED_DLIST_H
 #define INCLUDED_DLIST_H
 
-#include "util.h"
-#include "prot.h"
-#include "mailbox.h"
-#include "message_guid.h"
+#include "lib/prot.h"
+#include "lib/util.h"
+
+#include "imap/mailbox.h"
+#include "imap/message_guid.h"
 
 enum dlistsax_t {
     DLISTSAX_LISTSTART,

@@ -51,11 +51,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "global.h"
-#include "mboxname.h"
-
-/* generated headers are not necessarily in current directory */
+#include "imap/global.h"
 #include "imap/imap_err.h"
+#include "imap/mboxname.h"
 
 /* current namespace */
 static struct namespace cyr_pwd_namespace;

@@ -49,13 +49,15 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "arrayu64.h"
-#include "bitvector.h"
-#include "hash.h"
-#include "hashu64.h"
-#include "message_guid.h"
-#include "strarray.h"
-#include "util.h"
+
+#include "lib/arrayu64.h"
+#include "lib/bitvector.h"
+#include "lib/hash.h"
+#include "lib/hashu64.h"
+#include "lib/strarray.h"
+#include "lib/util.h"
+
+#include "imap/message_guid.h"
 
 #define FNAME_CONVERSATIONS_SUFFIX "conversations"
 

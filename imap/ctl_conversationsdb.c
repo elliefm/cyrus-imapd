@@ -52,20 +52,18 @@
 #include <string.h>
 #include <sys/stat.h>
 
-/* cyrus includes */
-#include "assert.h"
-#include "bsearch.h"
-#include "global.h"
-#include "index.h"
-#include "conversations.h"
-#include "mailbox.h"
-#include "mboxlist.h"
-#include "message.h"
-#include "util.h"
-#include "xmalloc.h"
+#include "lib/assert.h"
+#include "lib/bsearch.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
 
-/* generated headers are not necessarily in current directory */
+#include "imap/conversations.h"
+#include "imap/global.h"
 #include "imap/imap_err.h"
+#include "imap/index.h"
+#include "imap/mailbox.h"
+#include "imap/mboxlist.h"
+#include "imap/message.h"
 
 /* config.c stuff */
 const int config_need_data = CONFIG_NEED_PARTITION_DATA;

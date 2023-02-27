@@ -54,18 +54,17 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-#include "assert.h"
-#include "caldav_alarm.h"
-#include "cyrusdb.h"
-#include "dav_db.h"
-#include "global.h"
-#include "sieve_db.h"
-#include "user.h"
-#include "util.h"
-#include "xmalloc.h"
+#include "lib/assert.h"
+#include "lib/cyrusdb.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
 
-/* generated headers are not necessarily in current directory */
+#include "imap/caldav_alarm.h"
+#include "imap/dav_db.h"
+#include "imap/global.h"
 #include "imap/imap_err.h"
+#include "imap/sieve_db.h"
+#include "imap/user.h"
 
 #define CMD_CREATE_CAL                                                  \
     "CREATE TABLE IF NOT EXISTS ical_objs ("                            \

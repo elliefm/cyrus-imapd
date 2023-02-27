@@ -56,10 +56,11 @@
 #include <signal.h>
 #include <fcntl.h>
 
-#include "global.h"
-#include "xmalloc.h"
-#include "caldav_db.h"
-#include "caldav_alarm.h"
+#include "lib/xmalloc.h"
+
+#include "imap/caldav_alarm.h"
+#include "imap/caldav_db.h"
+#include "imap/global.h"
 
 extern int optind;
 extern char *optarg;

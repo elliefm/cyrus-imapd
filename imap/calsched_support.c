@@ -45,13 +45,14 @@
 
 #include <errno.h>
 #include <string.h>
+#include <syslog.h>
 
-#include "calsched_support.h"
-#include "http_dav.h"
-#include "mailbox.h"
-#include "strarray.h"
-#include "syslog.h"
-#include "util.h"
+#include "lib/strarray.h"
+#include "lib/util.h"
+
+#include "imap/calsched_support.h"
+#include "imap/http_dav.h"
+#include "imap/mailbox.h"
 
 /* generated headers are not necessarily in current directory */
 #include "imap/http_err.h"

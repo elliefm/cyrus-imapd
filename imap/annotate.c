@@ -62,29 +62,27 @@
 #include <sysexits.h>
 #include <syslog.h>
 
-#include "acl.h"
-#include "assert.h"
-#include "cyrusdb.h"
-#include "glob.h"
-#include "hash.h"
-#include "imapd.h"
-#include "global.h"
-#include "times.h"
-#include "mboxlist.h"
-#include "partlist.h"
-#include "util.h"
-#include "xmalloc.h"
-#include "ptrarray.h"
-#include "xstrlcpy.h"
-#include "xstrlcat.h"
-#include "tok.h"
-#include "quota.h"
+#include "lib/assert.h"
+#include "lib/cyrusdb.h"
+#include "lib/glob.h"
+#include "lib/hash.h"
+#include "lib/times.h"
+#include "lib/tok.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
+#include "lib/ptrarray.h"
+#include "lib/xstrlcpy.h"
+#include "lib/xstrlcat.h"
 
-/* generated headers are not necessarily in current directory */
+#include "imap/acl.h"
+#include "imap/annotate.h"
+#include "imap/imapd.h"
 #include "imap/imap_err.h"
-
-#include "annotate.h"
-#include "sync_log.h"
+#include "imap/global.h"
+#include "imap/mboxlist.h"
+#include "imap/partlist.h"
+#include "imap/quota.h"
+#include "imap/sync_log.h"
 
 #define DEBUG 0
 

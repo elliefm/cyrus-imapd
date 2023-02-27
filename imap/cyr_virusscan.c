@@ -53,24 +53,22 @@
 #include <string.h>
 #include <netinet/in.h>
 
-/* cyrus includes */
-#include "assert.h"
-#include "global.h"
-#include "append.h"
-#include "index.h"
-#include "mailbox.h"
-#include "map.h"
-#include "message.h"
-#include "xmalloc.h"
-#include "mboxlist.h"
-#include "parseaddr.h"
-#include "prot.h"
-#include "util.h"
-#include "times.h"
-#include "xstrlcpy.h"
+#include "lib/assert.h"
+#include "lib/map.h"
+#include "lib/parseaddr.h"
+#include "lib/prot.h"
+#include "lib/times.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
+#include "lib/xstrlcpy.h"
 
-/* generated headers are not necessarily in current directory */
+#include "imap/append.h"
+#include "imap/global.h"
 #include "imap/imap_err.h"
+#include "imap/index.h"
+#include "imap/mailbox.h"
+#include "imap/mboxlist.h"
+#include "imap/message.h"
 
 struct infected_msg {
     char *mboxname;

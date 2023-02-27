@@ -46,11 +46,12 @@
 
 #include <libical/ical.h>
 
-#include "caldav_db.h"
-#include "hash.h"
-#include "httpd.h"
-#include "mailbox.h"
-#include "strarray.h"
+#include "lib/hash.h"
+#include "lib/strarray.h"
+
+#include "imap/caldav_db.h"
+#include "imap/httpd.h"
+#include "imap/mailbox.h"
 
 
 #define NEW_STAG (1<<8)           /* Make sure we skip over PREFER bits */

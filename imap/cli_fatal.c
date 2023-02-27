@@ -45,8 +45,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "global.h"
-#include "xmalloc.h"
+#include "lib/xmalloc.h"
+
+#include "imap/global.h"
 
 /* generic fatal() routine for command line utilities */
 EXPORTED void fatal(const char *message, int code)

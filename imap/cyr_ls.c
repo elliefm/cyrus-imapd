@@ -74,16 +74,15 @@
 #include <grp.h>
 #include <inttypes.h>
 
-#include "bsearch.h"
-#include "util.h"
-#include "global.h"
-#include "mailbox.h"
-#include "xmalloc.h"
-#include "mboxlist.h"
-#include "user.h"
+#include "lib/bsearch.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
 
-/* generated headers are not necessarily in current directory */
+#include "imap/global.h"
 #include "imap/imap_err.h"
+#include "imap/mailbox.h"
+#include "imap/mboxlist.h"
+#include "imap/user.h"
 
 /* current namespace */
 static struct namespace cyr_ls_namespace;

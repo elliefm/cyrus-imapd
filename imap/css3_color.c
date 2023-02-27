@@ -46,7 +46,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "util.h"
+#include "lib/util.h"
 
 struct css3_color_t {
     const char *name;

@@ -46,22 +46,20 @@
 #include <syslog.h>
 #include <string.h>
 
-#include "append.h"
-#include "carddav_db.h"
-#include "cyrusdb.h"
-#include "httpd.h"
-#include "http_dav.h"
-#include "libconfig.h"
-#include "mboxevent.h"
-#include "times.h"
-#include "util.h"
-#include "xstrlcat.h"
-#include "xmalloc.h"
+#include "lib/cyrusdb.h"
+#include "lib/libconfig.h"
+#include "lib/times.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
+#include "lib/xstrlcat.h"
 
-/* generated headers are not necessarily in current directory */
+#include "imap/append.h"
+#include "imap/carddav_db.h"
+#include "imap/httpd.h"
+#include "imap/http_dav.h"
 #include "imap/http_err.h"
 #include "imap/imap_err.h"
-
+#include "imap/mboxevent.h"
 
 #define NUM_BUFS 10
 

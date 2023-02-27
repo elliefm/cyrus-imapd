@@ -56,18 +56,17 @@
 #include <netinet/in.h>
 #include <sys/stat.h>
 
-#include "global.h"
-#include "hash.h"
-#include "mailbox.h"
-#include "mpool.h"
-#include "mboxlist.h"
-#include "seen.h"
-#include "util.h"
-#include "xmalloc.h"
-#include "xstrlcpy.h"
+#include "lib/hash.h"
+#include "lib/mpool.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
+#include "lib/xstrlcpy.h"
 
-/* generated headers are not necessarily in current directory */
+#include "imap/global.h"
 #include "imap/imap_err.h"
+#include "imap/mailbox.h"
+#include "imap/mboxlist.h"
+#include "imap/seen.h"
 
 #define DB (config_seenstate_db)
 #define SUBDB (config_subscription_db)

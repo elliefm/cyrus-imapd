@@ -54,11 +54,13 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 
-#include "global.h"
-#include "proc.h"
-#include "util.h"
-#include "../master/masterconf.h"
-#include "xmalloc.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
+
+#include "imap/global.h"
+#include "imap/proc.h"
+
+#include "master/masterconf.h"
 
 /* config.c stuff */
 const char *MASTER_CONFIG_FILENAME = DEFAULT_MASTER_CONFIG_FILENAME;

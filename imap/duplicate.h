@@ -42,7 +42,7 @@
 #ifndef DUPLICATE_H
 #define DUPLICATE_H
 
-#include "hash.h"
+#include "lib/hash.h"
 
 /* name of the duplicate delivery database */
 #define FNAME_DELIVERDB "/deliver.db"

@@ -64,17 +64,16 @@
 #include <arpa/inet.h>
 #include <sys/un.h>
 
-#include "global.h"
-#include "xmalloc.h"
-#include "xstrlcpy.h"
-#include "xstrlcat.h"
-#include "lmtpengine.h"
-#include "prot.h"
-#include "proxy.h"
-#include "version.h"
+#include "lib/prot.h"
+#include "lib/xmalloc.h"
+#include "lib/xstrlcpy.h"
+#include "lib/xstrlcat.h"
 
-/* generated headers are not necessarily in current directory */
+#include "imap/global.h"
 #include "imap/imap_err.h"
+#include "imap/lmtpengine.h"
+#include "imap/proxy.h"
+#include "imap/version.h"
 
 static int logdebug = 0;
 

@@ -54,11 +54,12 @@
 #include <sys/stat.h>
 #include <signal.h>
 
-#include "duplicate.h"
-#include "global.h"
-#include "libcyr_cfg.h"
-#include "util.h"
-#include "xmalloc.h"
+#include "lib/libcyr_cfg.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
+
+#include "imap/duplicate.h"
+#include "imap/global.h"
 
 static void usage(void)
 {

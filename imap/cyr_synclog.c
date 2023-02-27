@@ -52,11 +52,12 @@
 #include <unistd.h>
 #endif
 
-#include "assert.h"
-#include "global.h"
-#include "sync_log.h"
-#include "util.h"
-#include "xmalloc.h"
+#include "lib/assert.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
+
+#include "imap/global.h"
+#include "imap/sync_log.h"
 
 void usage(const char *name) {
     fprintf(stderr, "Usage: %s [-C altconfig] [-{type}] value\n", name);

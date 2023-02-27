@@ -43,11 +43,12 @@
 #ifndef _INCLUDED_BACKEND_H
 #define _INCLUDED_BACKEND_H
 
-#include "global.h"
-#include "mboxlist.h"
-#include "prot.h"
-#include "protocol.h"
-#include "tls.h"
+#include "lib/prot.h"
+
+#include "imap/global.h"
+#include "imap/mboxlist.h"
+#include "imap/protocol.h"
+#include "imap/tls.h"
 
 /* Functionality to bring up/down connections to backend servers */
 

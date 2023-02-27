@@ -49,7 +49,6 @@
 
 #include <sysexits.h>
 
-/* generated headers are not necessarily in current directory */
 #include "imap/imap_err.h"
 
 EXPORTED int convert_code(int r)

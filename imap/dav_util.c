@@ -44,24 +44,22 @@
 #include <config.h>
 
 #include <string.h>
+#include <syslog.h>
 
-#include "append.h"
-#include "dav_db.h"
-#include "dav_util.h"
-#include "global.h"
-#include "mailbox.h"
-#include "mboxname.h"
-#include "strhash.h"
-#include "syslog.h"
-#include "times.h"
-#include "user.h"
-#include "util.h"
-#include "xstrnchr.h"
+#include "lib/strhash.h"
+#include "lib/times.h"
+#include "lib/util.h"
+#include "lib/xstrnchr.h"
 
-/* generated headers are not necessarily in current directory */
+#include "imap/append.h"
+#include "imap/dav_db.h"
+#include "imap/dav_util.h"
+#include "imap/global.h"
 #include "imap/http_err.h"
 #include "imap/imap_err.h"
-
+#include "imap/mailbox.h"
+#include "imap/mboxname.h"
+#include "imap/user.h"
 
 EXPORTED int dav_get_validators(struct mailbox *mailbox, void *data,
                                 const char *userid __attribute__((unused)),

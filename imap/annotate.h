@@ -43,13 +43,14 @@
 #ifndef ANNOTATE_H
 #define ANNOTATE_H
 
-#include "auth.h"
-#include "charset.h" /* for comp_pat */
-#include "imapd.h"
-#include "mailbox.h"
-#include "mboxlist.h"
-#include "util.h"
-#include "strarray.h"
+#include "lib/auth.h"
+#include "lib/charset.h" /* for comp_pat */
+#include "lib/util.h"
+#include "lib/strarray.h"
+
+#include "imap/imapd.h"
+#include "imap/mailbox.h"
+#include "imap/mboxlist.h"
 
 #define FNAME_GLOBALANNOTATIONS "/annotations.db"
 

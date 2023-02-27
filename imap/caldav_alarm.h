@@ -46,9 +46,10 @@
 
 #include <config.h>
 
-#include "sqldb.h"
-#include "mailbox.h"
 #include <libical/ical.h>
+
+#include "imap/mailbox.h"
+#include "imap/sqldb.h"
 
 enum alarm_type {
     ALARM_CALENDAR = 1,

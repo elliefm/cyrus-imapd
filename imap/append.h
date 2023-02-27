@@ -43,14 +43,15 @@
 #ifndef INCLUDED_APPEND_H
 #define INCLUDED_APPEND_H
 
-#include "mailbox.h"
-#include "mboxevent.h"
-#include "message.h"
-#include "prot.h"
-#include "seqset.h"
-#include "strarray.h"
-#include "annotate.h"
-#include "conversations.h"
+#include "lib/prot.h"
+#include "lib/strarray.h"
+
+#include "imap/annotate.h"
+#include "imap/conversations.h"
+#include "imap/mailbox.h"
+#include "imap/mboxevent.h"
+#include "imap/message.h"
+#include "imap/seqset.h"
 
 /* it's ridiculous i have to expose this structure if i want to allow
    clients to stack-allocate it */

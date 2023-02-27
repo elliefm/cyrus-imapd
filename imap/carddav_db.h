@@ -46,12 +46,13 @@
 
 #include <config.h>
 
-#include "auth.h"
-#include "dav_db.h"
-#include "mboxlist.h"
-#include "strarray.h"
-#include "util.h"
-#include "vparse.h"
+#include "lib/strarray.h"
+#include "lib/util.h"
+
+#include "imap/auth.h"
+#include "imap/dav_db.h"
+#include "imap/mboxlist.h"
+#include "imap/vparse.h"
 
 struct carddav_db;
 

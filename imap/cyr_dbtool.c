@@ -58,16 +58,15 @@
 #include <sys/ipc.h>
 #include <sys/msg.h>
 
-#include "assert.h"
-#include "cyrusdb.h"
-#include "global.h"
-#include "mailbox.h"
-#include "util.h"
-#include "retry.h"
-#include "xmalloc.h"
+#include "lib/assert.h"
+#include "lib/cyrusdb.h"
+#include "lib/retry.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
 
-/* generated headers are not necessarily in current directory */
+#include "imap/global.h"
 #include "imap/imap_err.h"
+#include "imap/mailbox.h"
 
 #define STACKSIZE 64000
 static char stack[STACKSIZE+1];

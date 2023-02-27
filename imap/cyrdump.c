@@ -52,19 +52,17 @@
 #include <syslog.h>
 #include <string.h>
 
-/* cyrus includes */
-#include "assert.h"
-#include "global.h"
-#include "index.h"
-#include "imapurl.h"
-#include "mailbox.h"
-#include "mboxlist.h"
-#include "util.h"
-#include "xmalloc.h"
-#include "xstrlcpy.h"
+#include "lib/assert.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
+#include "lib/xstrlcpy.h"
 
-/* generated headers are not necessarily in current directory */
+#include "imap/global.h"
+#include "imap/imapurl.h"
 #include "imap/imap_err.h"
+#include "imap/index.h"
+#include "imap/mailbox.h"
+#include "imap/mboxlist.h"
 
 static int verbose = 0;
 static const char *progname = NULL;
