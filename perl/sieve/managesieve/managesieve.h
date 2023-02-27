@@ -39,7 +39,7 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#include "isieve.h"
+#include "perl/sieve/lib/isieve.h"
 
 
 struct xscyrus {

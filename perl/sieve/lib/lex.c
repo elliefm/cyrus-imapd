@@ -51,8 +51,9 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "prot.h"
-#include "xmalloc.h"
+#include "lib/prot.h"
+#include "lib/xmalloc.h"
+
 #include "perl/sieve/lib/codes.h"
 #include "perl/sieve/lib/lex.h"
 

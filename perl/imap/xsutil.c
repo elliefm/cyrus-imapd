@@ -46,8 +46,9 @@
 #include "EXTERN.h"
 #include "perl.h"
 #include <imclient.h>
+
 #define CYRPERL_INTERNAL
-#include "cyrperl.h"
+#include "perl/imap/cyrperl.h"
 
 /* hack, since libcyrus apparently expects fatal() to exist */
 void

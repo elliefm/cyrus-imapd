@@ -46,7 +46,7 @@
 #ifndef _LEX_H_
 #define _LEX_H_
 
-#include "util.h"
+#include "lib/util.h"
 
 typedef struct lexstate_s {
   char *str;

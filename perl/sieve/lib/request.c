@@ -57,7 +57,8 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-#include "xmalloc.h"
+#include "lib/xmalloc.h"
+
 #include "perl/sieve/lib/request.h"
 #include "perl/sieve/lib/lex.h"
 

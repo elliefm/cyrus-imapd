@@ -52,9 +52,10 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "iptostring.h"
-#include "util.h"
-#include "xmalloc.h"
+#include "lib/iptostring.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
+
 #include "perl/sieve/lib/isieve.h"
 #include "perl/sieve/lib/lex.h"
 #include "perl/sieve/lib/request.h"
