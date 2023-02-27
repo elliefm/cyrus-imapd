@@ -53,7 +53,7 @@
 #define icalerror_warn(message) \
 {syslog(LOG_WARNING, "icalerror: %s(), %s:%d: %s", __FUNCTION__, __FILE__, __LINE__, message);}
 
-#include "mailbox.h"
+#include "imap/mailbox.h"
 
 #define ICALENDAR_CONTENT_TYPE "text/calendar; charset=utf-8"
 

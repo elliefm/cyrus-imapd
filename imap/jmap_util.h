@@ -46,12 +46,13 @@
 
 #include <jansson.h>
 
-#include "hash.h"
-#include "ical_support.h"
-#include "message.h"
-#include "mboxlist.h"
-#include "parseaddr.h"
-#include "smtpclient.h"
+#include "lib/hash.h"
+#include "lib/parseaddr.h"
+
+#include "imap/ical_support.h"
+#include "imap/message.h"
+#include "imap/mboxlist.h"
+#include "imap/smtpclient.h"
 
 #define JMAP_SUBMISSION_HDR "Content-Description"
 

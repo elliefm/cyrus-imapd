@@ -48,14 +48,15 @@
 #include <libical/ical.h>
 #include <libxml/tree.h>
 
-#include "acl.h"
-#include "annotate.h"
-#include "caldav_db.h"
-#include "dav_util.h"
-#include "httpd.h"
-#include "spool.h"
-#include "quota.h"
-#include "strarray.h"
+#include "lib/strarray.h"
+
+#include "imap/acl.h"
+#include "imap/annotate.h"
+#include "imap/caldav_db.h"
+#include "imap/dav_util.h"
+#include "imap/httpd.h"
+#include "imap/quota.h"
+#include "imap/spool.h"
 
 #define NULL_ETAG       "da39a3ee5e6b4b0d3255bfef95601890afd80709"
                         /* SHA1("") */

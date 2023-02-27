@@ -44,14 +44,16 @@
 #define INCLUDED_GLOBAL_H
 
 #include <sasl/sasl.h>
-#include "libconfig.h"
-#include "auth.h"
-#include "prot.h"
-#include "mboxname.h"
-#include "signals.h"
-#include "imapparse.h"
-#include "libcyr_cfg.h"
-#include "util.h"
+
+#include "lib/auth.h"
+#include "lib/libconfig.h"
+#include "lib/libcyr_cfg.h"
+#include "lib/prot.h"
+#include "lib/signals.h"
+#include "lib/util.h"
+
+#include "imap/mboxname.h"
+#include "imap/imapparse.h"
 
 #ifdef HAVE_SSL
 #include <openssl/evp.h>

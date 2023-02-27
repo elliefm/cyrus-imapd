@@ -56,32 +56,31 @@
 #include <sys/stat.h>
 #include <sys/statvfs.h>
 #include <sys/types.h>
+#include <time.h>
 
 #include "lib/assert.h"
-
+#include "lib/cyr_qsort_r.h"
+#include "lib/ptrarray.h"
 #include "lib/times.h"
-#include "cyr_qsort_r.h"
-#include "global.h"
-#include "httpd.h"
-#include "http_proxy.h"
-#include "../master/masterconf.h"
-#include "proc.h"
-#include "procinfo.h"
-#include "proxy.h"
-#include "ptrarray.h"
-#include "time.h"
-#include "tok.h"
-#include "util.h"
-#include "version.h"
-#include "xmalloc.h"
-#include "xstrlcat.h"
-#include "xstrlcpy.h"
+#include "lib/tok.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
+#include "lib/xstrlcat.h"
+#include "lib/xstrlcpy.h"
+
+#include "imap/global.h"
+#include "imap/httpd.h"
+#include "imap/http_err.h"
+#include "imap/http_proxy.h"
+#include "imap/proc.h"
+#include "imap/procinfo.h"
+#include "imap/proxy.h"
+#include "imap/version.h"
+
+#include "master/masterconf.h"
 
 /* config.c stuff */
 const char *MASTER_CONFIG_FILENAME = DEFAULT_MASTER_CONFIG_FILENAME;
-
-/* generated headers are not necessarily in current directory */
-#include "imap/http_err.h"
 
 static time_t compile_time;
 static void admin_init(struct buf *serverinfo);

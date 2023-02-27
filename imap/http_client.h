@@ -44,8 +44,8 @@
 #ifndef _HTTP_CLIENT_H
 #define _HTTP_CLIENT_H
 
-#include "backend.h"
-#include "spool.h"
+#include "imap/backend.h"
+#include "imap/spool.h"
 
 /* Supported HTTP version */
 #define HTTP2_VERSION    "HTTP/2"

@@ -52,14 +52,14 @@
 #include <errno.h>
 
 #include "lib/assert.h"
+#include "lib/bsearch.h"
+#include "lib/hash.h"
+#include "lib/util.h"
 
-#include "bsearch.h"
-#include "caldav_util.h"
-#include "hash.h"
-#include "http_caldav_sched.h"
-#include "http_jmap.h"
-#include "user.h"
-#include "util.h"
+#include "imap/caldav_util.h"
+#include "imap/http_caldav_sched.h"
+#include "imap/http_jmap.h"
+#include "imap/user.h"
 
 /* generated headers are not necessarily in current directory */
 #include "imap/http_err.h"

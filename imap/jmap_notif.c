@@ -45,17 +45,16 @@
 
 #include <syslog.h>
 
-#include "append.h"
-#include "dav_util.h"
-#include "caldav_util.h"
-#include "jmap_ical.h"
-#include "strhash.h"
-#include "times.h"
-#include "user.h"
+#include "lib/strhash.h"
+#include "lib/times.h"
 
-/* generated headers are not necessarily in current directory */
+#include "imap/append.h"
+#include "imap/dav_util.h"
+#include "imap/caldav_util.h"
 #include "imap/http_err.h"
 #include "imap/imap_err.h"
+#include "imap/jmap_ical.h"
+#include "imap/user.h"
 
 HIDDEN char *jmap_notifmboxname(const char *userid)
 {

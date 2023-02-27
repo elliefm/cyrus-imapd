@@ -44,8 +44,8 @@
 #include <config.h>
 #include <sysexits.h>
 
-#include "httpd.h"
-#include "http_h2.h"
+#include "imap/httpd.h"
+#include "imap/http_h2.h"
 
 #ifdef HAVE_NGHTTP2
 
@@ -54,12 +54,11 @@
 
 #include <sasl/saslutil.h>
 
-#include "http_ws.h"
-#include "prometheus.h"
-#include "retry.h"
+#include "lib/retry.h"
 
-/* generated headers are not necessarily in current directory */
 #include "imap/http_err.h"
+#include "imap/http_ws.h"
+#include "imap/prometheus.h"
 
 #define HTTP2_MAX_HEADERS  100
 

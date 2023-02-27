@@ -54,25 +54,23 @@
 #include <sasl/saslutil.h>
 
 #include "lib/assert.h"
+#include "lib/prot.h"
+#include "lib/tok.h"
+#include "lib/xmalloc.h"
+#include "lib/xstrlcat.h"
+#include "lib/xstrlcpy.h"
 
-#include "httpd.h"
-#include "http_proxy.h"
-#include "http_ws.h"
-#include "iptostring.h"
-#include "mupdate-client.h"
-#include "prot.h"
-#include "proxy.h"
-#include "spool.h"
-#include "tls.h"
-#include "tok.h"
-#include "version.h"
-#include "xmalloc.h"
-#include "xstrlcat.h"
-#include "xstrlcpy.h"
-
-/* generated headers are not necessarily in current directory */
+#include "imap/httpd.h"
 #include "imap/http_err.h"
+#include "imap/http_proxy.h"
+#include "imap/http_ws.h"
 #include "imap/imap_err.h"
+#include "imap/iptostring.h"
+#include "imap/mupdate-client.h"
+#include "imap/proxy.h"
+#include "imap/spool.h"
+#include "imap/tls.h"
+#include "imap/version.h"
 
 #include <libxml/uri.h>
 

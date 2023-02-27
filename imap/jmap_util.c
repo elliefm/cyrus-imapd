@@ -50,29 +50,27 @@
 #include <sasl/saslutil.h>
 
 #include "lib/assert.h"
+#include "lib/hash.h"
+#include "lib/times.h"
 
-#include "annotate.h"
-#include "append.h"
-#include "caldav_util.h"
-#include "carddav_db.h"
-#include "global.h"
-#include "hash.h"
-#include "index.h"
-#include "jmap_ical.h"
-#include "jmap_util.h"
-#include "json_support.h"
-#include "search_query.h"
-#include "times.h"
-#include "user.h"
-#include "xapian_wrap.h"
+#include "imap/annotate.h"
+#include "imap/append.h"
+#include "imap/caldav_util.h"
+#include "imap/carddav_db.h"
+#include "imap/global.h"
+#include "imap/http_err.h"
+#include "imap/imap_err.h"
+#include "imap/index.h"
+#include "imap/jmap_ical.h"
+#include "imap/jmap_util.h"
+#include "imap/json_support.h"
+#include "imap/search_query.h"
+#include "imap/user.h"
+#include "imap/xapian_wrap.h"
 
 #ifdef HAVE_LIBCHARDET
 #include <chardet/chardet.h>
 #endif
-
-/* generated headers are not necessarily in current directory */
-#include "imap/http_err.h"
-#include "imap/imap_err.h"
 
 EXPORTED int jmap_readprop_full(json_t *root, const char *prefix, const char *name,
                               int mandatory, json_t *invalid, const char *fmt,

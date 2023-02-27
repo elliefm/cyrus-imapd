@@ -49,11 +49,10 @@
 #include <string.h>
 #include <syslog.h>
 
-#include "http_client.h"
-#include "prot.h"
-#include "tok.h"
+#include "lib/prot.h"
+#include "lib/tok.h"
 
-/* generated headers are not necessarily in current directory */
+#include "imap/http_client.h"
 #include "imap/http_err.h"
 #include "imap/imap_err.h"
 

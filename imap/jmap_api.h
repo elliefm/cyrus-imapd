@@ -44,18 +44,19 @@
 #ifndef JMAP_API_H
 #define JMAP_API_H
 
-#include "acl.h"
-#include "auth.h"
-#include "conversations.h"
-#include "dav_db.h"
-#include "hash.h"
-#include "jmap_util.h"
-#include "json_support.h"
-#include "mailbox.h"
-#include "mboxname.h"
-#include "msgrecord.h"
-#include "ptrarray.h"
-#include "strarray.h"
+#include "lib/auth.h"
+#include "lib/hash.h"
+#include "lib/ptrarray.h"
+#include "lib/strarray.h"
+
+#include "imap/acl.h"
+#include "imap/conversations.h"
+#include "imap/dav_db.h"
+#include "imap/jmap_util.h"
+#include "imap/json_support.h"
+#include "imap/mailbox.h"
+#include "imap/mboxname.h"
+#include "imap/msgrecord.h"
 
 #define JMAP_URN_CORE       "urn:ietf:params:jmap:core"
 #define JMAP_URN_MAIL       "urn:ietf:params:jmap:mail"

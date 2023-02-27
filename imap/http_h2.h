@@ -50,7 +50,7 @@
 #include <nghttp2/nghttp2.h>
 #endif
 
-#include "util.h"
+#include "lib/util.h"
 
 #define HTTP2_CLEARTEXT_ID  "h2c"
 

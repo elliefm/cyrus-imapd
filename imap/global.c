@@ -61,30 +61,29 @@
 # include <unistd.h>
 #endif
 
-#include "acl.h"
-#include "assert.h"
-#include "charset.h"
-#include "cyr_lock.h"
-#include "gmtoff.h"
-#include "iptostring.h"
-#include "global.h"
-#include "ical_support.h"
-#include "libconfig.h"
-#include "libcyr_cfg.h"
-#include "mboxlist.h"
-#include "mutex.h"
-#include "prot.h" /* for PROT_BUFSIZE */
-#include "strarray.h"
-#include "userdeny.h"
-#include "util.h"
-#include "xmalloc.h"
-#include "xstrlcat.h"
-#include "xstrlcpy.h"
+#include "lib/assert.h"
+#include "lib/charset.h"
+#include "lib/cyr_lock.h"
+#include "lib/gmtoff.h"
+#include "lib/iptostring.h"
+#include "lib/libconfig.h"
+#include "lib/libcyr_cfg.h"
+#include "lib/prot.h" /* for PROT_BUFSIZE */
+#include "lib/strarray.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
+#include "lib/xstrlcat.h"
+#include "lib/xstrlcpy.h"
 
-/* generated headers are not necessarily in current directory */
+#include "imap/acl.h"
+#include "imap/global.h"
 #include "imap/http_err.h"
+#include "imap/ical_support.h"
 #include "imap/imap_err.h"
+#include "imap/mboxlist.h"
 #include "imap/mupdate_err.h"
+#include "imap/mutex.h"
+#include "imap/userdeny.h"
 
 static enum {
     NOT_RUNNING = 0,

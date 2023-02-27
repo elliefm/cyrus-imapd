@@ -46,11 +46,12 @@
 
 #include <config.h>
 
-#include "hash.h"
-#include "http_jmap.h"
-#include "jmap_util.h"
-#include "json_support.h"
-#include "msgrecord.h"
+#include "lib/hash.h"
+
+#include "imap/http_jmap.h"
+#include "imap/jmap_util.h"
+#include "imap/json_support.h"
+#include "imap/msgrecord.h"
 
 extern int jmap_email_find(jmap_req_t *req, const char *email_id,
                            const char *from_accountid,

@@ -61,51 +61,48 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <ctype.h>
-#include "prot.h"
 
 #include <sasl/sasl.h>
 #include <sasl/saslutil.h>
 #include <jansson.h>
 
-#include "httpd.h"
-#include "http_h2.h"
-#include "http_jwt.h"
-#include "http_proxy.h"
-#include "http_ws.h"
+#include "lib/assert.h"
+#include "lib/iptostring.h"
+#include "lib/map.h"
+#include "lib/md5.h"
+#include "lib/prot.h"
+#include "lib/stristr.h"
+#include "lib/times.h"
+#include "lib/tok.h"
+#include "lib/util.h"
+#include "lib/wildmat.h"
+#include "lib/xstrlcpy.h"
+#include "lib/xstrlcat.h"
 
-#include "acl.h"
-#include "assert.h"
-#include "util.h"
-#include "iptostring.h"
-#include "global.h"
-#include "tls.h"
-#include "map.h"
-
-#include "imapd.h"
-#include "proc.h"
-#include "version.h"
-#include "stristr.h"
-#include "xstrlcpy.h"
-#include "xstrlcat.h"
-#include "telemetry.h"
-#include "backend.h"
-#include "prometheus.h"
-#include "proxy.h"
-#include "sync_support.h"
-#include "userdeny.h"
-#include "message.h"
-#include "idle.h"
-#include "times.h"
-#include "tok.h"
-#include "wildmat.h"
-#include "md5.h"
-
-/* generated headers are not necessarily in current directory */
-#include "imap/imap_err.h"
+#include "imap/acl.h"
+#include "imap/backend.h"
+#include "imap/global.h"
+#include "imap/httpd.h"
 #include "imap/http_err.h"
+#include "imap/http_h2.h"
+#include "imap/http_jwt.h"
+#include "imap/http_proxy.h"
+#include "imap/http_ws.h"
+#include "imap/idle.h"
+#include "imap/imapd.h"
+#include "imap/imap_err.h"
+#include "imap/message.h"
+#include "imap/proc.h"
+#include "imap/prometheus.h"
+#include "imap/proxy.h"
+#include "imap/sync_support.h"
+#include "imap/telemetry.h"
+#include "imap/tls.h"
+#include "imap/userdeny.h"
+#include "imap/version.h"
 
 #ifdef WITH_DAV
-#include "http_dav.h"
+#include "imap/http_dav.h"
 #endif
 
 #include <libxml/tree.h>

@@ -44,8 +44,8 @@
 #ifndef HTTP_JMAP_H
 #define HTTP_JMAP_H
 
-#include "httpd.h"
-#include "jmap_api.h"
+#include "imap/httpd.h"
+#include "imap/jmap_api.h"
 
 extern struct namespace jmap_namespace;
 

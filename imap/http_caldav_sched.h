@@ -59,10 +59,10 @@
 
 #endif /* WITH_DKIM */
 
-#include "calsched_support.h"
-#include "http_dav.h"
-#include "ical_support.h"
-#include "itip_support.h"
+#include "imap/calsched_support.h"
+#include "imap/http_dav.h"
+#include "imap/ical_support.h"
+#include "imap/itip_support.h"
 
 
 struct freebusy {

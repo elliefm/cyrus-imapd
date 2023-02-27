@@ -54,11 +54,12 @@
 #include <string.h>
 #include <errno.h>
 
-#include "assert.h"
-#include "idle.h"
-#include "idlemsg.h"
-#include "global.h"
-#include "util.h"
+#include "lib/assert.h"
+#include "lib/util.h"
+
+#include "imap/idle.h"
+#include "imap/idlemsg.h"
+#include "imap/global.h"
 
 HIDDEN const char *idle_method_desc = "no";
 

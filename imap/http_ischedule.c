@@ -52,22 +52,21 @@
 
 #include <libical/ical.h>
 
-#include "global.h"
-#include "httpd.h"
-#include "http_caldav_sched.h"
-#include "http_dav.h"
-#include "http_proxy.h"
-#include "jcal.h"
-#include "map.h"
-#include "proxy.h"
-#include "tok.h"
-#include "util.h"
-#include "xmalloc.h"
-#include "xcal.h"
-#include "xstrlcpy.h"
+#include "lib/map.h"
+#include "lib/tok.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
+#include "lib/xstrlcpy.h"
 
-/* generated headers are not necessarily in current directory */
+#include "imap/global.h"
+#include "imap/httpd.h"
+#include "imap/http_caldav_sched.h"
+#include "imap/http_dav.h"
 #include "imap/http_err.h"
+#include "imap/http_proxy.h"
+#include "imap/jcal.h"
+#include "imap/proxy.h"
+#include "imap/xcal.h"
 
 #include <sasl/saslutil.h>
 

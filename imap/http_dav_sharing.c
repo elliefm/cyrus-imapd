@@ -42,22 +42,21 @@
  */
 
 #include <sysexits.h>
+#include <syslog.h>
 
-#include "httpd.h"
-#include "http_dav.h"
-#include "http_dav_sharing.h"
-#include "http_proxy.h"
-#include "proxy.h"
-#include "strhash.h"
-#include "syslog.h"
-#include "times.h"
-#include "user.h"
-#include "webdav_db.h"
-#include "xstrlcpy.h"
+#include "lib/strhash.h"
+#include "lib/xstrlcpy.h"
 
-/* generated headers are not necessarily in current directory */
+#include "imap/httpd.h"
+#include "imap/http_dav.h"
+#include "imap/http_dav_sharing.h"
 #include "imap/http_err.h"
+#include "imap/http_proxy.h"
 #include "imap/imap_err.h"
+#include "imap/proxy.h"
+#include "imap/times.h"
+#include "imap/user.h"
+#include "imap/webdav_db.h"
 
 #define DAVNOTIFICATION_CONTENT_TYPE \
     "application/davnotification+xml; charset=utf-8"

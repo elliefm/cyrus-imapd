@@ -52,28 +52,26 @@
 #include <errno.h>
 
 #include "lib/assert.h"
+#include "lib/cyr_qsort_r.h"
+#include "lib/hash.h"
+#include "lib/stristr.h"
+#include "lib/times.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
 
-#include "annotate.h"
-#include "carddav_db.h"
-#include "cyr_qsort_r.h"
-#include "global.h"
-#include "hash.h"
-#include "http_carddav.h"
-#include "http_dav.h"
-#include "http_jmap.h"
-#include "json_support.h"
-#include "mailbox.h"
-#include "mboxname.h"
-#include "stristr.h"
-#include "times.h"
-#include "util.h"
-#include "vcard_support.h"
-#include "xapian_wrap.h"
-#include "xmalloc.h"
-
-/* generated headers are not necessarily in current directory */
+#include "imap/annotate.h"
+#include "imap/carddav_db.h"
+#include "imap/global.h"
+#include "imap/http_carddav.h"
+#include "imap/http_dav.h"
 #include "imap/http_err.h"
+#include "imap/http_jmap.h"
 #include "imap/imap_err.h"
+#include "imap/json_support.h"
+#include "imap/mailbox.h"
+#include "imap/mboxname.h"
+#include "imap/vcard_support.h"
+#include "imap/xapian_wrap.h"
 
 static int jmap_contactgroup_get(struct jmap_req *req);
 static int jmap_contactgroup_changes(struct jmap_req *req);

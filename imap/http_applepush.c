@@ -41,15 +41,14 @@
  *
  */
 
-#include "config.h"
-
-#include "acl.h"
-#include "httpd.h"
-#include "http_dav.h"
-#include "util.h"
+#include <config.h>
 #include <syslog.h>
 
-/* generated headers are not necessarily in current directory */
+#include "lib/util.h"
+
+#include "imap/acl.h"
+#include "imap/httpd.h"
+#include "imap/http_dav.h"
 #include "imap/http_err.h"
 
 static void applepush_init(struct buf *serverinfo);

@@ -46,10 +46,11 @@
 
 #include <config.h>
 
-#include "jmap_api.h"
-#include "json_support.h"
-#include "ptrarray.h"
-#include "util.h"
+#include "lib/ptrarray.h"
+#include "lib/util.h"
+
+#include "imap/jmap_api.h"
+#include "imap/json_support.h"
 
 extern json_t *jmap_calendar_events_from_msg(jmap_req_t *req,
                                              const char *mboxid, uint32_t uid,

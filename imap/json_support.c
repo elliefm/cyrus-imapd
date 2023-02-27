@@ -47,7 +47,7 @@
 #include <string.h>
 #include <time.h>
 
-#include "json_support.h"
+#include "imap/json_support.h"
 
 static int parse_date(json_t *json, unsigned utc)
 {

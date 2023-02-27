@@ -56,15 +56,13 @@
 #include <string.h>
 #include <netinet/in.h>
 
-/* cyrus includes */
-#include "global.h"
-#include "mailbox.h"
-#include "xmalloc.h"
-#include "mboxlist.h"
-#include "util.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
 
-/* generated headers are not necessarily in current directory */
+#include "imap/global.h"
 #include "imap/imap_err.h"
+#include "imap/mailbox.h"
+#include "imap/mboxlist.h"
 
 /* globals for callback functions */
 static int days = -1;

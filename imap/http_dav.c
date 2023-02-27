@@ -62,38 +62,37 @@
  *
  */
 
-#include <sysexits.h>
-
-#include "annotate.h"
-#include "acl.h"
-#include "append.h"
-#include "dlist.h"
-#include "global.h"
-#include "http_dav.h"
-#include "http_dav_sharing.h"
-#include "http_proxy.h"
-#include "index.h"
-#include "proxy.h"
-#include "times.h"
-#include "syslog.h"
-#include "strhash.h"
-#include "sync_support.h"
-#include "tok.h"
-#include "user.h"
-#include "util.h"
-#include "version.h"
-#include "xmalloc.h"
-#include "xml_support.h"
-#include "xstrlcat.h"
-#include "xstrlcpy.h"
-#include "xstrnchr.h"
-
-/* generated headers are not necessarily in current directory */
-#include "imap/http_err.h"
-#include "imap/imap_err.h"
-
 #include <errno.h>
+#include <sysexits.h>
+#include <syslog.h>
+
 #include <libxml/uri.h>
+
+#include "lib/times.h"
+#include "lib/strhash.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
+#include "lib/xstrlcat.h"
+#include "lib/xstrlcpy.h"
+#include "lib/xstrnchr.h"
+
+#include "imap/annotate.h"
+#include "imap/acl.h"
+#include "imap/append.h"
+#include "imap/dlist.h"
+#include "imap/global.h"
+#include "imap/http_dav.h"
+#include "imap/http_dav_sharing.h"
+#include "imap/http_err.h"
+#include "imap/http_proxy.h"
+#include "imap/imap_err.h"
+#include "imap/index.h"
+#include "imap/proxy.h"
+#include "imap/sync_support.h"
+#include "imap/tok.h"
+#include "imap/user.h"
+#include "imap/version.h"
+#include "imap/xml_support.h"
 
 static const struct dav_namespace_t {
     const char *href;

@@ -58,27 +58,25 @@
 #include <errno.h>
 
 #include "lib/assert.h"
+#include "lib/hash.h"
+#include "lib/map.h"
+#include "lib/strhash.h"
+#include "lib/times.h"
+#include "lib/tok.h"
+#include "lib/util.h"
+#include "lib/xstrlcpy.h"
 
-#include "global.h"
-#include "hash.h"
-#include "httpd.h"
-#include "http_dav.h"
-#include "http_proxy.h"
-#include "ical_support.h"
-#include "jcal.h"
-#include "map.h"
-#include "strhash.h"
-#include "times.h"
-#include "tok.h"
-#include "util.h"
-#include "version.h"
-#include "xcal.h"
-#include "xstrlcpy.h"
-#include "zoneinfo_db.h"
-
-/* generated headers are not necessarily in current directory */
+#include "imap/global.h"
+#include "imap/httpd.h"
+#include "imap/http_dav.h"
 #include "imap/http_err.h"
+#include "imap/http_proxy.h"
+#include "imap/ical_support.h"
+#include "imap/jcal.h"
 #include "imap/tz_err.h"
+#include "imap/version.h"
+#include "imap/xcal.h"
+#include "imap/zoneinfo_db.h"
 
 #define TZDIST_WELLKNOWN_URI "/.well-known/timezone"
 

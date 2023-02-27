@@ -56,11 +56,12 @@
 #include <signal.h>
 #include <fcntl.h>
 
-#include "idlemsg.h"
-#include "global.h"
-#include "mboxlist.h"
-#include "xmalloc.h"
-#include "hash.h"
+#include "lib/hash.h"
+#include "lib/xmalloc.h"
+
+#include "imap/idlemsg.h"
+#include "imap/global.h"
+#include "imap/mboxlist.h"
 
 extern int optind;
 extern char *optarg;

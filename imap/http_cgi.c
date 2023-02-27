@@ -51,19 +51,17 @@
 #include <syslog.h>
 
 #include "lib/assert.h"
+#include "lib/command.h"
+#include "lib/tok.h"
+#include "lib/util.h"
 
-#include "command.h"
-#include "global.h"
-#include "httpd.h"
-#include "http_proxy.h"
-#include "proxy.h"
-#include "tok.h"
-#include "util.h"
-#include "version.h"
-
-/* generated headers are not necessarily in current directory */
+#include "imap/global.h"
+#include "imap/httpd.h"
 #include "imap/http_err.h"
+#include "imap/http_proxy.h"
 #include "imap/imap_err.h"
+#include "imap/proxy.h"
+#include "imap/version.h"
 
 static void cgi_init(struct buf *serverinfo);
 static int meth_get(struct transaction_t *txn, void *params);

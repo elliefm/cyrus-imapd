@@ -47,14 +47,13 @@
 #include <syslog.h>
 #include <errno.h>
 
-#include "libconfig.h"
-
-#include "jmap_mail_query.h"
-#include "jmap_util.h"
-#include "json_support.h"
-#include "search_engines.h"
+#include "lib/libconfig.h"
 
 #include "imap/imap_err.h"
+#include "imap/jmap_mail_query.h"
+#include "imap/jmap_util.h"
+#include "imap/json_support.h"
+#include "imap/search_engines.h"
 
 #ifndef JMAP_URN_MAIL
 #define JMAP_URN_MAIL                "urn:ietf:params:jmap:mail"

@@ -52,18 +52,16 @@
 #include <errno.h>
 
 #include "lib/assert.h"
+#include "lib/parseaddr.h"
+#include "lib/times.h"
+#include "lib/util.h"
 
-#include "http_jmap.h"
-#include "jmap_api.h"
-#include "jmap_mail.h"
-#include "json_support.h"
-#include "parseaddr.h"
-#include "times.h"
-#include "util.h"
-
-/* generated headers are not necessarily in current directory */
 #include "imap/http_err.h"
+#include "imap/http_jmap.h"
 #include "imap/imap_err.h"
+#include "imap/jmap_api.h"
+#include "imap/jmap_mail.h"
+#include "imap/json_support.h"
 
 static int jmap_mdn_send(jmap_req_t *req);
 static int jmap_mdn_parse(jmap_req_t *req);

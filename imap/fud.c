@@ -61,18 +61,17 @@
 #include <errno.h>
 #include <pwd.h>
 
-#include "acl.h"
-#include "mboxlist.h"
-#include "global.h"
-#include "mailbox.h"
-#include "map.h"
-#include "mboxname.h"
-#include "proc.h"
-#include "seen.h"
-#include "xmalloc.h"
+#include "lib/map.h"
+#include "lib/xmalloc.h"
 
-/* generated headers are not necessarily in current directory */
+#include "imap/acl.h"
+#include "imap/global.h"
 #include "imap/imap_err.h"
+#include "imap/mailbox.h"
+#include "imap/mboxlist.h"
+#include "imap/mboxname.h"
+#include "imap/proc.h"
+#include "imap/seen.h"
 
 #define REQ_OK          0
 #define REQ_DENY        1

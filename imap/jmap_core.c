@@ -48,18 +48,16 @@
 #include <string.h>
 #include <syslog.h>
 
-#include "acl.h"
-#include "append.h"
-#include "caldav_db.h"
-#include "carddav_db.h"
-#include "http_jmap.h"
-#include "times.h"
+#include "lib/times.h"
 
-/* generated headers are not necessarily in current directory */
+#include "imap/acl.h"
+#include "imap/append.h"
+#include "imap/caldav_db.h"
+#include "imap/carddav_db.h"
 #include "imap/http_err.h"
+#include "imap/http_jmap.h"
 #include "imap/imap_err.h"
 #include "imap/jmap_err.h"
-
 
 /* JMAP Core API Methods */
 static int jmap_blob_copy(jmap_req_t *req);

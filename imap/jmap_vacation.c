@@ -52,14 +52,15 @@
 #include <errno.h>
 
 #include "lib/assert.h"
+#include "lib/hash.h"
+#include "lib/map.h"
+#include "lib/util.h"
 
-#include "hash.h"
-#include "http_jmap.h"
-#include "json_support.h"
-#include "map.h"
-#include "sync_support.h"
-#include "user.h"
-#include "util.h"
+#include "imap/http_jmap.h"
+#include "imap/imap_err.h"
+#include "imap/json_support.h"
+#include "imap/sync_support.h"
+#include "imap/user.h"
 
 #ifdef USE_SIEVE
 #include "sieve/sieve_interface.h"
@@ -67,9 +68,6 @@
 #include "sieve_db.h"
 #include "sievedir.h"
 #endif
-
-/* generated headers are not necessarily in current directory */
-#include "imap/imap_err.h"
 
 static int jmap_vacation_get(jmap_req_t *req);
 static int jmap_vacation_set(jmap_req_t *req);

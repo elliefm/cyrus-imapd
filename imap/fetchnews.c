@@ -58,15 +58,16 @@
 #include <arpa/inet.h>
 #include <sys/un.h>
 
-#include "cyrusdb.h"
-#include "global.h"
-#include "gmtoff.h"
-#include "cyr_lock.h"
-#include "prot.h"
-#include "util.h"
-#include "xmalloc.h"
-#include "xstrlcat.h"
-#include "strarray.h"
+#include "lib/cyrusdb.h"
+#include "lib/cyr_lock.h"
+#include "lib/gmtoff.h"
+#include "lib/prot.h"
+#include "lib/strarray.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
+#include "lib/xstrlcat.h"
+
+#include "imap/global.h"
 
 #define FNAME_NEWSRCDB "/fetchnews.db"
 #define DB ("flat")

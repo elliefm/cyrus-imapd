@@ -47,21 +47,20 @@
 #include <sysexits.h>
 #include <syslog.h>
 
-#include "httpd.h"
-#include "http_dav.h"
-#include "http_proxy.h"
-#include "mailbox.h"
-#include "proxy.h"
-#include "spool.h"
-#include "tok.h"
-#include "user.h"
-#include "util.h"
-#include "webdav_db.h"
-#include "xstrlcpy.h"
+#include "lib/tok.h"
+#include "lib/util.h"
+#include "lib/xstrlcpy.h"
 
-/* generated headers are not necessarily in current directory */
+#include "imap/httpd.h"
+#include "imap/http_dav.h"
 #include "imap/http_err.h"
+#include "imap/http_proxy.h"
 #include "imap/imap_err.h"
+#include "imap/mailbox.h"
+#include "imap/proxy.h"
+#include "imap/spool.h"
+#include "imap/user.h"
+#include "imap/webdav_db.h"
 
 static void my_webdav_init(struct buf *serverinfo);
 static int my_webdav_auth(const char *userid);

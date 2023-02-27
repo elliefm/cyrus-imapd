@@ -56,28 +56,27 @@
 
 #include <sasl/saslutil.h>
 
-#include "caldav_util.h"
-#include "dynarray.h"
-#include "httpd.h"
-#include "http_caldav_sched.h"
-#include "http_dav.h"
-#include "http_proxy.h"
-#include "jmap_ical.h"
-#include "jmap_util.h"
-#include "msgrecord.h"
-#include "notify.h"
-#include "crc32.h"
-#include "smtpclient.h"
-#include "strhash.h"
-#include "times.h"
-#include "webdav_db.h"
-#include "xmalloc.h"
-#include "xstrlcat.h"
-#include "xstrlcpy.h"
+#include "lib/crc32.h"
+#include "lib/dynarray.h"
+#include "lib/strhash.h"
+#include "lib/times.h"
+#include "lib/xmalloc.h"
+#include "lib/xstrlcat.h"
+#include "lib/xstrlcpy.h"
 
-/* generated headers are not necessarily in current directory */
+#include "imap/caldav_util.h"
+#include "imap/httpd.h"
+#include "imap/http_caldav_sched.h"
+#include "imap/http_dav.h"
 #include "imap/http_err.h"
+#include "imap/http_proxy.h"
 #include "imap/imap_err.h"
+#include "imap/jmap_ical.h"
+#include "imap/jmap_util.h"
+#include "imap/msgrecord.h"
+#include "imap/notify.h"
+#include "imap/smtpclient.h"
+#include "imap/webdav_db.h"
 
 int caladdress_lookup(const char *addr, struct caldav_sched_param *param,
                       const strarray_t *schedule_addresses)

@@ -43,10 +43,11 @@
 #ifndef _IMAP_PROXY_H
 #define _IMAP_PROXY_H
 
-#include "annotate.h"
-#include "backend.h"
-#include "imapurl.h"
-#include "strarray.h"
+#include "lib/strarray.h"
+
+#include "imap/annotate.h"
+#include "imap/backend.h"
+#include "imap/imapurl.h"
 
 enum {
     PROXY_NOCONNECTION = -1,

@@ -47,30 +47,28 @@
 #include <sys/resource.h>
 
 #include <errno.h>
+#include <syslog.h>
 
-#include "append.h"
-#include "bsearch.h"
-#include "cyrusdb.h"
-#include "hash.h"
-#include "httpd.h"
-#include "http_dav.h"
-#include "http_dav_sharing.h"
-#include "http_jmap.h"
-#include "imparse.h"
-#include "mboxname.h"
-#include "msgrecord.h"
-#include "proxy.h"
-#include "times.h"
-#include "strhash.h"
-#include "syslog.h"
-#include "xmalloc.h"
-#include "xstrlcpy.h"
+#include "lib/bsearch.h"
+#include "lib/cyrusdb.h"
+#include "lib/hash.h"
+#include "lib/imparse.h"
+#include "lib/times.h"
+#include "lib/strhash.h"
+#include "lib/xmalloc.h"
+#include "lib/xstrlcpy.h"
 
-/* generated headers are not necessarily in current directory */
+#include "imap/append.h"
+#include "imap/httpd.h"
+#include "imap/http_dav.h"
 #include "imap/http_err.h"
+#include "imap/http_dav_sharing.h"
+#include "imap/http_jmap.h"
 #include "imap/imap_err.h"
 #include "imap/jmap_err.h"
-
+#include "imap/mboxname.h"
+#include "imap/msgrecord.h"
+#include "imap/proxy.h"
 
 static json_t *extract_value(json_t *from, const char *path, ptrarray_t *refs);
 

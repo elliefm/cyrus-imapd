@@ -46,22 +46,22 @@
 
 #include <jansson.h>
 
-#include "strarray.h"
+#include "lib/strarray.h"
 
-#include "jmap_mail_query_parse.h"
-#include "jmap_util.h"
+#include "imap/jmap_mail_query_parse.h"
+#include "imap/jmap_util.h"
 
 #ifdef WITH_DAV
 
 #include <time.h>
 
-#include "auth.h"
-#include "hash.h"
-#include "ptrarray.h"
+#include "lib/auth.h"
+#include "lib/hash.h"
+#include "lib/ptrarray.h"
 
-#include "carddav_db.h"
-#include "message.h"
-#include "xapian_wrap.h"
+#include "imap/carddav_db.h"
+#include "imap/message.h"
+#include "imap/xapian_wrap.h"
 
 struct email_contactfilter {
     const char *accountid;

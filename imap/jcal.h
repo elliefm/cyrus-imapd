@@ -46,7 +46,7 @@
 #include <libical/ical.h>
 #include <jansson.h>
 
-#include "util.h"
+#include "lib/util.h"
 
 extern struct buf *icalcomponent_as_jcal_string(icalcomponent* comp);
 extern icalcomponent *jcal_string_as_icalcomponent(const struct buf *);

@@ -48,10 +48,10 @@
 
 #include <libical/ical.h>
 
-#include "acl.h"
-#include "parseaddr.h"
-#include "strarray.h"
+#include "lib/parseaddr.h"
+#include "lib/strarray.h"
 
+#include "imap/acl.h"
 
 #define SCHED_INBOX     "Inbox/"
 #define SCHED_OUTBOX    "Outbox/"

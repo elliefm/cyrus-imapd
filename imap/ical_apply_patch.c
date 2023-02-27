@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <libical/ical.h>
 
-#include "ical_support.h"
+#include "imap/ical_support.h"
 
 extern int optind, opterr;
 extern char *optarg;

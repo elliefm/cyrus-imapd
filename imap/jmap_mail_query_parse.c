@@ -46,9 +46,9 @@
 #include <string.h>
 #include <syslog.h>
 
-#include "jmap_api.h"
-#include "jmap_mail_query_parse.h"
-#include "json_support.h"
+#include "imap/jmap_api.h"
+#include "imap/jmap_mail_query_parse.h"
+#include "imap/json_support.h"
 
 HIDDEN void jmap_email_filtercondition_parse(json_t *filter,
                                              jmap_email_filter_parse_ctx_t *ctx)

@@ -51,25 +51,23 @@
 #include <syslog.h>
 #include <errno.h>
 
+#include "lib/arrayu64.h"
 #include "lib/assert.h"
+#include "lib/hash.h"
+#include "lib/times.h"
 
-#include "acl.h"
-#include "append.h"
-#include "arrayu64.h"
-#include "caldav_db.h"
-#include "caldav_util.h"
-#include "carddav_db.h"
-#include "hash.h"
-#include "http_caldav_sched.h"
-#include "http_jmap.h"
-#include "json_support.h"
-#include "times.h"
-#include "user.h"
-#include "vcard_support.h"
-
-/* generated headers are not necessarily in current directory */
+#include "imap/acl.h"
+#include "imap/append.h"
+#include "imap/caldav_db.h"
+#include "imap/caldav_util.h"
+#include "imap/carddav_db.h"
+#include "imap/http_caldav_sched.h"
 #include "imap/http_err.h"
+#include "imap/http_jmap.h"
 #include "imap/imap_err.h"
+#include "imap/json_support.h"
+#include "imap/user.h"
+#include "imap/vcard_support.h"
 
 static int jmap_backup_restore_contacts(jmap_req_t *req);
 static int jmap_backup_restore_calendars(jmap_req_t *req);

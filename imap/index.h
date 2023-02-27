@@ -55,11 +55,12 @@
 #include <fcntl.h>
 #include <netinet/in.h>
 
-#include "annotate.h" /* for strlist functionality */
-#include "search_engines.h"
-#include "message_guid.h"
-#include "seqset.h"
-#include "strarray.h"
+#include "lib/seqset.h"
+#include "lib/strarray.h"
+
+#include "imap/annotate.h" /* for strlist functionality */
+#include "imap/message_guid.h"
+#include "imap/search_engines.h"
 
 /* Special "sort criteria" to load message-id and references/in-reply-to
  * into msgdata array for threaders that need them.

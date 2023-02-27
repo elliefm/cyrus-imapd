@@ -43,9 +43,10 @@
 #ifndef __CYRUS_IMAP_PARSE_H__
 #define __CYRUS_IMAP_PARSE_H__
 
-#include "libconfig.h"
-#include "prot.h"
-#include "index.h"
+#include "lib/libconfig.h"
+#include "lib/prot.h"
+
+#include "imap/index.h"
 
 /* imap parsing functions (imapparse.c) */
 int getword(struct protstream *in, struct buf *buf);

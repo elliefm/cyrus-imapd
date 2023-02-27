@@ -46,16 +46,15 @@
 #include <string.h>
 #include <sysexits.h>
 
-#include "global.h"
-#include "imparse.h"
-#include "search_expr.h"
-#include "imapd.h"      /* for struct searchargs */
-#include "prot.h"
-#include "util.h"
-#include "xmalloc.h"
+#include "lib/imparse.h"
+#include "lib/prot.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
 
-/* generated headers are not necessarily in current directory */
+#include "imap/global.h"
+#include "imap/imapd.h"      /* for struct searchargs */
 #include "imap/imap_err.h"
+#include "imap/search_expr.h"
 
 /*
  * Parse a word

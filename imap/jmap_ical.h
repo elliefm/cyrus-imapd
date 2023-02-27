@@ -51,8 +51,8 @@ extern "C" {
 #include <jansson.h>
 #include <libical/ical.h>
 
-#include "jmap_api.h"
-#include "jmap_util.h"
+#include "imap/jmap_api.h"
+#include "imap/jmap_util.h"
 
 #define JMAPICAL_ERROR_UNKNOWN  -1
 #define JMAPICAL_ERROR_CALLBACK 1

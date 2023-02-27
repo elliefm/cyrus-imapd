@@ -47,7 +47,7 @@
 #include <syslog.h>
 #include <time.h>
 
-#include "jmap_push.h"
+#include "imap/jmap_push.h"
 
 
 int jmap_push_poll = 0;

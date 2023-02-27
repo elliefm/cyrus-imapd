@@ -46,18 +46,15 @@
 
 #include <syslog.h>
 
-#include "itip_support.h"
-#include "caldav_db.h"
-#include "caldav_util.h"
-#include "http_dav.h"
-#include "httpd.h"
-#include "ical_support.h"
-#include "jmap_ical.h"
-
-/* generated headers are not necessarily in current directory */
-#include "imap/imap_err.h"
+#include "imap/caldav_db.h"
+#include "imap/caldav_util.h"
+#include "imap/httpd.h"
+#include "imap/http_dav.h"
 #include "imap/http_err.h"
-
+#include "imap/ical_support.h"
+#include "imap/imap_err.h"
+#include "imap/itip_support.h"
+#include "imap/jmap_ical.h"
 
 HIDDEN void sched_param_fini(struct caldav_sched_param *sparam)
 {

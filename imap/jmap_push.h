@@ -46,10 +46,11 @@
 
 #include <jansson.h>
 
-#include "httpd.h"
-#include "mboxname.h"
-#include "prot.h"
-#include "util.h"
+#include "lib/prot.h"
+#include "lib/util.h"
+
+#include "imap/httpd.h"
+#include "imap/mboxname.h"
 
 extern int jmap_push_poll;
 

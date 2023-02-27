@@ -46,7 +46,7 @@
 
 #include <jansson.h>
 
-#include "strarray.h"
+#include "lib/strarray.h"
 
 typedef struct jmap_email_filter_parse_context jmap_email_filter_parse_ctx_t;
 

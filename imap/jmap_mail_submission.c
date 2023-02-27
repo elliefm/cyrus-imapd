@@ -53,25 +53,23 @@
 #include <errno.h>
 
 #include "lib/assert.h"
+#include "lib/parseaddr.h"
+#include "lib/times.h"
+#include "lib/util.h"
 
-#include "acl.h"
-#include "append.h"
-#include "http_jmap.h"
-#include "http_proxy.h"
-#include "jmap_mail.h"
-#include "jmap_util.h"
-#include "json_support.h"
-#include "parseaddr.h"
-#include "proxy.h"
-#include "smtpclient.h"
-#include "sync_support.h"
-#include "times.h"
-#include "user.h"
-#include "util.h"
-
-/* generated headers are not necessarily in current directory */
+#include "imap/acl.h"
+#include "imap/append.h"
 #include "imap/http_err.h"
+#include "imap/http_jmap.h"
+#include "imap/http_proxy.h"
 #include "imap/imap_err.h"
+#include "imap/jmap_mail.h"
+#include "imap/jmap_util.h"
+#include "imap/json_support.h"
+#include "imap/proxy.h"
+#include "imap/smtpclient.h"
+#include "imap/sync_support.h"
+#include "imap/user.h"
 
 #define JMAP_SUBID_SIZE 12
 

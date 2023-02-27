@@ -52,14 +52,12 @@
 
 #include <sasl/saslutil.h>
 
-#include "assert.h"
-#include "global.h"
-#include "util.h"
+#include "lib/assert.h"
+#include "lib/util.h"
 
-/* generated headers are not necessarily in current directory */
+#include "imap/global.h"
 #include "imap/http_err.h"
-
-#include "http_jwt.h"
+#include "imap/http_jwt.h"
 
 #ifdef HAVE_SSL
 

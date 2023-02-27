@@ -49,14 +49,15 @@
 #include <libxml/uri.h>
 #include <libical/ical.h>
 
-#include "annotate.h" /* for strlist */
-#include "dynarray.h"
-#include "hash.h"
-#include "http_client.h"
-#include "mailbox.h"
-#include "md5.h"
-#include "prometheus.h"
-#include "spool.h"
+#include "lib/dynarray.h"
+#include "lib/hash.h"
+#include "lib/md5.h"
+
+#include "imap/annotate.h" /* for strlist */
+#include "imap/http_client.h"
+#include "imap/mailbox.h"
+#include "imap/prometheus.h"
+#include "imap/spool.h"
 
 #define MAX_REQ_LINE    8000  /* minimum size per RFC 7230 */
 #define MARKUP_INDENT   2     /* # spaces to indent each line of markup */

@@ -47,16 +47,16 @@
 #include <stddef.h> /* for offsetof() macro */
 #include <syslog.h>
 
-#include "httpd.h"
-#include "ical_support.h"
-#include "json_support.h"
-#include "jcal.h"
-#include "xcal.h"
-#include "tok.h"
-#include "util.h"
-#include "version.h"
-#include "xstrlcat.h"
+#include "lib/tok.h"
+#include "lib/util.h"
+#include "lib/xstrlcat.h"
 
+#include "imap/httpd.h"
+#include "imap/ical_support.h"
+#include "imap/json_support.h"
+#include "imap/jcal.h"
+#include "imap/xcal.h"
+#include "imap/version.h"
 
 /*
  * Construct a JSON string for an iCalendar Period.

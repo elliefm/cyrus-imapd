@@ -45,7 +45,8 @@
 
 #include <sys/socket.h>
 #include <sys/un.h>
-#include "mailbox.h"
+
+#include "imap/mailbox.h"
 
 /* socket to communicate with the idled */
 #define FNAME_IDLE_SOCK_DIR "/socket"

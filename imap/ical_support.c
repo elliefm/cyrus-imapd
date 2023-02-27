@@ -47,20 +47,20 @@
 #include <sysexits.h>
 #include <syslog.h>
 
-#include "assert.h"
-#include "caldav_db.h"
-#include "css3_color.h"
-#include "global.h"
-#include "ical_support.h"
-#include "icu_wrap.h"
-#include "message.h"
-#include "strhash.h"
-#include "stristr.h"
-#include "util.h"
-#include "icu_wrap.h"
+#include "lib/assert.h"
+#include "lib/strhash.h"
+#include "lib/stristr.h"
+#include "lib/util.h"
+
+#include "imap/caldav_db.h"
+#include "imap/css3_color.h"
+#include "imap/global.h"
+#include "imap/ical_support.h"
+#include "imap/icu_wrap.h"
+#include "imap/message.h"
 
 #ifdef WITH_JMAP
-#include "jmap_ical.h"
+#include "imap/jmap_ical.h"
 #endif
 
 #ifdef HAVE_ICAL

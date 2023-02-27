@@ -44,8 +44,8 @@
 #ifndef _HTTP_PROXY_H
 #define _HTTP_PROXY_H
 
-#include "proxy.h"
-#include "http_h2.h"
+#include "imap/proxy.h"
+#include "imap/http_h2.h"
 
 
 extern struct protocol_t http_protocol;

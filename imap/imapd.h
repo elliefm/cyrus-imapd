@@ -43,16 +43,17 @@
 #ifndef INCLUDED_IMAPD_H
 #define INCLUDED_IMAPD_H
 
-#include "annotate.h"
-#include "bufarray.h"
-#include "hash.h"
-#include "mailbox.h"
-#include "message.h"
-#include "prot.h"
-#include "strarray.h"
-#include "search_expr.h"
-#include "search_sort.h"
-#include "conversations.h"
+#include "lib/bufarray.h"
+#include "lib/hash.h"
+#include "lib/prot.h"
+#include "lib/strarray.h"
+
+#include "imap/annotate.h"
+#include "imap/conversations.h"
+#include "imap/mailbox.h"
+#include "imap/message.h"
+#include "imap/search_expr.h"
+#include "imap/search_sort.h"
 
 /* Userid client has logged in as */
 extern char *imapd_userid;

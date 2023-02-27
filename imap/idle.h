@@ -42,7 +42,7 @@
 #ifndef IDLE_H
 #define IDLE_H
 
-#include "mailbox.h"
+#include "imap/mailbox.h"
 
 extern const char *idle_method_desc;
 

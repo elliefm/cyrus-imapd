@@ -44,7 +44,7 @@
 #ifndef HTTP_DAV_SHARING_H
 #define HTTP_DAV_SHARING_H
 
-#include "httpd.h"
+#include "imap/httpd.h"
 
 #define DAVSHARING_CONTENT_TYPE "application/davsharing+xml"
 

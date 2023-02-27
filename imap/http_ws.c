@@ -44,9 +44,10 @@
 #include <config.h>
 #include <sysexits.h>
 
-#include "httpd.h"
-#include "http_ws.h"
-#include "util.h"
+#include "lib/util.h"
+
+#include "imap/httpd.h"
+#include "imap/http_ws.h"
 
 #ifdef HAVE_WSLAY
 
@@ -55,16 +56,14 @@
 
 #include <sasl/saslutil.h>
 
-#include "http_h2.h"
-#include "proc.h"
-#include "retry.h"
-#include "telemetry.h"
-#include "tok.h"
-#include "xsha1.h"
+#include "lib/retry.h"
+#include "lib/tok.h"
+#include "lib/xsha1.h"
 
-/* generated headers are not necessarily in current directory */
 #include "imap/http_err.h"
-
+#include "imap/http_h2.h"
+#include "imap/proc.h"
+#include "imap/telemetry.h"
 
 #define WS_CKEY_LEN  24
 #define WS_AKEY_LEN  28

@@ -51,31 +51,28 @@
 #include <syslog.h>
 
 #include "lib/assert.h"
+#include "lib/bsearch.h"
+#include "lib/cyr_qsort_r.h"
+#include "lib/mappedfile.h"
+#include "lib/stristr.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
 
-#include "acl.h"
-#include "annotate.h"
-#include "append.h"
-#include "bsearch.h"
-#include "cyr_qsort_r.h"
-#include "http_jmap.h"
-#include "jmap_mail.h"
-#include "json_support.h"
-#include "mailbox.h"
-#include "mappedfile.h"
-#include "mboxlist.h"
-#include "mboxname.h"
-#include "msgrecord.h"
-#include "statuscache.h"
-#include "stristr.h"
-#include "sync_log.h"
-#include "user.h"
-#include "util.h"
-#include "xmalloc.h"
-
-/* generated headers are not necessarily in current directory */
+#include "imap/acl.h"
+#include "imap/annotate.h"
+#include "imap/append.h"
 #include "imap/http_err.h"
+#include "imap/http_jmap.h"
 #include "imap/imap_err.h"
-
+#include "imap/jmap_mail.h"
+#include "imap/json_support.h"
+#include "imap/mailbox.h"
+#include "imap/mboxlist.h"
+#include "imap/mboxname.h"
+#include "imap/msgrecord.h"
+#include "imap/statuscache.h"
+#include "imap/sync_log.h"
+#include "imap/user.h"
 
 static int jmap_mailbox_get(jmap_req_t *req);
 static int jmap_mailbox_set(jmap_req_t *req);

@@ -49,23 +49,22 @@
 #include <syslog.h>
 #include <sys/un.h>
 
-#include "assert.h"
-#include "acl.h"
-#include "annotate.h"
-#include "backend.h"
-#include "global.h"
-#include "hashu64.h"
-#include "imap_proxy.h"
-#include "proxy.h"
-#include "mboxname.h"
-#include "mupdate-client.h"
-#include "partlist.h"
-#include "prot.h"
-#include "util.h"
-#include "xmalloc.h"
+#include "lib/assert.h"
+#include "lib/hashu64.h"
+#include "lib/prot.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
 
-/* generated headers are not necessarily in current directory */
+#include "imap/acl.h"
+#include "imap/annotate.h"
+#include "imap/backend.h"
+#include "imap/global.h"
 #include "imap/imap_err.h"
+#include "imap/imap_proxy.h"
+#include "imap/proxy.h"
+#include "imap/mboxname.h"
+#include "imap/mupdate-client.h"
+#include "imap/partlist.h"
 
 extern unsigned int proxy_cmdcnt;
 extern struct protstream *imapd_in, *imapd_out;

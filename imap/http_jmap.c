@@ -44,27 +44,25 @@
 #include <config.h>
 
 #include <errno.h>
+#include <syslog.h>
 
-#include "acl.h"
-#include "append.h"
-#include "httpd.h"
-#include "http_jmap.h"
-#include "http_proxy.h"
-#include "http_ws.h"
-#include "jmap_push.h"
-#include "mboxname.h"
-#include "proxy.h"
-#include "times.h"
-#include "sync_support.h"
-#include "syslog.h"
-#include "user.h"
-#include "xstrlcpy.h"
+#include "lib/times.h"
+#include "lib/xstrlcpy.h"
 
-/* generated headers are not necessarily in current directory */
+#include "imap/acl.h"
+#include "imap/append.h"
+#include "imap/httpd.h"
 #include "imap/http_err.h"
+#include "imap/http_jmap.h"
+#include "imap/http_proxy.h"
+#include "imap/http_ws.h"
 #include "imap/imap_err.h"
 #include "imap/jmap_err.h"
-
+#include "imap/jmap_push.h"
+#include "imap/mboxname.h"
+#include "imap/proxy.h"
+#include "imap/sync_support.h"
+#include "imap/user.h"
 
 #define JMAP_ROOT          "/jmap"
 #define JMAP_BASE_URL      JMAP_ROOT "/"
