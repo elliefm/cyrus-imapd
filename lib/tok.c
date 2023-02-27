@@ -43,8 +43,9 @@
 #include <config.h>
 #include <string.h>
 #include <ctype.h>
-#include "tok.h"
-#include "xmalloc.h"
+
+#include "lib/tok.h"
+#include "lib/xmalloc.h"
 
 EXPORTED void tok_init(tok_t *t, const char *str, const char *sep, int flags)
 {

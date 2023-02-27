@@ -44,10 +44,9 @@
 #include <memory.h>
 
 #include "lib/assert.h"
-
-#include "dynarray.h"
-#include "util.h"
-#include "xmalloc.h"
+#include "lib/dynarray.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
 
 EXPORTED void dynarray_init(struct dynarray *da, size_t membsize)
 {

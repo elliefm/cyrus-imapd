@@ -44,9 +44,9 @@
 #include <stdlib.h>
 #include <sysexits.h>
 
-#include "auth.h"
-#include "xmalloc.h"
-#include "util.h"
+#include "lib/auth.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
 
 #ifdef HAVE_KRB
 

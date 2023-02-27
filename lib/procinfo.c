@@ -6,9 +6,9 @@
 #include <stdio.h>
 #include <ctype.h>
 
-#include "procinfo.h"
-#include "xmalloc.h"
-#include "xstrlcat.h"
+#include "lib/procinfo.h"
+#include "lib/xmalloc.h"
+#include "lib/xstrlcat.h"
 
 static struct proc_info *
 add_procinfo_generic(piarray_t *piarray, pid_t pid, const char *servicename,

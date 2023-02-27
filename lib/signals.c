@@ -50,10 +50,10 @@
 #include <string.h>
 #include <errno.h>
 
-#include "assert.h"
-#include "signals.h"
-#include "xmalloc.h"
-#include "util.h"
+#include "lib/assert.h"
+#include "lib/signals.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
 
 #ifndef _NSIG
 #define _NSIG 65

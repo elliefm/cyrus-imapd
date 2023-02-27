@@ -2,8 +2,9 @@
 #define VCARDFAST_H
 
 #include <stdlib.h>
-#include "util.h"
-#include "strarray.h"
+
+#include "lib/strarray.h"
+#include "lib/util.h"
 
 #define VCARD_APPLE_LABEL_PROPERTY "X-ABLabel"
 #define VCARD_APPLE_ABADR_PROPERTY "X-ABADR"

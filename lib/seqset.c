@@ -45,10 +45,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <sysexits.h>
-#include "seqset.h"
-#include "string.h"
-#include "util.h"
-#include "xmalloc.h"
+
+#include "lib/seqset.h"
+#include "lib/string.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
 
 #define SETGROWSIZE 30
 

@@ -41,7 +41,8 @@
  */
 
 #include <config.h>
-#include "byteorder.h"
+
+#include "lib/byteorder.h"
 
 #ifdef CYRUS_BYTESWAP
 

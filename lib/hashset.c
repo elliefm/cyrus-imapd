@@ -47,10 +47,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "assert.h"
-#include "hashset.h"
-#include "xmalloc.h"
-#include "util.h"
+#include "lib/assert.h"
+#include "lib/hashset.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
 
 EXPORTED struct hashset *hashset_new(size_t bytesize)
 {

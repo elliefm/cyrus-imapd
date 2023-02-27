@@ -46,11 +46,11 @@
 #include <stdlib.h>
 #include <syslog.h>
 
-#include "assert.h"
-#include "libcyr_cfg.h"
-#include "cyrusdb.h"
-#include "xmalloc.h"
-#include "util.h"
+#include "lib/assert.h"
+#include "lib/cyrusdb.h"
+#include "lib/libcyr_cfg.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
 
 #if defined(__GNUC__) && __GNUC__ > 1
 /* We can use the GCC union constructor extension */

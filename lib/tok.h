@@ -48,7 +48,8 @@
 
 #include <config.h>
 #include <sys/types.h>
-#include "xmalloc.h"
+
+#include "lib/xmalloc.h"
 
 typedef struct
 {

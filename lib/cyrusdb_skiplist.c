@@ -59,15 +59,15 @@
 #endif
 #include <netinet/in.h>
 
-#include "assert.h"
-#include "bsearch.h"
-#include "cyrusdb.h"
-#include "libcyr_cfg.h"
-#include "cyr_lock.h"
-#include "map.h"
-#include "retry.h"
-#include "util.h"
-#include "xmalloc.h"
+#include "lib/assert.h"
+#include "lib/bsearch.h"
+#include "lib/cyrusdb.h"
+#include "lib/cyr_lock.h"
+#include "lib/libcyr_cfg.h"
+#include "lib/map.h"
+#include "lib/retry.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
 
 #define PROB (0.5)
 

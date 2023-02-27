@@ -43,10 +43,11 @@
  * Start Date: 2011/01/11
  */
 
-#include "strarray.h"
 #include <memory.h>
-#include "util.h"
-#include "xmalloc.h"
+
+#include "lib/strarray.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
 
 EXPORTED strarray_t *strarray_new(void)
 {

@@ -52,14 +52,14 @@
 #include <unistd.h>
 #endif
 
-#include "assert.h"
-#include "bsearch.h"
-#include "cyrusdb.h"
-#include "util.h"
-#include "xmalloc.h"
-
 #include <libzeroskip/zeroskip.h>
 #include <libzeroskip/memtree.h>
+
+#include "lib/assert.h"
+#include "lib/bsearch.h"
+#include "lib/cyrusdb.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
 
 struct txn {
     struct zsdb_txn *t;

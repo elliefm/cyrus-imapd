@@ -2,9 +2,8 @@
 #include <string.h>
 
 #include "lib/assert.h"
-
-#include "smallarrayu64.h"
-#include "xmalloc.h"
+#include "lib/smallarrayu64.h"
+#include "lib/xmalloc.h"
 
 EXPORTED smallarrayu64_t *smallarrayu64_new(void)
 {

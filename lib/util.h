@@ -65,7 +65,7 @@
 #define	STDERR_FILENO	2	/* Standard error output.  */
 #endif
 
-#include "xmalloc.h"
+#include "lib/xmalloc.h"
 
 /* version string printable in gdb tracking */
 extern const char CYRUS_VERSION[];

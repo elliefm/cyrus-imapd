@@ -52,12 +52,11 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-#include "xmalloc.h"
-#include "command.h"
-#include "signals.h"
-#include "strarray.h"
+#include "lib/command.h"
+#include "lib/signals.h"
+#include "lib/strarray.h"
+#include "lib/xmalloc.h"
 
-/* generated headers are not necessarily in current directory */
 #include "imap/imap_err.h"
 
 static int wait_for_child(const char *argv0, pid_t pid);

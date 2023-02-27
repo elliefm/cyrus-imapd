@@ -55,16 +55,16 @@
 #include <sys/uio.h>
 #include <fcntl.h>
 
-#include "assert.h"
-#include "cyrusdb.h"
-#include "map.h"
-#include "bsearch.h"
-#include "cyr_lock.h"
-#include "retry.h"
-#include "util.h"
-#include "xmalloc.h"
-#include "xstrlcpy.h"
-#include "xstrlcat.h"
+#include "lib/assert.h"
+#include "lib/bsearch.h"
+#include "lib/cyrusdb.h"
+#include "lib/cyr_lock.h"
+#include "lib/map.h"
+#include "lib/retry.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
+#include "lib/xstrlcat.h"
+#include "lib/xstrlcpy.h"
 
 /* we have the file locked iff we have an outstanding transaction */
 

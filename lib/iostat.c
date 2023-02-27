@@ -1,9 +1,11 @@
+#include <config.h>
+
 #include <stdio.h>
 #include <sys/types.h>
 #include <syslog.h>
-#include "config.h"
-#include "libconfig.h"
-#include "iostat.h"
+
+#include "lib/libconfig.h"
+#include "lib/iostat.h"
 
 EXPORTED void read_io_count(struct io_count *iocount) {
     FILE *file = NULL;

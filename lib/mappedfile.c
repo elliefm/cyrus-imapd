@@ -55,8 +55,6 @@
  */
 
 
-#include "mappedfile.h"
-
 #include <config.h>
 
 #include <libgen.h>
@@ -71,13 +69,14 @@
 #include <unistd.h>
 #endif
 
-#include "assert.h"
-#include "cyr_lock.h"
-#include "libcyr_cfg.h"
-#include "map.h"
-#include "retry.h"
-#include "util.h"
-#include "xmalloc.h"
+#include "lib/assert.h"
+#include "lib/cyr_lock.h"
+#include "lib/libcyr_cfg.h"
+#include "lib/map.h"
+#include "lib/mappedfile.h"
+#include "lib/retry.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
 
 static void _ensure_mapped(struct mappedfile *mf, size_t offset, int update)
 {

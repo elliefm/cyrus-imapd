@@ -52,7 +52,7 @@
 #endif
 #include <ctype.h>
 
-#include "auth.h"
+#include "lib/auth.h"
 
 #define PTS_DBFIL FNAME_PTSDB
 #define PTS_DBSOCKET "/ptclient/ptsock"

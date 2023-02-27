@@ -40,7 +40,7 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#include "xstrnchr.h"
+#include "lib/xstrnchr.h"
 
 #ifndef HAVE_STRNCHR
 EXPORTED char *strnchr(const char *s, int c, size_t n)

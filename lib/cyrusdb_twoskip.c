@@ -52,15 +52,15 @@
 #include <unistd.h>
 #endif
 
-#include "assert.h"
-#include "bsearch.h"
-#include "byteorder.h"
-#include "cyrusdb.h"
-#include "crc32.h"
-#include "libcyr_cfg.h"
-#include "mappedfile.h"
-#include "util.h"
-#include "xmalloc.h"
+#include "lib/assert.h"
+#include "lib/bsearch.h"
+#include "lib/byteorder.h"
+#include "lib/crc32.h"
+#include "lib/cyrusdb.h"
+#include "lib/libcyr_cfg.h"
+#include "lib/mappedfile.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
 
 /*
  * twoskip disk format.

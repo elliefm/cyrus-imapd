@@ -50,7 +50,7 @@
 
 #include <stdint.h>
 
-#include "arrayu64.h"
+#include "lib/arrayu64.h"
 
 #define SMALLARRAYU64_ALLOC 8
 

@@ -46,7 +46,7 @@
 #ifndef INCLUDED_ACL_H
 #define INCLUDED_ACL_H
 
-#include "auth.h"
+#include "lib/auth.h"
 
 /* max length of an acl string */
 #define ACL_MAXSTR 32

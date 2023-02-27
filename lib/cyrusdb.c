@@ -54,13 +54,13 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-#include "assert.h"
-#include "bsearch.h"
-#include "cyrusdb.h"
-#include "util.h"
-#include "libcyr_cfg.h"
-#include "xmalloc.h"
-#include "xstrlcpy.h"
+#include "lib/assert.h"
+#include "lib/bsearch.h"
+#include "lib/cyrusdb.h"
+#include "lib/libcyr_cfg.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
+#include "lib/xstrlcpy.h"
 
 //#define DEBUGDB 1
 

@@ -52,8 +52,8 @@
 #include <stdlib.h>
 #include <sysexits.h>
 
-#include "mpool.h"
-#include "xmalloc.h"
+#include "lib/mpool.h"
+#include "lib/xmalloc.h"
 
 struct mpool
 {

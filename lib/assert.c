@@ -44,8 +44,8 @@
 #include <stdio.h>
 #include <sysexits.h>
 
-#include "xmalloc.h"
-#include "assert.h"
+#include "lib/assert.h"
+#include "lib/xmalloc.h"
 
 EXPORTED void
 assertionfailed(const char *file, int line, const char *expr)

@@ -46,9 +46,10 @@
 #include <config.h>
 #include <stdio.h>
 #include <string.h>
-#include "util.h"
-#include "glob.h"
-#include "xmalloc.h"
+
+#include "lib/glob.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
 
 /* initialize globbing structure
  *  This makes the following changes to the input string:

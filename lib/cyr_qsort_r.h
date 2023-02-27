@@ -14,7 +14,7 @@
 #ifndef INCLUDED_CYR_QSORT_R_H
 #define INCLUDED_CYR_QSORT_R_H
 
-#include "config.h"
+#include <config.h>
 
 #include <stdlib.h>
 

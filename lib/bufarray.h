@@ -48,7 +48,8 @@
 
 #include <string.h>
 #include <sys/types.h>
-#include "util.h"
+
+#include "lib/util.h"
 
 typedef struct {
     size_t alloc;

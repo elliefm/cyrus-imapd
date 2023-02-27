@@ -44,9 +44,9 @@
 #include <string.h>
 #include <sysexits.h>
 
-#include "auth.h"
-#include "libcyr_cfg.h"
-#include "xmalloc.h"
+#include "lib/auth.h"
+#include "lib/libcyr_cfg.h"
+#include "lib/xmalloc.h"
 
 struct auth_mech *auth_mechs[] = {
     &auth_unix,

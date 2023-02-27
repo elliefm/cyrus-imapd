@@ -82,18 +82,18 @@
 # endif
 #endif
 
-#include "assert.h"
-#include "bsearch.h"
-#include "cyrusdb.h"
-#include "hash.h"
-#include "map.h"
-#include "libcyr_cfg.h"
-#include "cyr_lock.h"
-#include "util.h"
-#include "xmalloc.h"
-#include "xstrlcpy.h"
-#include "xstrlcat.h"
-#include "strarray.h"
+#include "lib/assert.h"
+#include "lib/bsearch.h"
+#include "lib/cyrusdb.h"
+#include "lib/cyr_lock.h"
+#include "lib/hash.h"
+#include "lib/libcyr_cfg.h"
+#include "lib/map.h"
+#include "lib/strarray.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
+#include "lib/xstrlcat.h"
+#include "lib/xstrlcpy.h"
 
 #define FNAME_QUOTADIR "/quota/"
 #define MAX_QUOTA_PATH 4096

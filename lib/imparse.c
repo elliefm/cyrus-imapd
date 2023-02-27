@@ -43,8 +43,8 @@
 #include <config.h>
 #include <stdio.h>
 
-#include "imparse.h"
-#include "util.h"
+#include "lib/imparse.h"
+#include "lib/util.h"
 
 /*
  * Parse a word from the string starting at the pointer pointed to by 's'.

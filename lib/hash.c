@@ -7,12 +7,12 @@
 #include <stdlib.h>
 #include <syslog.h>
 
-#include "assert.h"
-#include "hash.h"
-#include "mpool.h"
-#include "strhash.h"
-#include "util.h"
-#include "xmalloc.h"
+#include "lib/assert.h"
+#include "lib/hash.h"
+#include "lib/mpool.h"
+#include "lib/strhash.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
 
 /*
 ** public domain code by Jerry Coffin, with improvements by HenkJan Wolthuis.

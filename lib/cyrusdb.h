@@ -43,7 +43,8 @@
 #define INCLUDED_CYRUSDB_H
 
 #include <stdio.h>
-#include "strarray.h"
+
+#include "lib/strarray.h"
 
 struct db;
 struct txn;

@@ -23,9 +23,8 @@
 #include <unistd.h>
 
 #include "lib/assert.h"
-
-#include "bloom.h"
-#include "murmurhash2.h"
+#include "lib/bloom.h"
+#include "lib/murmurhash2.h"
 
 #define MAKESTRING(n) STRING(n)
 #define STRING(n) #n

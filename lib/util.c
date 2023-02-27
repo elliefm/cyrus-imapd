@@ -71,15 +71,16 @@
 #include <netinet/in.h>
 #include <netinet/tcp.h>
 
-#include "byteorder.h"
-#include "libconfig.h"
-#include "map.h"
-#include "retry.h"
-#include "util.h"
-#include "assert.h"
-#include "xmalloc.h"
+#include "lib/assert.h"
+#include "lib/byteorder.h"
+#include "lib/libconfig.h"
+#include "lib/map.h"
+#include "lib/retry.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
+
 #ifdef HAVE_ZLIB
-#include "zlib.h"
+#include "lib/zlib.h"
 #endif
 
 

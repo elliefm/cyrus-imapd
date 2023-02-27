@@ -45,20 +45,19 @@
 #include <string.h>
 #include <syslog.h>
 
-#include "unicode/ucnv.h"
-
-#include "assert.h"
-#include "charset.h"
-#include "xmalloc.h"
-#include "chartable.h"
-#include "hash.h"
-#include "htmlchar.h"
-#include "util.h"
-#include "xsha1.h"
-
 #include <unicode/ustring.h>
 #include <unicode/unorm2.h>
 #include <unicode/utf8.h>
+#include <unicode/ucnv.h>
+
+#include "lib/assert.h"
+#include "lib/charset.h"
+#include "lib/chartable.h"
+#include "lib/hash.h"
+#include "lib/htmlchar.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
+#include "lib/xsha1.h"
 
 #define U_REPLACEMENT   0xfffd
 

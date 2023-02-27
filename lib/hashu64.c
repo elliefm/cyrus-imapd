@@ -6,10 +6,10 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "assert.h"
-#include "hashu64.h"
-#include "mpool.h"
-#include "xmalloc.h"
+#include "lib/assert.h"
+#include "lib/hashu64.h"
+#include "lib/mpool.h"
+#include "lib/xmalloc.h"
 
 /*
 ** public domain code by Jerry Coffin, with improvements by HenkJan Wolthuis.

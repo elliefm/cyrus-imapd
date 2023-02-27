@@ -46,11 +46,10 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <errno.h>
-
-#include "cyr_lock.h"
-
 #include <syslog.h>
 #include <time.h>
+
+#include "lib/cyr_lock.h"
 
 EXPORTED const char lock_method_desc[] = "fcntl";
 

@@ -47,9 +47,9 @@
 
 #include <string.h>
 
-#include "arrayu64.h"
-#include "util.h"
-#include "xmalloc.h"
+#include "lib/arrayu64.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
 
 EXPORTED arrayu64_t *arrayu64_new(void)
 {

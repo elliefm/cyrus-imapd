@@ -48,9 +48,11 @@
 #include <config.h>
 #include <stdio.h>
 #include <syslog.h>
+
 #include "lib/acl.h"
 #include "lib/libcyr_cfg.h"
 #include "lib/util.h"
+
 #include "imap/imap_err.h"
 
 /* check a string, with meaningful description of error */

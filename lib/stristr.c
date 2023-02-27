@@ -18,10 +18,10 @@
 ** Modified for use with libcyrus by Ken Murchison 06/01/00.
 */
 
+#include <config.h>
+
 #include <string.h>
 #include <ctype.h>
-
-#include "config.h"
 
 #if defined(__cplusplus) && __cplusplus
  extern "C" {

@@ -49,7 +49,7 @@
 #ifndef INCLUDED_GLOB_H
 #define INCLUDED_GLOB_H
 
-#include "util.h"
+#include "lib/util.h"
 
 /* "compiled" glob structure: may change
  */

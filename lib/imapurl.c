@@ -48,10 +48,10 @@
 #include <limits.h>
 #include <time.h>
 
-#include "imapurl.h"
-#include "xmalloc.h"
-#include "times.h"
-#include "util.h"
+#include "lib/imapurl.h"
+#include "lib/times.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
 
 /* URL unsafe printable characters */
 static const char urlunsafe[] = " \"#%&+:;<=>?@[\\]^`{|}";

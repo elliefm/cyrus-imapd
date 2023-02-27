@@ -46,11 +46,11 @@
 #include <string.h>
 #include <strings.h>
 
-#include "assert.h"
-#include "times.h"
-#include "util.h"
-#include "gmtoff.h"
-#include "mkgmtime.h"
+#include "lib/assert.h"
+#include "lib/gmtoff.h"
+#include "lib/mkgmtime.h"
+#include "lib/times.h"
+#include "lib/util.h"
 
 EXPORTED const char monthname[][4] = {
     "Jan", "Feb", "Mar", "Apr", "May", "Jun",

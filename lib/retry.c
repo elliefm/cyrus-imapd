@@ -49,8 +49,8 @@
 #include <unistd.h>
 #endif
 
-#include "retry.h"
-#include "xmalloc.h"
+#include "lib/retry.h"
+#include "lib/xmalloc.h"
 
 /*
  * Keep calling the read() system call with 'fd', 'buf', and 'nbyte'

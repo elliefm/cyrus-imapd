@@ -1,4 +1,4 @@
-#include "cyr_qsort_r.h"
+#include "lib/cyr_qsort_r.h"
 
 #ifndef cyr_qsort_r
 

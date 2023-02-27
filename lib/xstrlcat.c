@@ -40,7 +40,7 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#include "xstrlcat.h"
+#include "lib/xstrlcat.h"
 
 #ifndef HAVE_STRLCAT
 EXPORTED size_t strlcat(char *dst, const char *src, size_t len)

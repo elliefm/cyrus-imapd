@@ -44,7 +44,8 @@
 #include <string.h>
 #include <ctype.h>
 #include <errno.h>
-#include "rfc822tok.h"
+
+#include "lib/rfc822tok.h"
 
 EXPORTED void rfc822tok_init(rfc822tok_t *t, const char *base,
                              unsigned int len, unsigned int flags)

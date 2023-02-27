@@ -40,7 +40,7 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#include "xstrlcpy.h"
+#include "lib/xstrlcpy.h"
 
 #ifndef HAVE_STRLCPY
 /* strlcpy -- copy string smartly.

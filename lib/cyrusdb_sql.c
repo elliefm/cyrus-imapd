@@ -47,12 +47,12 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include "assert.h"
-#include "bsearch.h"
-#include "cyrusdb.h"
-#include "libcyr_cfg.h"
-#include "xmalloc.h"
-#include "util.h"
+#include "lib/assert.h"
+#include "lib/bsearch.h"
+#include "lib/cyrusdb.h"
+#include "lib/libcyr_cfg.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
 
 extern void fatal(const char *, int);
 

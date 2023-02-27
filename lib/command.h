@@ -49,7 +49,8 @@
 #include <config.h>
 #include <sys/types.h>
 #include <stdarg.h>
-#include "prot.h"
+
+#include "lib/prot.h"
 
 struct command {
     char *argv0;

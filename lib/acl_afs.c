@@ -53,11 +53,11 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "acl.h"
-#include "auth.h"
-#include "xmalloc.h"
-#include "strarray.h"
-#include "libconfig.h"
+#include "lib/acl.h"
+#include "lib/auth.h"
+#include "lib/xmalloc.h"
+#include "lib/strarray.h"
+#include "lib/libconfig.h"
 #include "lib/libcyr_cfg.h"
 
 /*

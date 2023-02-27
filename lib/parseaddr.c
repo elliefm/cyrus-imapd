@@ -45,9 +45,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "parseaddr.h"
-#include "xmalloc.h"
-#include "util.h"
+#include "lib/parseaddr.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
 
 static const char unknown_user[] = "unknown-user";
 static const char unspecified_domain[] = "unspecified-domain";

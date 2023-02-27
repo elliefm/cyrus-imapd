@@ -48,7 +48,8 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <errno.h>
-#include "iptostring.h"
+
+#include "lib/iptostring.h"
 
 EXPORTED int iptostring(const struct sockaddr *addr, socklen_t addrlen,
                char *out, unsigned outlen) {

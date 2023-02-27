@@ -48,8 +48,8 @@
 #include <sysexits.h>
 #include <syslog.h>
 
-#include "map.h"
-#include "xmalloc.h"
+#include "lib/map.h"
+#include "lib/xmalloc.h"
 
 EXPORTED const char map_method_desc[] = "stupidshared";
 

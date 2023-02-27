@@ -58,7 +58,8 @@
  * will be used if you have broken getaddrinfo or no getaddrinfo.
  */
 
-#include "config.h"
+#include <config.h>
+
 #ifndef macintosh
 #include <sys/param.h>
 #include <arpa/inet.h>
@@ -67,7 +68,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "util.h"
+#include "lib/util.h"
 
 static struct addrinfo *
 malloc_ai(int port, u_long addr, int socktype, int proto)

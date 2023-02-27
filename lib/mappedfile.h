@@ -44,9 +44,10 @@
 #define _MAPPEDFILE_H
 
 // includes
-#include "util.h"
 #include <sys/types.h>
 #include <sys/uio.h>
+
+#include "lib/util.h"
 
 struct mappedfile {
     char *fname;

@@ -44,10 +44,10 @@
 #include <sys/ioctl.h>
 #include <sysexits.h>
 
-#include "nonblock.h"
+#include "lib/nonblock.h"
 
 /* for fatal */
-#include "xmalloc.h"
+#include "lib/xmalloc.h"
 
 EXPORTED const char nonblock_method_desc[] = "ioctl";
 

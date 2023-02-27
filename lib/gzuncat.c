@@ -52,9 +52,8 @@
 #include <unistd.h>
 #include <zlib.h>
 
-#include "lib/xmalloc.h"
-
 #include "lib/gzuncat.h"
+#include "lib/xmalloc.h"
 
 /*
  * current_offset, next_offset, and member_eof together indicate the state of

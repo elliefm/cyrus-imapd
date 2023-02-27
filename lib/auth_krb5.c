@@ -45,8 +45,8 @@
 #include <sysexits.h>
 #include <syslog.h>
 
-#include "auth.h"
-#include "xmalloc.h"
+#include "lib/auth.h"
+#include "lib/xmalloc.h"
 
 #ifdef HAVE_GSSAPI_H
 

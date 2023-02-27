@@ -43,8 +43,8 @@
 #include <config.h>
 #include <string.h>
 
-#include "bsearch.h"
-#include "util.h"
+#include "lib/bsearch.h"
+#include "lib/util.h"
 
 /* Case-dependent comparison converter.
  * Treats \r and \t as end-of-string and treats '.' lower than

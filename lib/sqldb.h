@@ -45,8 +45,9 @@
 #define SQLDB_H
 
 #include <sqlite3.h>
-#include "ptrarray.h"
-#include "strarray.h"
+
+#include "lib/ptrarray.h"
+#include "lib/strarray.h"
 
 struct sqldb_bindval {
     const char *name;

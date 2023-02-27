@@ -58,7 +58,7 @@
  * will be used if you have broken getnameinfo or no getnameinfo.
  */
 
-#include "config.h"
+#include <config.h>
 #include <arpa/inet.h>
 #include <stdio.h>
 #include <string.h>

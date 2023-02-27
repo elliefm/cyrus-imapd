@@ -43,8 +43,8 @@
 #ifndef INCLUDED_LIBCONFIG_H
 #define INCLUDED_LIBCONFIG_H
 
-#include "imapopts.h"
-#include "strarray.h"
+#include "lib/imapopts.h"
+#include "lib/strarray.h"
 
 /* these will assert() if they're called on the wrong type of
    option (imapopts.c) */

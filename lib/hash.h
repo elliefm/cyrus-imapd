@@ -4,8 +4,9 @@
 
 #include <stddef.h>           /* For size_t     */
 #include <stdint.h>
-#include "mpool.h"
-#include "strarray.h"
+
+#include "lib/mpool.h"
+#include "lib/strarray.h"
 
 #define HASH_TABLE_INITIALIZER {0, 0, 0, 0, NULL, NULL}
 

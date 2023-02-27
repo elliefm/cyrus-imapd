@@ -54,10 +54,10 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-#include "assert.h"
-#include "sqldb.h"
-#include "util.h"
-#include "xmalloc.h"
+#include "lib/assert.h"
+#include "lib/sqldb.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
 
 static int sqldb_active = 0;
 

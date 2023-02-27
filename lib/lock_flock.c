@@ -49,7 +49,7 @@
 #include <unistd.h>
 #endif
 
-#include "cyr_lock.h"
+#include "lib/cyr_lock.h"
 
 EXPORTED const char lock_method_desc[] = "flock";
 

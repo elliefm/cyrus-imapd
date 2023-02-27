@@ -46,8 +46,8 @@
 #include <fcntl.h>
 #include <sysexits.h>
 
-#include "xmalloc.h"
-#include "nonblock.h"
+#include "lib/nonblock.h"
+#include "lib/xmalloc.h"
 
 #ifndef FNDELAY
 #define FNDELAY         O_NDELAY

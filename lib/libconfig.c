@@ -53,14 +53,14 @@
 #include <netinet/in.h>
 #include <sys/stat.h>
 
-#include "assert.h"
-#include "hash.h"
-#include "libconfig.h"
-#include "xmalloc.h"
-#include "xstrlcat.h"
-#include "xstrlcpy.h"
-#include "tok.h"
-#include "util.h"
+#include "lib/assert.h"
+#include "lib/hash.h"
+#include "lib/libconfig.h"
+#include "lib/tok.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
+#include "lib/xstrlcat.h"
+#include "lib/xstrlcpy.h"
 
 #define CONFIGHASHSIZE 30 /* relatively small,
                            * because it is for overflow only */

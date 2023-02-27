@@ -48,8 +48,8 @@
 #include <sysexits.h>
 #include <syslog.h>
 
-#include "xmalloc.h"
-#include "map.h"
+#include "lib/map.h"
+#include "lib/xmalloc.h"
 
 #define SLOP (4*1024)
 

@@ -6,9 +6,10 @@
  * parameters.
  */
 
-#include "lsort.h"
-#include "config.h"
+#include <config.h>
 #include <stdlib.h>
+
+#include "lib/lsort.h"
 
 /* merge two sorted lists */
 static void *lmerge(void *p, void *q,

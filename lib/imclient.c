@@ -71,14 +71,14 @@
 #include <errno.h>
 #endif /* HAVE_SSL */
 
-#include "assert.h"
-#include "xmalloc.h"
-#include "xstrlcpy.h"
-#include "strarray.h"
-#include "imclient.h"
-#include "nonblock.h"
-#include "util.h"
-#include "iptostring.h"
+#include "lib/assert.h"
+#include "lib/imclient.h"
+#include "lib/iptostring.h"
+#include "lib/nonblock.h"
+#include "lib/strarray.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
+#include "lib/xstrlcpy.h"
 
 /* I/O buffer size */
 #define IMCLIENT_BUFSIZE 4096

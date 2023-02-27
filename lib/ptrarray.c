@@ -43,10 +43,11 @@
  * Start Date: 2011/01/11
  */
 
-#include "ptrarray.h"
 #include <memory.h>
-#include "util.h"
-#include "xmalloc.h"
+
+#include "lib/ptrarray.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
 
 EXPORTED ptrarray_t *ptrarray_new(void)
 {

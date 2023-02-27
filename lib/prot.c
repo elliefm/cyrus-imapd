@@ -58,15 +58,15 @@
 #include <sys/select.h>
 #endif
 
-#include "assert.h"
-#include "imparse.h"
-#include "libcyr_cfg.h"
-#include "map.h"
-#include "nonblock.h"
-#include "prot.h"
-#include "signals.h"
-#include "util.h"
-#include "xmalloc.h"
+#include "lib/assert.h"
+#include "lib/imparse.h"
+#include "lib/libcyr_cfg.h"
+#include "lib/map.h"
+#include "lib/nonblock.h"
+#include "lib/prot.h"
+#include "lib/signals.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
 
 /* Transparent protgroup structure */
 struct protgroup

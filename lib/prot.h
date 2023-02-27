@@ -59,7 +59,7 @@
 #include <zlib.h>
 #endif /* HAVE_ZLIB */
 
-#include "util.h"
+#include "lib/util.h"
 
 #define PROT_BUFSIZE 4096
 /* #define PROT_BUFSIZE 8192 */

@@ -42,11 +42,11 @@
  * Author: Greg Banks
  * Start Date: 2011/01/11
  */
-
-#include "bufarray.h"
 #include <memory.h>
-#include "util.h"
-#include "xmalloc.h"
+
+#include "lib/bufarray.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
 
 EXPORTED bufarray_t *bufarray_new(void)
 {

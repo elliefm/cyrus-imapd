@@ -46,9 +46,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "xmalloc.h"
-#include "bitvector.h"
-#include "util.h"
+#include "lib/bitvector.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
 
 #ifndef MAX
 #define MAX(a,b)    ((a)>(b)?(a):(b))

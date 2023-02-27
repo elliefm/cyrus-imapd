@@ -47,11 +47,11 @@
 #include <ctype.h>
 #include <string.h>
 
-#include "auth.h"
-#include "libcyr_cfg.h"
-#include "xmalloc.h"
-#include "strarray.h"
-#include "util.h"
+#include "lib/auth.h"
+#include "lib/libcyr_cfg.h"
+#include "lib/strarray.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
 
 struct auth_state {
     char userid[81];

@@ -55,14 +55,14 @@
 #include <sys/uio.h>
 #include <inttypes.h>
 
-#include "auth_pts.h"
-#include "cyrusdb.h"
-#include "libcyr_cfg.h"
-#include "retry.h"
-#include "strhash.h"
-#include "util.h"
-#include "xmalloc.h"
-#include "xstrlcpy.h"
+#include "lib/auth_pts.h"
+#include "lib/cyrusdb.h"
+#include "lib/libcyr_cfg.h"
+#include "lib/retry.h"
+#include "lib/strhash.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
+#include "lib/xstrlcpy.h"
 
 static char *canonuser_id = NULL;
 static struct auth_state *canonuser_cache = NULL;

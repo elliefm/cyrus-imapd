@@ -5,9 +5,9 @@
 #include <stdio.h>
 #include <fcntl.h>
 
-#include "hash.h"
-#include "vparse.h"
-#include "xmalloc.h"
+#include "lib/hash.h"
+#include "lib/vparse.h"
+#include "lib/xmalloc.h"
 
 #define DEBUG 0
 

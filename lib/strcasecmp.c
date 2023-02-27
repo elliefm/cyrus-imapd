@@ -45,7 +45,8 @@
 
 /* for size_t */
 #include <sys/types.h>
-#include "util.h"
+
+#include "lib/util.h"
 
 /* case insensitive string compare
  */

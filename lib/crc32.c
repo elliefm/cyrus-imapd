@@ -24,9 +24,10 @@
  */
 
 #include <config.h>
-#include "crc32.h"
-#include "util.h"
-#include "string.h"
+#include <string.h>
+
+#include "lib/crc32.h"
+#include "lib/util.h"
 
 static const uint32_t crc32_lookup[16][256] =
 {

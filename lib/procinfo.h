@@ -5,7 +5,7 @@
 #include <sys/types.h>
 #include <time.h>
 
-#include "cyr_qsort_r.h"
+#include "lib/cyr_qsort_r.h"
 
 struct proc_info {
     pid_t pid;
