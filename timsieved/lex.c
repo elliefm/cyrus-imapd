@@ -51,10 +51,12 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "libconfig.h"
-#include "xmalloc.h"
+#include "lib/libconfig.h"
+#include "lib/xmalloc.h"
+
 #include "imap/global.h"
 #include "imap/tls.h"
+
 #include "timsieved/codes.h"
 #include "timsieved/lex.h"
 

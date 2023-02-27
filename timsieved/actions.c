@@ -58,17 +58,20 @@
 #include <syslog.h>
 #include <unistd.h>
 
-#include "libconfig.h"
-#include "xmalloc.h"
-#include "xstrlcat.h"
-#include "xstrlcpy.h"
+#include "lib/libconfig.h"
+#include "lib/xmalloc.h"
+#include "lib/xstrlcat.h"
+#include "lib/xstrlcpy.h"
+
 #include "imap/global.h"
 #include "imap/sievedir.h"
 #include "imap/sieve_db.h"
 #include "imap/tls.h"
 #include "imap/user.h"
 #include "imap/version.h"
+
 #include "sieve/sieve_interface.h"
+
 #include "timsieved/actions.h"
 #include "timsieved/codes.h"
 

@@ -45,8 +45,8 @@
 #ifndef _LEX_H_
 #define _LEX_H_
 
-#include "prot.h"
-#include "util.h"
+#include "lib/prot.h"
+#include "lib/util.h"
 
 #define LEXER_STATE_RECOVER     61
 #define LEXER_STATE_RECOVER_CR  62

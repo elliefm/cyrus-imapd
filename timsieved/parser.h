@@ -45,7 +45,8 @@
 #ifndef PARSER_H
 #define PARSER_H
 
-#include "prot.h"
+#include "lib/prot.h"
+
 #include "imap/global.h" /* for saslprops_t */
 
 int parser(struct protstream *sieved_out,

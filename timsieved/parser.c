@@ -57,10 +57,10 @@
 #include <sasl/sasl.h>
 #include <sasl/saslutil.h>
 
-#include "assert.h"
-#include "libconfig.h"
-#include "xmalloc.h"
-#include "xstrlcpy.h"
+#include "lib/assert.h"
+#include "lib/libconfig.h"
+#include "lib/xmalloc.h"
+#include "lib/xstrlcpy.h"
 
 #include "imap/backend.h"
 #include "imap/global.h"

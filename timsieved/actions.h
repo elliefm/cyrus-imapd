@@ -46,8 +46,8 @@
 #define _ACTIONS_H_
 
 
-#include "prot.h"
-#include "util.h"
+#include "lib/prot.h"
+#include "lib/util.h"
 
 extern int sieved_tls_required;
 

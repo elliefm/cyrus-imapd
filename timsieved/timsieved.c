@@ -63,16 +63,19 @@
 #include <syslog.h>
 #include <unistd.h>
 
-#include "auth.h"
-#include "libconfig.h"
-#include "xmalloc.h"
+#include "lib/assert.h"
+#include "lib/auth.h"
+#include "lib/libconfig.h"
+#include "lib/xmalloc.h"
+
 #include "imap/backend.h"
 #include "imap/global.h"
 #include "imap/mboxlist.h"
 #include "imap/proxy.h"
 #include "imap/sync_log.h"
-#include "lib/assert.h"
+
 #include "sieve/sieve_interface.h"
+
 #include "timsieved/actions.h"
 #include "timsieved/codes.h"
 #include "timsieved/parser.h"
