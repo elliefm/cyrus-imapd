@@ -42,11 +42,11 @@
 
 #include <config.h>
 
-#include "notify_log.h"
-
 #include <syslog.h>
 #include <string.h>
 #include <stdio.h>
+
+#include "notifyd/notify_log.h"
 
 char* notify_log(const char *class, const char *priority,
                  const char *user, const char *mailbox,

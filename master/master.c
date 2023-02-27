@@ -88,17 +88,16 @@
 #define IPV6_V6ONLY     IPV6_BINDV6ONLY
 #endif
 
-#include "masterconf.h"
+#include "lib/assert.h"
+#include "lib/cyr_lock.h"
+#include "lib/retry.h"
+#include "lib/strarray.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
 
-#include "master.h"
-#include "service.h"
-
-#include "assert.h"
-#include "cyr_lock.h"
-#include "retry.h"
-#include "util.h"
-#include "xmalloc.h"
-#include "strarray.h"
+#include "master/master.h"
+#include "master/masterconf.h"
+#include "master/service.h"
 
 enum {
     child_table_size = 10000,

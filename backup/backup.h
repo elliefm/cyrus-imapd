@@ -44,11 +44,11 @@
 #ifndef BACKUP_BACKUP_H
 #define BACKUP_BACKUP_H
 
+#include "lib/gzuncat.h"
+
 #include "imap/dlist.h"
 #include "imap/mboxname.h"
 #include "imap/sync_support.h"
-
-#include "lib/gzuncat.h"
 
 struct backup;
 

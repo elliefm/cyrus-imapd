@@ -65,13 +65,14 @@
 #include <string.h>
 #include <limits.h>
 
-#include "service.h"
-#include "libconfig.h"
-#include "xmalloc.h"
-#include "xstrlcpy.h"
-#include "strarray.h"
-#include "signals.h"
-#include "util.h"
+#include "lib/libconfig.h"
+#include "lib/signals.h"
+#include "lib/strarray.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
+#include "lib/xstrlcpy.h"
+
+#include "master/service.h"
 
 #ifndef PATH_MAX
 #define PATH_MAX 4096

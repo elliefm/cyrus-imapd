@@ -51,9 +51,11 @@
 #include <syslog.h>
 #include <errno.h>
 
+#include "lib/libconfig.h"
+
 #include "imap/global.h"
-#include "libconfig.h"
-#include "notify_external.h"
+
+#include "notifyd/notify_external.h"
 
 char* notify_external(const char *class, const char *priority,
                       const char *user, const char *mailbox,

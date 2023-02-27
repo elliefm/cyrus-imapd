@@ -43,9 +43,8 @@
 #include <ctype.h>
 #include <sysexits.h>
 #include <syslog.h>
-#include "ptloader.h"
-#include "util.h"
-#include "xmalloc.h"
+
+#include "ptclient/ptloader.h"
 
 #ifdef HAVE_AFSKRB
 #include <string.h>
@@ -66,9 +65,12 @@
 #include <krb.h>
 #endif
 
-#include "auth_pts.h"
-#include "libconfig.h"
-#include "strhash.h"
+#include "lib/auth_pts.h"
+#include "lib/libconfig.h"
+#include "lib/strhash.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
+
 
 /* AFS stuff */
 #include <lock.h>

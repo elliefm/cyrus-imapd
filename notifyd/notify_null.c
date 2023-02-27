@@ -42,9 +42,9 @@
 
 #include <config.h>
 
-#include "notify_null.h"
-
 #include <string.h>
+
+#include "notifyd/notify_null.h"
 
 char* notify_null(const char *class __attribute__((unused)),
                   const char *priority __attribute__((unused)),

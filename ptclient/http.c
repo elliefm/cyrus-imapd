@@ -45,18 +45,18 @@
 #include <syslog.h>
 #include <jansson.h>
 
-#include "auth_pts.h"
-#include "libconfig.h"
-#include "ptloader.h"
-#include "strhash.h"
-#include "util.h"
-#include "xmalloc.h"
-#include "xstrlcpy.h"
+#include "lib/auth_pts.h"
+#include "lib/libconfig.h"
+#include "lib/strhash.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
+#include "lib/xstrlcpy.h"
 
 #include "imap/backend.h"
 #include "imap/http_client.h"
 #include "imap/spool.h"
 
+#include "ptclient/ptloader.h"
 
 static struct {
     struct backend *conn;

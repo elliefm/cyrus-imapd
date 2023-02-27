@@ -59,14 +59,15 @@
 #include <signal.h>
 #include <string.h>
 
-#include "notifyd.h"
+
+#include "lib/libconfig.h"
+#include "lib/strarray.h"
+#include "lib/xmalloc.h"
 
 #include "imap/global.h"
-#include "libconfig.h"
 #include "imap/notify.h"
-#include "xmalloc.h"
-#include "strarray.h"
 
+#include "notifyd/notifyd.h"
 
 /* global state */
 const int config_need_data = 0;

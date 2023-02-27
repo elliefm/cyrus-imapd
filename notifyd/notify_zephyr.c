@@ -57,8 +57,8 @@
 #include <zephyr/zephyr.h>
 #include <syslog.h>
 
-#include "xmalloc.h"
-#include "util.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
 
 #ifndef MAIL_CLASS
 #define MAIL_CLASS "MAIL"
@@ -68,7 +68,7 @@
 #define HOST_NAME_MAX 256
 #endif
 
-#include "notify_zephyr.h"
+#include "notifyd/notify_zephyr.h"
 
 char* notify_zephyr(const char *class, const char *priority,
                     const char *user, const char *mailbox,

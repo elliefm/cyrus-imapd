@@ -56,13 +56,15 @@
 #include <sys/un.h>
 #include <sys/uio.h>
 
-#include "auth_pts.h"
-#include "cyrusdb.h"
+#include "lib/auth_pts.h"
+#include "lib/cyrusdb.h"
+#include "lib/libconfig.h"
+#include "lib/retry.h"
+#include "lib/xmalloc.h"
+
 #include "imap/global.h"
-#include "libconfig.h"
-#include "retry.h"
-#include "xmalloc.h"
-#include "ptloader.h"
+
+#include "ptclient/ptloader.h"
 
 struct pts_module *pts_modules[] = {
     &pts_http,

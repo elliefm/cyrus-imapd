@@ -42,7 +42,6 @@
 
 #include <config.h>
 
-#include "notify_mailto.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -51,10 +50,14 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
+#include "lib/libconfig.h"
+#include "lib/times.h"
+
 #include "imap/global.h"
-#include "libconfig.h"
+
+#include "notifyd/notify_mailto.h"
+
 #include "sieve/sieve_interface.h"
-#include "times.h"
 
 static int contains_8bit(const char *msg);
 

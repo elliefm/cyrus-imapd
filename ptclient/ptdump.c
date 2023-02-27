@@ -45,10 +45,11 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "auth_pts.h"
-#include "cyrusdb.h"
+#include "lib/auth_pts.h"
+#include "lib/cyrusdb.h"
+#include "lib/libconfig.h"
+
 #include "imap/global.h"
-#include "libconfig.h"
 
 static int dump_cb(void *rockp __attribute__((unused)),
                      const char *key, size_t keylen,

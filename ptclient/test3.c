@@ -6,9 +6,8 @@
 #include <syslog.h>
 
 #include "lib/assert.h"
-
-#include "util.h"
-#include "xmalloc.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
 
 // ptsmodule_standard_root_dn is declared static, so we need to include its
 // source rather than just linking with the object it's in

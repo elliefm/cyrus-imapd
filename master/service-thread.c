@@ -63,11 +63,12 @@
 #include <sysexits.h>
 #include <string.h>
 
-#include "service.h"
-#include "libconfig.h"
-#include "xmalloc.h"
-#include "strarray.h"
-#include "signals.h"
+#include "lib/libconfig.h"
+#include "lib/signals.h"
+#include "lib/strarray.h"
+#include "lib/xmalloc.h"
+
+#include "master/service.h"
 
 extern int optind;
 extern char *optarg;

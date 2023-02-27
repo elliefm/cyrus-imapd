@@ -64,11 +64,12 @@
 #include <sysexits.h>
 #include <syslog.h>
 
-#include "auth_pts.h"
-#include "cyrusdb.h"
+#include "lib/auth_pts.h"
+#include "lib/cyrusdb.h"
+#include "lib/libconfig.h"
+#include "lib/xmalloc.h"
+
 #include "imap/global.h"
-#include "libconfig.h"
-#include "xmalloc.h"
 
 /* global */
 time_t timenow;

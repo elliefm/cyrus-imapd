@@ -4,8 +4,8 @@
 #include <config.h>
 #include <sys/resource.h> /* for rlim_t */
 
-#include "libconfig.h" /* for config_dir and IMAPOPT_SYNC_MACHINEID */
-#include "strarray.h"
+#include "lib/libconfig.h" /* for config_dir and IMAPOPT_SYNC_MACHINEID */
+#include "lib/strarray.h"
 
 struct service {
     char *name;                 /* name of service */

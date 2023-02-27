@@ -50,17 +50,17 @@
 #include <sys/stat.h>
 #include <sysexits.h>
 
-#include "util.h"
-#include "libconfig.h"
-#include "xmalloc.h"
-#include "xstrlcat.h"
-#include "xstrlcpy.h"
-
 #if HAVE_UNISTD_H
 # include <unistd.h>
 #endif
 
-#include "masterconf.h"
+#include "lib/util.h"
+#include "lib/libconfig.h"
+#include "lib/xmalloc.h"
+#include "lib/xstrlcat.h"
+#include "lib/xstrlcpy.h"
+
+#include "master/masterconf.h"
 
 extern const char *MASTER_CONFIG_FILENAME;
 

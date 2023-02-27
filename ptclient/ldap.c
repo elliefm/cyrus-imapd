@@ -43,9 +43,8 @@
 #include <sysexits.h>
 #include <syslog.h>
 #include <config.h>
-#include "ptloader.h"
-#include "util.h"
-#include "assert.h"
+
+#include "ptclient/ptloader.h"
 
 #ifdef HAVE_LDAP
 
@@ -68,17 +67,17 @@
 #include <ldap.h>
 #include <lber.h>
 
-/* libimap */
+#include "lib/assert.h"
+#include "lib/auth_pts.h"
+#include "lib/libconfig.h"
+#include "lib/strhash.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
+#include "lib/xstrlcat.h"
+
 #include "imap/global.h"
 
-/* libconfig */
-#include "libconfig.h"
-
 /* libcyrus */
-#include "auth_pts.h"
-#include "strhash.h"
-#include "xmalloc.h"
-#include "xstrlcat.h"
 
 typedef struct _ptsm {
     const char      *uri;

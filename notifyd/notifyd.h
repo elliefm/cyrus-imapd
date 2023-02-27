@@ -42,11 +42,11 @@
 
 #include <config.h>
 
-#include "notify_null.h"
-#include "notify_log.h"
-#include "notify_mailto.h"
-#include "notify_zephyr.h"
-#include "notify_external.h"
+#include "notifyd/notify_external.h"
+#include "notifyd/notify_log.h"
+#include "notifyd/notify_mailto.h"
+#include "notifyd/notify_null.h"
+#include "notifyd/notify_zephyr.h"
 
 /* Notify method dispatch table definition */
 typedef struct {
