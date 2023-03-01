@@ -42,7 +42,7 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#include "config.h"
+#include <config.h>
 
 #include <fcntl.h>
 #include <getopt.h>
@@ -69,18 +69,18 @@
 #include <sasl/sasl.h>
 #include <sasl/saslutil.h>
 
-#include "hash.h"
-#include "imparse.h"
-#include "iptostring.h"
-#include "md5.h"
-#include "prot.h"
-#include "retry.h"
-#include "strarray.h"
-#include "stristr.h"
-#include "util.h"
-#include "xmalloc.h"
-#include "xstrlcat.h"
-#include "xstrlcpy.h"
+#include "lib/hash.h"
+#include "lib/imparse.h"
+#include "lib/iptostring.h"
+#include "lib/md5.h"
+#include "lib/prot.h"
+#include "lib/retry.h"
+#include "lib/strarray.h"
+#include "lib/stristr.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
+#include "lib/xstrlcat.h"
+#include "lib/xstrlcpy.h"
 
 #ifdef HAVE_SSL
 #include <openssl/ssl.h>
