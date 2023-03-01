@@ -66,25 +66,23 @@
 #include <sasl/sasl.h>
 #include <sasl/saslutil.h>
 
-#include "assert.h"
-#include "util.h"
-#include "auth.h"
-#include "prot.h"
-#include "times.h"
-#include "global.h"
-#include "prometheus.h"
-#include "xmalloc.h"
-#include "xstrlcpy.h"
-#include "version.h"
+#include "lib/assert.h"
+#include "lib/auth.h"
+#include "lib/prot.h"
+#include "lib/times.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
+#include "lib/xstrlcpy.h"
 
-/* generated headers are not necessarily in current directory */
+#include "imap/global.h"
 #include "imap/imap_err.h"
+#include "imap/lmtpengine.h"
 #include "imap/lmtp_err.h"
 #include "imap/mupdate_err.h"
-
-#include "lmtpengine.h"
-#include "tls.h"
-#include "telemetry.h"
+#include "imap/prometheus.h"
+#include "imap/telemetry.h"
+#include "imap/tls.h"
+#include "imap/version.h"
 
 #define RCPT_GROW 30
 

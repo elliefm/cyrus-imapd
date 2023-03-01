@@ -45,11 +45,12 @@
 
 /***************** server-side LMTP *******************/
 
-#include "xmalloc.h"
-#include "spool.h"
-#include "mboxname.h"
-#include "quota.h"
-#include "jmap_mail_query.h"
+#include "lib/xmalloc.h"
+
+#include "imap/jmap_mail_query.h"
+#include "imap/mboxname.h"
+#include "imap/quota.h"
+#include "imap/spool.h"
 
 typedef struct message_data message_data_t;
 typedef struct address_data address_data_t;

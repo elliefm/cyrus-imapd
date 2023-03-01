@@ -43,12 +43,13 @@
 #ifndef LMTPD_H
 #define LMTPD_H
 
-#include "append.h"
-#include "auth.h"
-#include "lmtpengine.h"
-#include "mboxname.h"
-#include "message.h"
-#include "jmap_mail_query.h"
+#include "lib/auth.h"
+
+#include "imap/append.h"
+#include "imap/lmtpengine.h"
+#include "imap/mboxname.h"
+#include "imap/message.h"
+#include "imap/jmap_mail_query.h"
 
 /* data per message */
 typedef struct deliver_data {

@@ -43,15 +43,16 @@
 #ifndef LMTP_SIEVE_H
 #define LMTP_SIEVE_H
 
-#include "lmtpd.h"
-#include "conversations.h"
-#include "sieve/sieve_interface.h"
+#include "imap/conversations.h"
+#include "imap/lmtpd.h"
 
 #ifdef WITH_DAV
-#include "carddav_db.h"
+#include "imap/carddav_db.h"
 #else
 struct carddav_db { };
 #endif
+
+#include "sieve/sieve_interface.h"
 
 struct sieve_interp_ctx {
     const char *userid;

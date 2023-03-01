@@ -63,54 +63,51 @@
 #include <sasl/sasl.h>
 #include <sasl/saslutil.h>
 
-#include "acl.h"
-#include "annotate.h"
-#include "append.h"
-#include "assert.h"
-#include "auth.h"
+#include "lib/assert.h"
+#include "lib/auth.h"
+#include "lib/iostat.h"
+#include "lib/map.h"
+#include "lib/prot.h"
+#include "lib/times.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
+#include "lib/xstrlcat.h"
+#include "lib/xstrlcpy.h"
+
+#include "imap/acl.h"
+#include "imap/annotate.h"
+#include "imap/append.h"
 #ifdef USE_AUTOCREATE
-#include "autocreate.h"
+#include "imap/autocreate.h"
 #endif
-#include "backend.h"
+#include "imap/backend.h"
 #ifdef WITH_DAV
-#include "carddav_db.h"
+#include "imap/carddav_db.h"
 #endif
-#include "duplicate.h"
-#include "global.h"
-#include "idle.h"
-#include "mailbox.h"
-#include "map.h"
-#include "mboxevent.h"
-#include "mboxlist.h"
-#include "mboxname.h"
-#include "message.h"
-#include "mupdate.h"
-#include "notify.h"
-#include "prometheus.h"
-#include "prot.h"
-#include "proxy.h"
-#include "sync_support.h"
-#include "telemetry.h"
-#include "times.h"
-#include "tls.h"
-#include "userdeny.h"
-#include "util.h"
-#include "version.h"
-#include "xmalloc.h"
-#include "xstrlcpy.h"
-#include "xstrlcat.h"
-
-/* generated headers are not necessarily in current directory */
+#include "imap/duplicate.h"
+#include "imap/global.h"
+#include "imap/idle.h"
 #include "imap/imap_err.h"
+#include "imap/lmtpd.h"
+#include "imap/lmtpengine.h"
 #include "imap/lmtp_err.h"
-
-#include "lmtpd.h"
-#include "lmtpengine.h"
 #ifdef USE_SIEVE
-#include "lmtp_sieve.h"
+#include "imap/lmtp_sieve.h"
 #endif
-
-#include "iostat.h"
+#include "imap/mailbox.h"
+#include "imap/mboxevent.h"
+#include "imap/mboxlist.h"
+#include "imap/mboxname.h"
+#include "imap/message.h"
+#include "imap/mupdate.h"
+#include "imap/notify.h"
+#include "imap/prometheus.h"
+#include "imap/proxy.h"
+#include "imap/sync_support.h"
+#include "imap/telemetry.h"
+#include "imap/tls.h"
+#include "imap/userdeny.h"
+#include "imap/version.h"
 
 /* forward declarations */
 static int deliver(message_data_t *msgdata, char *authuser,
