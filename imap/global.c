@@ -61,6 +61,7 @@
 # include <unistd.h>
 #endif
 
+#include "lib/acl.h"
 #include "lib/assert.h"
 #include "lib/charset.h"
 #include "lib/cyr_lock.h"
@@ -75,7 +76,6 @@
 #include "lib/xstrlcat.h"
 #include "lib/xstrlcpy.h"
 
-#include "imap/acl.h"
 #include "imap/global.h"
 #include "imap/http_err.h"
 #include "imap/ical_support.h"

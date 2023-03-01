@@ -61,10 +61,10 @@
 #include <errno.h>
 #include <pwd.h>
 
+#include "lib/acl.h"
 #include "lib/map.h"
 #include "lib/xmalloc.h"
 
-#include "imap/acl.h"
 #include "imap/global.h"
 #include "imap/imap_err.h"
 #include "imap/mailbox.h"

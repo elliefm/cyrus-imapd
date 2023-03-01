@@ -54,6 +54,7 @@
 #include <guesstz.h>
 #endif
 
+#include "lib/acl.h"
 #include "lib/assert.h"
 #include "lib/hash.h"
 #include "lib/parseaddr.h"
@@ -64,7 +65,6 @@
 #include "lib/xstrlcat.h"
 #include "lib/xstrlcpy.h"
 
-#include "imap/acl.h"
 #include "imap/annotate.h"
 #include "imap/append.h"
 #include "imap/caldav_db.h"

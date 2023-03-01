@@ -49,13 +49,13 @@
 #include <syslog.h>
 #include <sys/un.h>
 
+#include "lib/acl.h"
 #include "lib/assert.h"
 #include "lib/hashu64.h"
 #include "lib/prot.h"
 #include "lib/util.h"
 #include "lib/xmalloc.h"
 
-#include "imap/acl.h"
 #include "imap/annotate.h"
 #include "imap/backend.h"
 #include "imap/global.h"

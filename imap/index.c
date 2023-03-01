@@ -60,6 +60,7 @@
 #include "imap/vcard_support.h"
 #endif
 
+#include "lib/acl.h"
 #include "lib/assert.h"
 #include "lib/charset.h"
 #include "lib/hash.h"
@@ -74,7 +75,6 @@
 #include "lib/xmalloc.h"
 #include "lib/xstrlcpy.h"
 
-#include "imap/acl.h"
 #include "imap/annotate.h"
 #include "imap/append.h"
 #include "imap/backend.h"

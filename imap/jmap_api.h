@@ -44,12 +44,12 @@
 #ifndef JMAP_API_H
 #define JMAP_API_H
 
+#include "lib/acl.h"
 #include "lib/auth.h"
 #include "lib/hash.h"
 #include "lib/ptrarray.h"
 #include "lib/strarray.h"
 
-#include "imap/acl.h"
 #include "imap/conversations.h"
 #include "imap/dav_db.h"
 #include "imap/jmap_util.h"

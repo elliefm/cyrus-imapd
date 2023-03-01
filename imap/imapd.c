@@ -70,6 +70,7 @@
 #include <openssl/rand.h>
 #endif /* HAVE_SSL */
 
+#include "lib/acl.h"
 #include "lib/assert.h"
 #include "lib/auth.h"
 #include "lib/bsearch.h"
@@ -84,7 +85,6 @@
 #include "lib/xstrlcat.h"
 #include "lib/xstrlcpy.h"
 
-#include "imap/acl.h"
 #include "imap/annotate.h"
 #include "imap/append.h"
 #ifdef USE_AUTOCREATE

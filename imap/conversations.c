@@ -54,6 +54,7 @@
 #include <sysexits.h>
 #include <syslog.h>
 
+#include "lib/acl.h"
 #include "lib/assert.h"
 #include "lib/bsearch.h"
 #include "lib/charset.h"
@@ -69,7 +70,6 @@
 #include "lib/xstrlcpy.h"
 #include "lib/xstrlcat.h"
 
-#include "imap/acl.h"
 #include "imap/annotate.h"
 #include "imap/append.h"
 #include "imap/conversations.h"

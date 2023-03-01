@@ -71,6 +71,10 @@
 #include <netinet/in.h>
 #include <netinet/tcp.h>
 
+#ifdef HAVE_ZLIB
+#include <zlib.h>
+#endif
+
 #include "lib/assert.h"
 #include "lib/byteorder.h"
 #include "lib/libconfig.h"
@@ -78,11 +82,6 @@
 #include "lib/retry.h"
 #include "lib/util.h"
 #include "lib/xmalloc.h"
-
-#ifdef HAVE_ZLIB
-#include "lib/zlib.h"
-#endif
-
 
 #define BEAUTYBUFSIZE 4096
 

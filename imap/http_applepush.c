@@ -44,9 +44,9 @@
 #include <config.h>
 #include <syslog.h>
 
+#include "lib/acl.h"
 #include "lib/util.h"
 
-#include "imap/acl.h"
 #include "imap/httpd.h"
 #include "imap/http_dav.h"
 #include "imap/http_err.h"

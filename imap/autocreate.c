@@ -58,10 +58,10 @@
 #include <time.h>
 #include <syslog.h>
 
+#include "lib/acl.h"
 #include "lib/util.h"
 #include "lib/xmalloc.h"
 
-#include "imap/acl.h"
 #include "imap/annotate.h"
 #include "imap/global.h"
 #include "imap/imap_err.h"

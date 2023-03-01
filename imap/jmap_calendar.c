@@ -51,6 +51,7 @@
 #include <unistd.h>
 #endif
 
+#include "lib/acl.h"
 #include "lib/assert.h"
 #include "lib/cyr_qsort_r.h"
 #include "lib/dynarray.h"
@@ -61,7 +62,6 @@
 #include "lib/xmalloc.h"
 #include "lib/xsha1.h"
 
-#include "imap/acl.h"
 #include "imap/annotate.h"
 #include "imap/append.h"
 #include "imap/caldav_db.h"

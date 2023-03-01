@@ -58,6 +58,7 @@
 #include <chardet/chardet.h>
 #endif
 
+#include "lib/acl.h"
 #include "lib/assert.h"
 #include "lib/bsearch.h"
 #include "lib/cyr_qsort_r.h"
@@ -71,7 +72,6 @@
 #include "lib/xsha1.h"
 #include "lib/xstrnchr.h"
 
-#include "imap/acl.h"
 #include "imap/annotate.h"
 #include "imap/append.h"
 #include "imap/carddav_db.h"

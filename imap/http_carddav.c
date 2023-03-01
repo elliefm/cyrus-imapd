@@ -56,6 +56,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
+#include "lib/acl.h"
 #include "lib/hash.h"
 #include "lib/strhash.h"
 #include "lib/times.h"
@@ -64,7 +65,6 @@
 #include "lib/xstrlcat.h"
 #include "lib/xstrlcpy.h"
 
-#include "imap/acl.h"
 #include "imap/append.h"
 #include "imap/carddav_db.h"
 #include "imap/global.h"

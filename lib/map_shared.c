@@ -49,7 +49,7 @@
 #include <syslog.h>
 
 #include "lib/map.h"
-#include "xlib/malloc.h"
+#include "lib/xmalloc.h"
 
 #define SLOP (8*1024)
 

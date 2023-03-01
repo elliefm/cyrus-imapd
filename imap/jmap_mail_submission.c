@@ -52,12 +52,12 @@
 #include <limits.h>
 #include <errno.h>
 
+#include "lib/acl.h"
 #include "lib/assert.h"
 #include "lib/parseaddr.h"
 #include "lib/times.h"
 #include "lib/util.h"
 
-#include "imap/acl.h"
 #include "imap/append.h"
 #include "imap/http_err.h"
 #include "imap/http_jmap.h"

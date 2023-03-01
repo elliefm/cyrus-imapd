@@ -48,9 +48,9 @@
 #include <string.h>
 #include <syslog.h>
 
+#include "lib/acl.h"
 #include "lib/times.h"
 
-#include "imap/acl.h"
 #include "imap/append.h"
 #include "imap/caldav_db.h"
 #include "imap/carddav_db.h"

@@ -68,6 +68,7 @@
 
 #include <libxml/uri.h>
 
+#include "lib/acl.h"
 #include "lib/times.h"
 #include "lib/strhash.h"
 #include "lib/util.h"
@@ -77,7 +78,6 @@
 #include "lib/xstrnchr.h"
 
 #include "imap/annotate.h"
-#include "imap/acl.h"
 #include "imap/append.h"
 #include "imap/dlist.h"
 #include "imap/global.h"

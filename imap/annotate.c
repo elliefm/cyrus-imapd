@@ -62,6 +62,7 @@
 #include <sysexits.h>
 #include <syslog.h>
 
+#include "lib/acl.h"
 #include "lib/assert.h"
 #include "lib/cyrusdb.h"
 #include "lib/glob.h"
@@ -74,7 +75,6 @@
 #include "lib/xstrlcpy.h"
 #include "lib/xstrlcat.h"
 
-#include "imap/acl.h"
 #include "imap/annotate.h"
 #include "imap/imapd.h"
 #include "imap/imap_err.h"

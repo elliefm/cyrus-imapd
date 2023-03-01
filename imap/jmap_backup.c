@@ -51,12 +51,12 @@
 #include <syslog.h>
 #include <errno.h>
 
+#include "lib/acl.h"
 #include "lib/arrayu64.h"
 #include "lib/assert.h"
 #include "lib/hash.h"
 #include "lib/times.h"
 
-#include "imap/acl.h"
 #include "imap/append.h"
 #include "imap/caldav_db.h"
 #include "imap/caldav_util.h"

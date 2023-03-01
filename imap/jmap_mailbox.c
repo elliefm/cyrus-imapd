@@ -50,6 +50,7 @@
 #include <string.h>
 #include <syslog.h>
 
+#include "lib/acl.h"
 #include "lib/assert.h"
 #include "lib/bsearch.h"
 #include "lib/cyr_qsort_r.h"
@@ -58,7 +59,6 @@
 #include "lib/util.h"
 #include "lib/xmalloc.h"
 
-#include "imap/acl.h"
 #include "imap/annotate.h"
 #include "imap/append.h"
 #include "imap/http_err.h"

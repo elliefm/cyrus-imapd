@@ -47,12 +47,12 @@
 #include <string.h>
 #include <syslog.h>
 
+#include "lib/acl.h"
 #include "lib/strarray.h"
 #include "lib/strhash.h"
 #include "lib/times.h"
 #include "lib/util.h"
 
-#include "imap/acl.h"
 #include "imap/caldav_alarm.h"
 #include "imap/caldav_db.h"
 #include "imap/caldav_util.h"

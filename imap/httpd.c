@@ -66,6 +66,7 @@
 #include <sasl/saslutil.h>
 #include <jansson.h>
 
+#include "lib/acl.h"
 #include "lib/assert.h"
 #include "lib/iptostring.h"
 #include "lib/map.h"
@@ -79,7 +80,6 @@
 #include "lib/xstrlcpy.h"
 #include "lib/xstrlcat.h"
 
-#include "imap/acl.h"
 #include "imap/backend.h"
 #include "imap/global.h"
 #include "imap/httpd.h"

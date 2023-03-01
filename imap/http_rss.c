@@ -50,6 +50,7 @@
 #include <string.h>
 #include <syslog.h>
 
+#include "lib/acl.h"
 #include "lib/assert.h"
 #include "lib/charset.h"
 #include "lib/map.h"
@@ -61,7 +62,6 @@
 #include "lib/xmalloc.h"
 #include "lib/xstrlcpy.h"
 
-#include "imap/acl.h"
 #include "imap/annotate.h"
 #include "imap/global.h"
 #include "imap/httpd.h"

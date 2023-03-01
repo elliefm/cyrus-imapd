@@ -48,9 +48,9 @@
 #include <libical/ical.h>
 #include <libxml/tree.h>
 
+#include "lib/acl.h"
 #include "lib/strarray.h"
 
-#include "imap/acl.h"
 #include "imap/annotate.h"
 #include "imap/caldav_db.h"
 #include "imap/dav_util.h"

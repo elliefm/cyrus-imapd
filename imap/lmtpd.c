@@ -63,6 +63,7 @@
 #include <sasl/sasl.h>
 #include <sasl/saslutil.h>
 
+#include "lib/acl.h"
 #include "lib/assert.h"
 #include "lib/auth.h"
 #include "lib/iostat.h"
@@ -74,7 +75,6 @@
 #include "lib/xstrlcat.h"
 #include "lib/xstrlcpy.h"
 
-#include "imap/acl.h"
 #include "imap/annotate.h"
 #include "imap/append.h"
 #ifdef USE_AUTOCREATE

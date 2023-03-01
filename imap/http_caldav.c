@@ -62,6 +62,7 @@
 #include <libxml/uri.h>
 #include <sys/types.h>
 
+#include "lib/acl.h"
 #include "lib/charset.h"
 #include "lib/hash.h"
 #include "lib/map.h"
@@ -73,7 +74,6 @@
 #include "lib/xstrlcpy.h"
 #include "lib/xstrnchr.h"
 
-#include "imap/acl.h"
 #include "imap/append.h"
 #include "imap/caldav_db.h"
 #include "imap/caldav_util.h"
