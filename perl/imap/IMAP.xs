@@ -56,7 +56,7 @@
 #include "lib/util.h"
 #include "lib/xmalloc.h"
 
-#include "cyrperl.h"
+#include "perl/imap/cyrperl.h"
 
 typedef struct xscyrus *Cyrus_IMAP;
 

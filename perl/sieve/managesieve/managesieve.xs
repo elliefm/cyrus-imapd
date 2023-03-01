@@ -59,9 +59,10 @@ extern "C" {
 typedef struct xscyrus *Sieveobj;
 static char *globalerr = NULL;
 
-#include "isieve.h"
-#include "util.h"
-#include "xmalloc.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
+
+#include "perl/sieve/lib/isieve.h"
 
 void fatal(const char *s, int t)
 {
