@@ -50,9 +50,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "lib/xstrlcpy.h"
+
 #include "sieve/script.h"
 #include "sieve/addr.h"
-#include "xstrlcpy.h"
 
 #define ADDRERR_SIZE 500
 

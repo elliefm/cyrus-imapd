@@ -53,7 +53,15 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include "xmalloc.h"
+
+#include "lib/assert.h"
+#include "lib/imparse.h"
+#include "lib/libconfig.h"
+#include "lib/times.h"
+#include "lib/tok.h"
+#include "lib/util.h"
+#include "lib/xmalloc.h"
+
 #include "sieve/bytecode.h"
 #include "sieve/comparator.h"
 #include "sieve/interp.h"
@@ -62,14 +70,6 @@
 #include "sieve/flags.h"
 #include "sieve/grammar.h"
 #include "sieve/sieve_err.h"
-
-#include "lib/assert.h"
-
-#include "util.h"
-#include "imparse.h"
-#include "libconfig.h"
-#include "times.h"
-#include "tok.h"
 
 #define ERR_BUF_SIZE 1024
 
