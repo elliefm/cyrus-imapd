@@ -2331,7 +2331,7 @@ static int sieve_find_script(const char *user, const char *domain,
     }
     buf_free(&buf);
 
-    return 0;
+    return script ? 0 : -1;
 }
 
 int run_sieve(const mbname_t *mbname, sieve_interp_t *interp, deliver_data_t *msgdata)
