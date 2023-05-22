@@ -81,6 +81,14 @@ AM_INIT_AUTOMAKE([-Wall -Werror -Wno-portability foreign dist-bzip2
                   no-installinfo subdir-objects silent-rules tar-ustar])
 AC_CONFIG_LIBOBJ_DIR([lib])
 
+dnl Enable some extra checks when building releases
+AC_ARG_ENABLE(release-checks,
+    AS_HELP_STRING([--enable-release-checks],[enable extra checks for releases]),
+    [],
+    [enable_release_checks=no]
+)
+AM_CONDITIONAL([DO_RELEASE_CHECKS], [test "x$enable_release_checks" != xno ])
+
 dnl Useful hook for distributions
 AC_ARG_WITH(extraident,
         [AS_HELP_STRING([--with-extraident=STRING],[use STRING as extra version information])],
@@ -2593,4 +2601,5 @@ Build info:
    ldflags:            $LDFLAGS
    libm:               $LIBM
    unit tests (cunit): $enable_unit_tests
+   release checks:     $enable_release_checks
 "
