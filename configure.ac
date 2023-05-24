@@ -1636,12 +1636,12 @@ dnl
                                 [Do we have support for xmlBufferDetach()?]))
                 ])
 
-        PKG_CHECK_MODULES([ICAL], [libical >= 3.0.0], [
+        PKG_CHECK_MODULES([ICAL], [libical >= 3.0.10], [
                 AC_DEFINE(HAVE_ICAL,[],[Build CalDAV support into httpd?])
                 LIBS="$LIBS ${ICAL_LIBS}"
                 with_ical=yes
                 ],
-                AC_MSG_ERROR([Need libical 3.0.0 for http]))
+                AC_MSG_ERROR([Need libical 3.0.10 for http]))
 
         dnl icalproperty_new_color was overlooked, and eventually added in 3.0.5
         AC_CHECK_LIB(ical, icalproperty_new_color,
