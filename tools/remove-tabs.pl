@@ -12,13 +12,28 @@ sub cleanup {
   my $d = IO::Dir->new($name);
   while (defined($_ = $d->read)) {
     next if m/^\./;
-    # XXX this should really be file name patterns to process,
-    # XXX not ones to ignore...
-    next if m/^Makefile/;
-    next if m/\.tgz$/;
-    next if m/\.tar\.gz$/;
-    next if m/\.gif$/;
-    cleanup("$name/$_");
+
+    my $path = "$name/$_";
+    next if -l $path;  # don't mess with symlinks
+
+    if (-f $path) {
+      my @want = (
+        qr{\.c$},
+        qr{\.cpp$},
+        qr{\.h$},
+        qr{\.pl$},
+        qr{\.pm$},
+        qr{\.testc$},
+      );
+
+      my $found = 0;
+      foreach my $p (@want) {
+        $found += scalar m/$p/;
+      }
+      next if not $found;
+    }
+
+    cleanup($path);
   }
 }
 
