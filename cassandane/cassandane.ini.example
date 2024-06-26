@@ -102,6 +102,10 @@
 # capture group (if present) will be used to identify the pid the
 # core file came from.
 ##core_pattern = ^core.*?(?:\.(\d+))?$
+# Whether Cassandane should exit zero on runs with failed tests.
+# When this is enabled, Cassandane will only exit non-zero if
+# something goes badly wrong in Cassandane itself.
+##exit_zero_on_failures = no
 
 # This section describes configurable properties of Valgrind.
 [valgrind]

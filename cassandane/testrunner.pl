@@ -246,6 +246,12 @@ while (my $a = shift)
     {
         push(@cassini_overrides, ['cassandane', 'cleanup', 'no']);
     }
+    elsif($a eq '--exit-zero-on-failures')
+    {
+        push(@cassini_overrides, ['cassandane',
+                                  'exit_zero_on_failures',
+                                  'yes']);
+    }
     elsif ($a eq '-f')
     {
         $format = shift;
@@ -381,12 +387,16 @@ if ($do_list)
 }
 else
 {
+    my $exit_zero_on_failures = $cassini->bool_val('cassandane',
+                                                   'exit_zero_on_failures',
+                                                   'no');
     # Build the schedule per commandline
     $plan->schedule(@names);
     # Run the schedule
     open my $fh, '>&', \*STDOUT
         or die "Cannot save STDOUT as a runner print stream: $!";
-    exit(! $runners{$format}->($plan, $fh));
+    my $result = $runners{$format}->($plan, $fh);
+    exit ($exit_zero_on_failures ? 0 : !$result);
 }
 
 sub _listitem {
