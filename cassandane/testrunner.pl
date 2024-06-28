@@ -47,6 +47,7 @@ use lib '.';
 use Cassandane::Util::Setup;
 use Cassandane::Unit::Runner;
 use Cassandane::Unit::RunnerPretty;
+use Cassandane::Unit::RunnerJSON;
 use Cassandane::Unit::TestPlan;
 use Cassandane::Util::Log;
 use Cassandane::Cassini;
@@ -178,6 +179,19 @@ my %runners =
         $runner->filter(@filters);
         return $runner->do_run($plan, 0);
     },
+    json => sub
+    {
+        my ($plan, $fh) = @_;
+        local *__ANON__ = "runner_json";
+        my $runner = Cassandane::Unit::RunnerJSON->new({}, $fh);
+        my @filters = qw(x skip_version skip_missing_features
+                         skip_runtime_check
+                         enable_wanted_properties);
+        push @filters, 'skip_slow' if $plan->{skip_slow};
+        push @filters, 'slow_only' if $plan->{slow_only};
+        $runner->filter(@filters);
+        return $runner->do_run($plan, 0);
+    },
 );
 
 become_cyrus();
@@ -224,7 +238,8 @@ if ($@) {
 
 sub usage
 {
-    printf STDERR "Usage: testrunner.pl [options] -f <xml|tap|pretty|prettier> [testname...]\n";
+    print STDERR "Usage: testrunner.pl [options] ",
+                 "-f <xml|tap|pretty|prettier|json> [testname...]\n";
     exit(1);
 }
 
