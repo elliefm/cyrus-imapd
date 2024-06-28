@@ -88,6 +88,9 @@ sub test_delete
     my $admintalk = $self->{adminstore}->get_client();
     my $talk = $self->{store}->get_client();
 
+    die "what"; # XXX force an error
+    $self->assert_null(1);  # XXX force a failure
+
     $self->{adminstore}->set_folder('user.archive.cassandane.sent');
     $self->make_message("Message A", store => $self->{adminstore});
 
