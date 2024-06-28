@@ -41,6 +41,7 @@ package Cassandane::Unit::RunnerJSON;
 use strict;
 use warnings;
 use Data::Dumper;
+use JSON;
 
 use lib '.';
 use base qw(Cassandane::Unit::Runner);
@@ -50,8 +51,6 @@ sub new
     my ($class, $params, @args) = @_;
     my $self = $class->SUPER::new(@args);
     $self->{_ok} = [];
-    $self->{_failed} = [];
-    $self->{_error} = [];
     return $self;
 }
 
@@ -70,7 +69,7 @@ sub _getname
 sub start_test
 {
     my ($self, $test) = @_;
-    # prevent the default action which is to print "."
+    # suppress default output
 }
 
 sub add_pass
@@ -85,7 +84,7 @@ sub add_error
     my ($self, $test) = @_;
 
     $self->record_failed($test);
-    push @{$self->{_error}}, _getname($test);
+    # suppress default output
 }
 
 sub add_failure
@@ -93,14 +92,61 @@ sub add_failure
     my ($self, $test) = @_;
 
     $self->record_failed($test);
-    push @{$self->{_failed}}, _getname($test);
+    # suppress default output
 }
 
 sub print_result
 {
     my ($self, $result, $start_time, $end_time) = @_;
 
-    $self->_print(Dumper $result);
+    my $report = {
+        ok => [ sort @{$self->{_ok}} ],
+        error => [],
+        failed => [],
+        backtrace => {},
+        annotations => {},
+    };
+
+    foreach my $e (@{$result->errors()}, @{$result->failures()}) {
+        my $type = ref $e;
+        my $test = $e->object();
+        my $name = _getname($test);
+
+        if ($type eq 'Test::Unit::Failure') {
+            push @{$report->{failed}}, $name;
+        }
+        else {
+            if ($type ne 'Test::Unit::Error') {
+                warn "weird exception: " . Dumper $e;
+            }
+            push @{$report->{error}}, $name;
+        }
+
+        my (undef, $backtrace) = split(/\n/, $e->to_string(), 2);
+        $report->{backtrace}->{$name} = $backtrace;
+
+        $report->{annotations}->{$name} = $test->annotations();
+    }
+
+    my $json = JSON->new();
+    $json->utf8();
+    $json->pretty();
+    $self->_print($json->encode($report));
+}
+
+sub do_run {
+    my ($self, $suite, $wait) = @_;
+    my $result = $self->create_test_result();
+    $result->add_listener($self);
+    my $start_time = new Benchmark();
+    $suite->run($result, $self);
+    my $end_time = new Benchmark();
+
+    $self->print_result($result, $start_time, $end_time);
+
+    # suppress default wait/not successful handling
+
+    return $result->was_successful;
 }
 
 1;
