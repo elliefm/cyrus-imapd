@@ -132,10 +132,22 @@ sub print_result
         ]
     }
 
+    # XXX this could actually just be an optional behaviour of Runner
+    # XXX rather than a whole separate runner, and then you could get
+    # XXX json output alongside any other output you wanted (except
+    # XXX junit, which would need to be refactored to use our base
+    # XXX class)
+    my $cassini = Cassandane::Cassini->instance();
+    my $rootdir = $cassini->val('cassandane', 'rootdir', '/var/tmp/cass');
+    my $report_file = "$rootdir/reports.json";
+
     my $json = JSON->new();
     $json->utf8();
     $json->pretty();
-    $self->_print($json->encode($report));
+
+    open my $fh, '>', $report_file or die "open $report_file: $!";
+    print $fh $json->encode($report);
+    close $fh;
 }
 
 sub do_run {
