@@ -123,9 +123,13 @@ sub print_result
         }
 
         my (undef, $backtrace) = split(/\n/, $e->to_string(), 2);
-        $report->{backtrace}->{$name} = $backtrace;
+        $report->{backtrace}->{$name} = [
+            split /\n/, $backtrace
+        ];
 
-        $report->{annotations}->{$name} = $test->annotations();
+        $report->{annotations}->{$name} = [
+            split /\n/, $test->annotations()
+        ]
     }
 
     my $json = JSON->new();
