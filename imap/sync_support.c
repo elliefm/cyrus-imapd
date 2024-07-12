@@ -1456,8 +1456,8 @@ int decode_annotations(/*const*/struct dlist *annots,
 {
     struct dlist *aa;
     const char *entry;
-    const char *userid;
-    modseq_t modseq;
+    const char *userid = NULL;
+    modseq_t modseq = 0;
 
     *salp = NULL;
     if (strcmp(annots->name, "ANNOTATIONS"))
@@ -1469,12 +1469,12 @@ int decode_annotations(/*const*/struct dlist *annots,
             *salp = sync_annot_list_create();
         if (!dlist_getatom(aa, "ENTRY", &entry))
             return IMAP_PROTOCOL_BAD_PARAMETERS;
-        if (!dlist_getatom(aa, "USERID", &userid))
-            return IMAP_PROTOCOL_BAD_PARAMETERS;
-        if (!dlist_getnum64(aa, "MODSEQ", &modseq))
-            return IMAP_PROTOCOL_BAD_PARAMETERS;
         if (!dlist_getbuf(aa, "VALUE", &value))
             return IMAP_PROTOCOL_BAD_PARAMETERS;
+
+        dlist_getatom(aa, "USERID", &userid); /* optional */
+        dlist_getnum64(aa, "MODSEQ", &modseq); /* optional */
+
         if (!strcmp(entry, IMAP_ANNOT_NS "thrid") &&
             record && mailbox->i.minor_version >= 13) {
             const char *p = buf_cstring(&value);
@@ -1610,7 +1610,8 @@ int apply_annotations(struct mailbox *mailbox,
             0               /* flags - is determined by value */
         };
         r = annotate_state_writemdata(astate, chosen->entry,
-                                      chosen->userid, value, &mdata);
+                                      chosen->userid, value,
+                                      chosen->modseq ? &mdata : NULL);
         if (r)
             break;
     }
