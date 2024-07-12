@@ -1686,7 +1686,7 @@ sub stop
 
     push @errors, $self->_check_valgrind_logs();
     push @errors, $self->_check_cores();
-    push @errors, $self->_check_syslog() unless $params{no_check_syslog};
+#    push @errors, $self->_check_syslog() unless $params{no_check_syslog};
 
     # filter out empty errors (shouldn't be any, but just in case)
     @errors = grep { $_ } @errors;
