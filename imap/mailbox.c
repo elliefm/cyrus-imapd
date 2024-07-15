@@ -3363,11 +3363,16 @@ static uint32_t crc_annot(unsigned int uid, const char *entry,
     uint32_t res = 0;
 
     // ignore everything with a NULL userid, it's bogus!
-    if (!userid) return 0;
+//    if (!userid) return 0;
 
     buf_printf(&buf, "%u %s %s ", uid, entry, userid);
     buf_append(&buf, value);
     res = crc32_buf(&buf);
+    if (!userid) res = 0;
+    syslog(LOG_DEBUG, "%s: uid=<%u> entry=<%s> userid=<%s> value=<%s>"
+                           " computed_string=<%s> res=<%" PRIu32 ">",
+                      __func__, uid, entry, userid, buf_cstring(value),
+                      buf_cstring(&buf), res);
     buf_free(&buf);
 
     return res;
