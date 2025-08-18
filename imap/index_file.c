@@ -241,7 +241,7 @@ static const index_field_t v20_hdr_fields[] = {
     {  4, '4', offsetof(struct index_header, synccrcs.annot)       },
     {  4, '4', offsetof(struct index_header, unseen)               },
     {  8, '8', offsetof(struct index_header, createdmodseq)        },
-    {  8, '4', offsetof(struct index_header, quota_deleted_used)   },
+    {  8, '8', offsetof(struct index_header, quota_deleted_used)   },
     {  8, '8', offsetof(struct index_header, quota_expunged_used)  },
     {  8, '8', offsetof(struct index_header, quota_annot_used)     },
     {  8, 'T', offsetof(struct index_header, changes_epoch)        },
