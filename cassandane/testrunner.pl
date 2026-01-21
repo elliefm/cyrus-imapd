@@ -204,6 +204,7 @@ sub usage
 my $cassini_filename;
 my @cassini_overrides;
 my $want_rerun;
+my $want_dirty;
 
 while (defined(my $a = shift))
 {
@@ -218,6 +219,10 @@ while (defined(my $a = shift))
     elsif ($a eq '--no-cleanup')
     {
         push(@cassini_overrides, ['cassandane', 'cleanup', 'no']);
+    }
+    elsif ($a eq '--dirty')
+    {
+        $want_dirty = 1;
     }
     elsif ($a eq '-f')
     {
@@ -346,6 +351,20 @@ if ($want_rerun) {
                         "re-run.\n";
         exit 0;
     }
+}
+
+if ($want_dirty) {
+    my @status = qx(git status --porcelain);
+
+    # XXX figure out the two status columns, collect the ones we care about
+
+    # XXX filenames are relative to repo root so there'll be a 'cassandane/'
+    # XXX prefix even though we're probably in the cassandane directory
+
+    # XXX filter for cassandane/tiny-tests/X/y and cassandane/Cassandane/X/Y.pm,
+    # XXX other files aren't our tests
+
+    # XXX translate filenames into test names and push onto @names
 }
 
 my $plan = Cassandane::Unit::TestPlan->new(
