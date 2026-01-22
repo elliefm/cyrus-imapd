@@ -354,9 +354,14 @@ if ($want_rerun) {
 }
 
 if ($want_dirty) {
-    my @status = qx(git status --porcelain);
+    my @status = qx(git status --porcelain -z);
+    # XXX fails with "dubious ownership" because we're already "cyrus" at this
+    # XXX point, but repository is owned by real user...
 
-    # XXX figure out the two status columns, collect the ones we care about
+    print Dumper \@status;
+    exit 1;
+
+    # XXX collect filenames for statuses with not ' ' in the second column
 
     # XXX filenames are relative to repo root so there'll be a 'cassandane/'
     # XXX prefix even though we're probably in the cassandane directory
