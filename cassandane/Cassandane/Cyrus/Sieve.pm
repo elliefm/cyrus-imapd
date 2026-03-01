@@ -194,64 +194,6 @@ sub compile_sievec
     return ($result, join("\n", @errors));
 }
 
-sub compile_timsieved
-{
-    my ($self, $name, $script) = @_;
-
-    my $basedir = $self->{instance}->{basedir};
-    my $bindir = $self->{instance}->{cyrus_destdir} .
-                 $self->{instance}->{cyrus_prefix} . '/bin';
-    my $srv = $self->{instance}->get_service('sieve');
-
-    xlog $self, "Checking preconditions for compiling sieve script $name";
-
-    $self->assert_not_file_test("$basedir/$name.script", '-f');
-    $self->assert_not_file_test("$basedir/$name.errors", '-f');
-
-    open(FH, '>', "$basedir/$name.script")
-        or die "Cannot open $basedir/$name.script for writing: $!";
-    print FH $script;
-    close(FH);
-
-    if (! -f "$basedir/sieve.passwd" )
-    {
-        open(FH, '>', "$basedir/sieve.passwd")
-            or die "Cannot open $basedir/sieve.passwd for writing: $!";
-        print FH "\ntestpw\n";
-        close(FH);
-    }
-
-    xlog $self, "Running installsieve on script $name";
-    my $result = $self->{instance}->run_command({
-                redirects => {
-                    # No cyrus => 1 as installsieve is a Perl
-                    # script which doesn't need Valgrind and
-                    # doesn't understand the Cyrus -C option
-                    stdin => "$basedir/sieve.passwd",
-                    stderr => "$basedir/$name.errors"
-                },
-                handlers => {
-                    exited_normally => sub { return 'success'; },
-                    exited_abnormally => sub { return 'failure'; },
-                },
-            },
-            "$bindir/installsieve",
-            "-i", "$basedir/$name.script",
-            "-u", "cassandane",
-            $srv->host() . ":" . $srv->port());
-
-    # Read the errors file in @errors
-    my (@errors) = read_errors("$basedir/$name.errors");
-
-    if ($result eq 'success')
-    {
-        xlog $self, "Checking that installsieve didn't write anything to stderr";
-        $self->assert_equals(0, scalar(@errors));
-    }
-
-    return ($result, join("\n", @errors));
-}
-
 sub compile_sieve_script
 {
     my ($self, $name, $script) = @_;
