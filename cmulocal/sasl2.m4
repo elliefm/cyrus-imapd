@@ -7,13 +7,11 @@ AC_DEFUN([SASL_GSSAPI_CHK],
 [AC_REQUIRE([SASL2_CRYPT_CHK])
 AC_REQUIRE([CMU_SOCKETS])
 AC_ARG_ENABLE([gssapi],
-              [AC_HELP_STRING([--enable-gssapi=<DIR>],
-                              [enable GSSAPI authentication [yes]])],
+              [AS_HELP_STRING([--enable-gssapi=<DIR>],[enable GSSAPI authentication [yes]])],
               [gssapi=$enableval],
               [gssapi=yes])
 AC_ARG_WITH([gss_impl],
-            [AC_HELP_STRING([--with-gss_impl={heimdal|mit|cybersafe|seam|auto}],
-                            [choose specific GSSAPI implementation [[auto]]])],
+            [AS_HELP_STRING([--with-gss_impl={heimdal|mit|cybersafe|seam|auto}],[choose specific GSSAPI implementation [[auto]]])],
             [gss_impl=$withval],
             [gss_impl=auto])
 
@@ -38,7 +36,7 @@ if test "$gssapi" != no; then
       platform=__aix
       ;;
     *)
-      AC_WARN([The system type is not recognized. If you believe that CyberSafe GSSAPI works on this platform, please update the configure script])
+      AC_MSG_WARN(The system type is not recognized. If you believe that CyberSafe GSSAPI works on this platform, please update the configure script)
       if test "$gss_impl" = "cybersafe"; then
         AC_MSG_ERROR([CyberSafe was forced, cannot continue as platform is not supported])
       fi
@@ -192,12 +190,12 @@ if test "$gssapi" != no; then
     gssapi="no"
     GSSAPIBASE_LIBS=
     GSSAPIBASE_STATIC_LIBS=
-    AC_WARN([Disabling GSSAPI - specified library not found])
+    AC_MSG_WARN(Disabling GSSAPI - specified library not found)
   else
     gssapi="no"
     GSSAPIBASE_LIBS=
     GSSAPIBASE_STATIC_LIBS=
-    AC_WARN([Disabling GSSAPI - no library])
+    AC_MSG_WARN(Disabling GSSAPI - no library)
   fi
 fi
 
@@ -214,7 +212,7 @@ if test "$gssapi" != "no"; then
                   #endif],
                  [AC_DEFINE(HAVE_GSS_C_NT_HOSTBASED_SERVICE,,
                             [Define if your GSSAPI implementation defines GSS_C_NT_HOSTBASED_SERVICE])],
-                 [AC_WARN([Cybersafe define not found])])
+                 [AC_MSG_WARN(Cybersafe define not found)])
 
   elif test "$ac_cv_header_gssapi_h" = "yes"; then
     AC_EGREP_HEADER(GSS_C_NT_HOSTBASED_SERVICE, gssapi.h,
@@ -234,7 +232,7 @@ if test "$gssapi" != "no"; then
                   #endif],
                  [AC_DEFINE(HAVE_GSS_C_NT_USER_NAME,,
                             [Define if your GSSAPI implementation defines GSS_C_NT_USER_NAME])],
-                 [AC_WARN([Cybersafe define not found])])
+                 [AC_MSG_WARN(Cybersafe define not found)])
   elif test "$ac_cv_header_gssapi_h" = "yes"; then
     AC_EGREP_HEADER(GSS_C_NT_USER_NAME, gssapi.h,
                     [AC_DEFINE(HAVE_GSS_C_NT_USER_NAME,,
@@ -279,7 +277,7 @@ if test "$gssapi" != no; then
   cmu_save_LIBS="$LIBS"
   LIBS="$LIBS $GSSAPIBASE_LIBS"
   AC_MSG_CHECKING([for SPNEGO support in GSSAPI libraries])
-  AC_TRY_RUN([
+  AC_RUN_IFELSE([AC_LANG_SOURCE([[
 #ifdef HAVE_GSSAPI_H
 #include <gssapi.h>
 #else
@@ -300,10 +298,8 @@ int main(void)
 
     return (!have_spnego);  // 0 = success, 1 = failure
 }
-],
-        [ AC_DEFINE(HAVE_GSS_SPNEGO,,[Define if your GSSAPI implementation supports SPNEGO])
-        AC_MSG_RESULT(yes) ],
-        AC_MSG_RESULT(no))
+]])],[ AC_DEFINE(HAVE_GSS_SPNEGO,,[Define if your GSSAPI implementation supports SPNEGO])
+        AC_MSG_RESULT(yes) ],[AC_MSG_RESULT(no)],[])
   LIBS="$cmu_save_LIBS"
 
 else
@@ -334,13 +330,12 @@ AC_DEFUN([CMU_SASL2],
 [AC_REQUIRE([SASL_GSSAPI_CHK])
 
 AC_ARG_WITH(sasl,
-            [AC_HELP_STRING([--with-sasl=DIR],[Compile with libsasl2 in <DIR>])],
+            [AS_HELP_STRING([--with-sasl=DIR],[Compile with libsasl2 in <DIR>])],
             with_sasl="$withval",
             with_sasl="yes")
 
 AC_ARG_WITH(staticsasl,
-            [AC_HELP_STRING([--with-staticsasl=DIR],
-                            [Compile with statically linked libsasl2 in <DIR>])],
+            [AS_HELP_STRING([--with-staticsasl=DIR],[Compile with statically linked libsasl2 in <DIR>])],
             [with_staticsasl="$withval";
              if test $with_staticsasl != "no"; then
                using_static_sasl="static"
@@ -468,7 +463,7 @@ AC_DEFUN([CMU_SASL2_REQUIRE_VER],
 cmu_saved_CPPFLAGS=$CPPFLAGS
 CPPFLAGS="$CPPFLAGS $SASLFLAGS"
 
-AC_TRY_CPP([
+AC_PREPROC_IFELSE([AC_LANG_SOURCE([[
 #include <sasl/sasl.h>
 
 #ifndef SASL_VERSION_MAJOR
@@ -484,8 +479,7 @@ AC_TRY_CPP([
 #if SASL_VERSION_MAJOR < $1 || SASL_VERSION_MINOR < $2 || SASL_VERSION_STEP < $3
 #error SASL version is less than $1.$2.$3
 #endif
-],,
-           [AC_MSG_ERROR([Incorrect SASL headers found.  This package requires SASL $1.$2.$3 or newer.])])
+]])],[],[AC_MSG_ERROR([Incorrect SASL headers found.  This package requires SASL $1.$2.$3 or newer.])])
 
 CPPFLAGS=$cmu_saved_CPPFLAGS
 ])# CMU_SASL2_REQUIRE_VER

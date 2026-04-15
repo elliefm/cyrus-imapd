@@ -17,19 +17,19 @@ AC_DEFUN([CMU_SOCKETS], [
         LIBS="$LIB_SOCKET $save_LIBS"
         AC_CHECK_FUNC(res_search, :,
                 [LIBS="-lresolv $LIB_SOCKET $save_LIBS"
-                AC_TRY_LINK([[
+                AC_LINK_IFELSE([AC_LANG_PROGRAM([[[
 #include <sys/types.h>
 #include <netinet/in.h>
 #include <arpa/nameser.h>
 #ifdef HAVE_ARPA_NAMESER_COMPAT_H
 #include <arpa/nameser_compat.h>
 #endif
-#include <resolv.h>]],[[
+#include <resolv.h>]]], [[[
 const char host[12]="openafs.org";
 u_char ans[1024];
 res_search( host, C_IN, T_MX, (u_char *)&ans, sizeof(ans));
 return 0;
-]], LIB_SOCKET="-lresolv $LIB_SOCKET")
+]]])],[LIB_SOCKET="-lresolv $LIB_SOCKET"],[])
         ])
         LIBS="$LIB_SOCKET $save_LIBS"
         AC_CHECK_FUNCS(dn_expand dns_lookup)

@@ -26,11 +26,8 @@ AC_DEFUN([CYRUS_MYSQL_CHK_LIB],
         for libname in ${with_mysql} mysqlclient
           do
             LIBS="$saved_LIBS -l$libname"
-            AC_TRY_LINK([#include <stdio.h>
-#include <mysql.h>],
-            [mysql_select_db(NULL, NULL);],
-            MYSQL_LIBADD="$MYSQL_LIBADD -l$libname"; mysqllib="yes",
-            mysqllib="no")
+            AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <stdio.h>
+#include <mysql.h>]], [[mysql_select_db(NULL, NULL);]])],[MYSQL_LIBADD="$MYSQL_LIBADD -l$libname"; mysqllib="yes"],[mysqllib="no"])
             if test "$mysqllib" = "yes"; then break; fi
           done
         LIBS=$saved_LIBS
@@ -100,11 +97,8 @@ AC_DEFUN([CYRUS_PGSQL_CHK_LIB],
         for libname in ${with_pgsql} pq
           do
             LIBS="$saved_LIBS -l$libname"
-            AC_TRY_LINK([#include <stdio.h>
-#include <libpq-fe.h>],
-            [PQconnectdb(NULL);],
-            PGSQL_LIBADD="$PGSQL_LIBADD -l$libname"; pgsqllib="yes",
-            pgsqllib="no")
+            AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <stdio.h>
+#include <libpq-fe.h>]], [[PQconnectdb(NULL);]])],[PGSQL_LIBADD="$PGSQL_LIBADD -l$libname"; pgsqllib="yes"],[pgsqllib="no"])
             if test "$pgsqllib" = "yes"; then break; fi
           done
         LIBS=$saved_LIBS
@@ -174,11 +168,8 @@ AC_DEFUN([CYRUS_SQLITE_CHK_LIB],
         for libname in ${with_sqlite} sqlite3
           do
             LIBS="$saved_LIBS -l$libname"
-            AC_TRY_LINK([#include <stdio.h>
-#include <sqlite3.h>],
-            [sqlite3_open(NULL, NULL);],
-            SQLITE_LIBADD="$SQLITE_LIBADD -l$libname"; sqlitelib="yes",
-            sqlitelib="no")
+            AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <stdio.h>
+#include <sqlite3.h>]], [[sqlite3_open(NULL, NULL);]])],[SQLITE_LIBADD="$SQLITE_LIBADD -l$libname"; sqlitelib="yes"],[sqlitelib="no"])
             if test "$sqlitelib" = "yes"; then break; fi
           done
         LIBS=$saved_LIBS

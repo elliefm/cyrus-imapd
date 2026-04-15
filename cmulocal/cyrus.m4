@@ -35,9 +35,9 @@ AC_DEFUN([CMU_GUESS_RUNPATH_SWITCH], [
     # first, try -R
     SAVE_LDFLAGS="${LDFLAGS}"
     LDFLAGS="-R /usr/lib"
-    AC_TRY_LINK([],[],[andrew_cv_runpath_switch="-R"], [
+    AC_LINK_IFELSE([AC_LANG_PROGRAM([[]], [[]])],[andrew_cv_runpath_switch="-R"],[
         LDFLAGS="-Wl,-rpath,/usr/lib"
-    AC_TRY_LINK([],[],[andrew_cv_runpath_switch="-Wl,-rpath,"],
+    _au_m4_changequote([,])AC_TRY_LINK([],[],[andrew_cv_runpath_switch="-Wl,-rpath,"],
     [andrew_cv_runpath_switch="none"])
     ])
   LDFLAGS="${SAVE_LDFLAGS}"

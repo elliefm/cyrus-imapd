@@ -1,6 +1,6 @@
 AC_DEFUN([CMU_FIND_LIB_SUBDIR],
 [dnl
-AC_ARG_WITH([lib-subdir], AC_HELP_STRING([--with-lib-subdir=DIR],[Find libraries in DIR instead of lib]))
+AC_ARG_WITH([lib-subdir], AS_HELP_STRING([--with-lib-subdir=DIR],[Find libraries in DIR instead of lib]))
 AC_CHECK_SIZEOF(long)
 AC_CACHE_CHECK([what directory libraries are found in], [ac_cv_cmu_lib_subdir],
 [test "X$with_lib_subdir" = "Xyes" && with_lib_subdir=

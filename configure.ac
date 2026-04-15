@@ -6,16 +6,12 @@ dnl configure.ac for the Cyrus imapd
 dnl
 
 
-AC_INIT([cyrus-imapd],
-        m4_esyscmd(printf '%s' $(tools/git-version.sh)),
-        [https://github.com/cyrusimap/cyrus-imapd/issues],
-        ,
-        [https://www.cyrusimap.org])
-AC_PREREQ([2.63])
+AC_INIT([cyrus-imapd],[m4_esyscmd(printf '%s' $(tools/git-version.sh))],[https://github.com/cyrusimap/cyrus-imapd/issues],[],[https://www.cyrusimap.org])
+AC_PREREQ([2.71])
 AC_CONFIG_SRCDIR([imap/imapd.c])
 AC_CONFIG_HEADERS(config.h)
 AC_CONFIG_MACRO_DIR([cmulocal])
-AC_CANONICAL_SYSTEM
+AC_CANONICAL_TARGET
 
 dnl shared or static
 ENABLE_SHARED="$enable_shared"
@@ -123,7 +119,7 @@ AC_PROG_LN_S
 AC_PROG_MAKE_SET
 AC_PROG_INSTALL
 AC_USE_SYSTEM_EXTENSIONS
-AC_ISC_POSIX
+AC_SEARCH_LIBS([strerror],[cposix])
 AC_PROG_AWK
 AC_SYS_LONG_FILE_NAMES
 if test $ac_cv_sys_long_file_names = no; then
@@ -244,7 +240,20 @@ IPv6_CHECK_SA_LEN()
 
 dnl this is to check for time things
 AC_CHECK_HEADERS(sys/time.h)
-AC_HEADER_TIME
+m4_warn([obsolete],
+[Update your code to rely only on HAVE_SYS_TIME_H,
+then remove this warning and the obsolete code below it.
+All current systems provide time.h; it need not be checked for.
+Not all systems provide sys/time.h, but those that do, all allow
+you to include it and time.h simultaneously.])dnl
+AC_CHECK_HEADERS_ONCE([sys/time.h])
+# Obsolete code to be removed.
+if test $ac_cv_header_sys_time_h = yes; then
+  AC_DEFINE([TIME_WITH_SYS_TIME],[1],[Define to 1 if you can safely include both <sys/time.h>
+	     and <time.h>.  This macro is obsolete.])
+fi
+# End of obsolete code.
+
 AC_STRUCT_TM
 AC_STRUCT_TIMEZONE
 AC_CHECK_FUNCS(timegm)
@@ -508,16 +517,16 @@ if test "x$enable_xapian" != xno ; then
         dnl Xapian requires CXX11
         AX_CXX_COMPILE_STDCXX(11)
 
-        dnl If AC_PROG_LIBTOOL (or the deprecated older version AM_PROG_LIBTOOL)
+        dnl If LT_INIT (or the deprecated older version LT_INIT)
         dnl has already been expanded, enable libtool support now, otherwise add
-        dnl hooks to the end of AC_PROG_LIBTOOL and AM_PROG_LIBTOOL to enable it
+        dnl hooks to the end of LT_INIT and LT_INIT to enable it
         dnl if either is expanded later.
         XAPIAN_VERSION="`$XAPIAN_CONFIG --version|sed 's/.* //'`"
         AS_VERSION_COMPARE([$XAPIAN_VERSION], [1.4], AC_MSG_ERROR([need at least Xapian 1.4]), [], [])
         XAPIAN_CXXFLAGS="`$XAPIAN_CONFIG --cxxflags`"
-        AC_PROVIDE_IFELSE([AC_PROG_LIBTOOL],
+        AC_PROVIDE_IFELSE([LT_INIT],
             [XAPIAN_LIBS="`$XAPIAN_CONFIG --ltlibs`"],
-            [AC_PROVIDE_IFELSE([AM_PROG_LIBTOOL],
+            [AC_PROVIDE_IFELSE([LT_INIT],
                 [XAPIAN_LIBS="`$XAPIAN_CONFIG --ltlibs`"],
                 dnl Pass magic option so xapian-config knows we called it (so it
                 dnl can choose a more appropriate error message if asked to link
@@ -525,9 +534,9 @@ if test "x$enable_xapian" != xno ; then
                 dnl so the error message can correctly say "configure.ac" or
                 dnl "configure.in" according to which is in use.
                 [XAPIAN_LIBS="`ac_top_srcdir=\"$ac_top_srcdir\" $XAPIAN_CONFIG --from-xo-lib-xapian --libs`"
-                define([AC_PROG_LIBTOOL], defn([AC_PROG_LIBTOOL])
+                define([LT_INIT], defn([LT_INIT])
                        [XAPIAN_LIBS="`$XAPIAN_CONFIG --ltlibs`"])
-                define([AM_PROG_LIBTOOL], defn([AM_PROG_LIBTOOL])
+                define([LT_INIT], defn([LT_INIT])
                        [XAPIAN_LIBS="`$XAPIAN_CONFIG --ltlibs`"])])])
         AC_DEFINE(USE_XAPIAN,[],[Build in Xapian support?])
 
@@ -628,13 +637,11 @@ if test "$enable_pcre" != "no"; then
                         CFLAGS="$CFLAGS $PCRE_CFLAGS"
                         LIBS="$LIBS $PCRE_LIBS"
                         AC_CACHE_VAL(cyrus_cv_pcre_utf8,
-                                     AC_TRY_CPP([   #include <pcreposix.h>
+                                     AC_PREPROC_IFELSE([AC_LANG_SOURCE([[   #include <pcreposix.h>
                                                     #ifndef REG_UTF8
                                                     #include </nonexistent>
                                                     #endif
-                                                ],
-                                                [cyrus_cv_pcre_utf8=yes],
-                                                [cyrus_cv_pcre_utf8=no]))
+                                                ]])],[cyrus_cv_pcre_utf8=yes],[cyrus_cv_pcre_utf8=no]))
                         AC_MSG_RESULT($cyrus_cv_pcre_utf8)
                         CFLAGS="$saved_CFLAGS"
                         LIBS="$saved_LIBS"
@@ -651,13 +658,11 @@ if test "$enable_pcre2" != "no"; then
                         CFLAGS="$CFLAGS $PCRE2_CFLAGS"
                         LIBS="$LIBS $PCRE2_LIBS"
                         AC_CACHE_VAL(cyrus_cv_pcre2_utf8,
-                                     AC_TRY_CPP([   #include <pcre2posix.h>
+                                     AC_PREPROC_IFELSE([AC_LANG_SOURCE([[   #include <pcre2posix.h>
                                                     #ifndef REG_UTF
                                                     #include </nonexistent>
                                                     #endif
-                                                ],
-                                                [cyrus_cv_pcre2_utf8=yes],
-                                                [cyrus_cv_pcre2_utf8=no]))
+                                                ]])],[cyrus_cv_pcre2_utf8=yes],[cyrus_cv_pcre2_utf8=no]))
                         AC_MSG_RESULT($cyrus_cv_pcre2_utf8)
                         CFLAGS="$saved_CFLAGS"
                         LIBS="$saved_LIBS"
@@ -790,8 +795,7 @@ CFLAGS="$saved_CFLAGS"
 AC_SUBST([NOERROR_UNUSED_PARAMETER])
 
 dnl for et routines
-AC_FUNC_CHECK(strerror,AC_DEFINE(HAS_STRERROR,[],[Do we have strerror()?]),
-              AC_DEFINE(NEED_SYS_ERRLIST,[],[Do we have a sys_errlist?]))
+AC_CHECK_FUNC([strerror],[AC_DEFINE(HAS_STRERROR,,Do we have strerror()?)],[AC_DEFINE(NEED_SYS_ERRLIST,,Do we have a sys_errlist?)])
 
 dnl for master fd limits
 AC_CHECK_HEADERS(sys/resource.h)
@@ -837,10 +841,10 @@ void *p = PS_STRINGS;
 fi
 if test "$spt_type" = ""; then
         AC_MSG_CHECKING(for SCO)
-        AC_CACHE_VAL(cyrus_cv_sys_sco, AC_TRY_CPP([
+        AC_CACHE_VAL(cyrus_cv_sys_sco, AC_PREPROC_IFELSE([AC_LANG_SOURCE([[
 #ifndef _SCO_unix_
 #include </nonexistent>
-#endif],cyrus_cv_sys_sco=yes,cyrus_cv_sys_sco=no))
+#endif]])],[cyrus_cv_sys_sco=yes],[cyrus_cv_sys_sco=no]))
         if test $cyrus_cv_sys_sco = yes; then
                 spt_type=SPT_SCO
         fi
@@ -848,10 +852,10 @@ if test "$spt_type" = ""; then
 fi
 if test "$spt_type" = ""; then
         AC_MSG_CHECKING(for setproctitle usability)
-        AC_CACHE_VAL(cyrus_cv_sys_setproctitle, AC_TRY_CPP([
+        AC_CACHE_VAL(cyrus_cv_sys_setproctitle, AC_PREPROC_IFELSE([AC_LANG_SOURCE([[
 #if defined(DGUX) || defined(_SEQUENT_) || defined(apollo)
 #include </nonexistent>
-#endif],cyrus_cv_sys_setproctitle=yes,cyrus_cv_sys_setproctitle=no))
+#endif]])],[cyrus_cv_sys_setproctitle=yes],[cyrus_cv_sys_setproctitle=no]))
         if test $cyrus_cv_sys_setproctitle = no; then
                 spt_type=SPT_NONE
         fi
@@ -862,26 +866,25 @@ if test "$spt_type" != ""; then
 fi
 
 AC_MSG_CHECKING(nonblocking method)
-AC_CACHE_VAL(cyrus_cv_sys_nonblock,AC_TRY_LINK([#include <sys/types.h>
+AC_CACHE_VAL(cyrus_cv_sys_nonblock,AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <sys/types.h>
 #include <sys/file.h>
 #include <fcntl.h>
 #ifndef FNDELAY
 #define FNDELAY         O_NDELAY
-#endif],[(void)(fcntl(0, F_GETFL, 0) & FNDELAY)],
-cyrus_cv_sys_nonblock=fcntl,cyrus_cv_sys_nonblock=ioctl))
+#endif]], [[(void)(fcntl(0, F_GETFL, 0) & FNDELAY)]])],[cyrus_cv_sys_nonblock=fcntl],[cyrus_cv_sys_nonblock=ioctl]))
 AM_CONDITIONAL([NONBLOCK_FCNTL], [test "$cyrus_cv_sys_nonblock" = "fcntl"])
 AC_MSG_RESULT($cyrus_cv_sys_nonblock)
 
 AC_MSG_CHECKING(timezone GMT offset method)
-AC_CACHE_VAL(cyrus_cv_struct_sys_gmtoff,AC_TRY_COMPILE([
-#include <time.h>],[struct tm tm;
+AC_CACHE_VAL(cyrus_cv_struct_sys_gmtoff,AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
+#include <time.h>]], [[struct tm tm;
 tm.tm_gmtoff = 0;
 (void) tm;
-],cyrus_cv_struct_sys_gmtoff=tm,cyrus_cv_struct_sys_gmtoff=gmtime))
+]])],[cyrus_cv_struct_sys_gmtoff=tm],[cyrus_cv_struct_sys_gmtoff=gmtime]))
 AM_CONDITIONAL([GMTOFF_TM], [test "$cyrus_cv_struct_sys_gmtoff" = "tm"])
 AC_MSG_RESULT($cyrus_cv_struct_sys_gmtoff)
 AC_MSG_CHECKING(for shared mmap)
-AC_CACHE_VAL(cyrus_cv_func_mmap_shared,AC_TRY_RUN([
+AC_CACHE_VAL(cyrus_cv_func_mmap_shared,AC_RUN_IFELSE([AC_LANG_SOURCE([[
 #include <fcntl.h>
 #include <string.h>
 #include <sys/mman.h>
@@ -908,14 +911,13 @@ int main() {
     if (memcmp(base+4, "test", 4) != 0) return 1;
     return 0;
 }
-],cyrus_cv_func_mmap_shared=yes,cyrus_cv_func_mmap_shared=no,
-cyrus_cv_func_mmap_shared=no))
+]])],[cyrus_cv_func_mmap_shared=yes],[cyrus_cv_func_mmap_shared=no],[cyrus_cv_func_mmap_shared=no]))
 AC_MSG_RESULT($cyrus_cv_func_mmap_shared)
 if test $cyrus_cv_func_mmap_shared = yes; then
         found_map="shared"
 else
 AC_MSG_CHECKING(for stupid shared mmap)
-AC_CACHE_VAL(cyrus_cv_func_mmap_stupidshared,AC_TRY_RUN([
+AC_CACHE_VAL(cyrus_cv_func_mmap_stupidshared,AC_RUN_IFELSE([AC_LANG_SOURCE([[
 #include <fcntl.h>
 #include <string.h>
 #include <sys/mman.h>
@@ -943,8 +945,7 @@ int main() {
     if (memcmp(base, "xyzz", 4) != 0) return 1;
     return 0;
 }
-],cyrus_cv_func_mmap_stupidshared=yes,cyrus_cv_func_mmap_stupidshared=no,
-cyrus_cv_func_mmap_stupidshared=no))
+]])],[cyrus_cv_func_mmap_stupidshared=yes],[cyrus_cv_func_mmap_stupidshared=no],[cyrus_cv_func_mmap_stupidshared=no]))
 AC_MSG_RESULT($cyrus_cv_func_mmap_stupidshared)
 if test $cyrus_cv_func_mmap_stupidshared = yes; then
         found_map="stupidshared"
@@ -1062,13 +1063,11 @@ if test "x$enable_afs" = "xyes"; then
         AC_MSG_CHECKING(if AFS libraries need sigvec)
         dnl Does AFS need sigvec?  We have to link against lwp and see
         dnl if IOMGR_Initialize wants it
-        AC_TRY_LINK([IOMGR_Initialize();],
-                [IOMGR_Initialize()],
-                [
+        AC_LINK_IFELSE([AC_LANG_PROGRAM([[IOMGR_Initialize();]], [[IOMGR_Initialize()]])],[
                         dnl it linked; don't need it
                         AC_MSG_RESULT(no)
                         cyrus_cv_afs_sigvec="no"
-                ], [
+                ],[
                         dnl didn't link; pick up sigvec
                         AC_MSG_RESULT(yes)
                         cyrus_cv_afs_sigvec="yes"
@@ -1116,7 +1115,7 @@ xyes)
         ldap_ldflags="-L${with_ldap}/lib"
         with_ldap=yes
     else
-        AC_WARN([Disabling LDAP - no include files found])
+        AC_MSG_WARN(Disabling LDAP - no include files found)
         with_ldap=no
     fi
 esac
@@ -1194,7 +1193,7 @@ dnl
 dnl Allow for setting EGD socket file on systems without /dev/*random.
 dnl
 AC_ARG_WITH(egd-socket,
-      [AC_HELP_STRING([--with-egd-socket=FILE], [Entropy Gathering Daemon socket pathname for systems without /dev/urandom])],
+      [AS_HELP_STRING([--with-egd-socket=FILE],[Entropy Gathering Daemon socket pathname for systems without /dev/urandom])],
               [ EGD_SOCKET="$withval" ]
       )
 if test -n "$EGD_SOCKET" ; then
@@ -1765,10 +1764,10 @@ if test "$USE_MAINTAINER_MODE" = "yes" ; then
 fi
 
 AC_MSG_CHECKING(for modern syslog)
-AC_CACHE_VAL(cyrus_cv_lib_syslog, AC_TRY_CPP([#include <syslog.h>
+AC_CACHE_VAL(cyrus_cv_lib_syslog, AC_PREPROC_IFELSE([AC_LANG_SOURCE([[#include <syslog.h>
 #ifndef LOG_LOCAL6
 #include </nonexistent>
-#endif],cyrus_cv_lib_syslog=yes,cyrus_cv_lib_syslog=no))
+#endif]])],[cyrus_cv_lib_syslog=yes],[cyrus_cv_lib_syslog=no]))
 AC_MSG_RESULT($cyrus_cv_lib_syslog)
 
 AC_MSG_CHECKING(which syslog facility to use)
@@ -2016,7 +2015,7 @@ AM_CONDITIONAL([USE_SQLITE], [test "x$use_sqlite" = xyes])
 
 dnl compiler feature checking
 AC_MSG_CHECKING(for function nesting)
-AC_CACHE_VAL(cyrus_cv_function_nesting, AC_TRY_COMPILE([
+AC_CACHE_VAL(cyrus_cv_function_nesting, AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
 #include <stdlib.h>
 void func(void *data, size_t nmemb, size_t size,
           int (*compar)(const void *, const void *, void *),
@@ -2038,11 +2037,11 @@ int cval(const void *a, const void *b, void *prev)
   *ref = bc;
   return 1;
 }
-],[
+]], [[
     /* the chaos is a pair of quadrigraphs representing square brackets */
     char *dest, buf@<:@@:>@ = "abc";
     func(buf, 3, 1, cval, &dest);
-],cyrus_cv_function_nesting=yes, cyrus_cv_function_nesting=no))
+]])],[cyrus_cv_function_nesting=yes],[cyrus_cv_function_nesting=no]))
 AC_MSG_RESULT($cyrus_cv_function_nesting)
 if test "$cyrus_cv_function_nesting" = "yes"; then
   AC_DEFINE(HAVE_FUNCTION_NESTING,[],[Do we have function nesting support?])
