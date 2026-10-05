@@ -320,7 +320,36 @@ endif # SIEVE
 if USE_INTERNAL_SASL
 noinst_LTLIBRARIES += lib/libsasl_min.la
 
-lib_libsasl_min_la_SOURCES =
+lib_libsasl_min_la_SOURCES = \
+    libsasl_min/auxprop.c \
+    libsasl_min/canonusr.c \
+    libsasl_min/checkpw.c \
+    libsasl_min/client.c \
+    libsasl_min/common.c \
+    libsasl_min/config.c \
+    libsasl_min/dlopen.c \
+    libsasl_min/external.c \
+    libsasl_min/getaddrinfo.c \
+    libsasl_min/getnameinfo.c \
+    libsasl_min/getsubopt.c \
+    libsasl_min/prop.h \
+    libsasl_min/sasl.h \
+    libsasl_min/saslint.h \
+    libsasl_min/saslplug.h \
+    libsasl_min/saslutil.c \
+    libsasl_min/saslutil.h \
+    libsasl_min/server.c \
+    libsasl_min/seterror.c \
+    libsasl_min/snprintf.c \
+    libsasl_min/staticopen.h \
+    libsasl_min/windlopen.c \
+    libsasl_min/prop.h \
+    libsasl_min/sasl.h \
+    libsasl_min/saslint.h \
+    libsasl_min/saslplug.h \
+    libsasl_min/saslutil.h
+
+lib_libsasl_min_la_CFLAGS = $(AM_CFLAGS) $(CFLAG_VISIBILITY)
 lib_libsasl_min_la_LIBADD =
 endif # USE_INTERNAL_SASL
 
