@@ -317,6 +317,13 @@ endif # SERVER
 
 endif # SIEVE
 
+if USE_INTERNAL_SASL
+noinst_LTLIBRARIES += lib/libsasl_min.la
+
+lib_libsasl_min_la_SOURCES =
+lib_libsasl_min_la_LIBADD =
+endif # USE_INTERNAL_SASL
+
 EXTRA_DIST = \
     COPYING \
     Doxyfile \
