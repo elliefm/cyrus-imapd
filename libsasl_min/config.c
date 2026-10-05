@@ -2,7 +2,7 @@
  * Rob Siemborski
  * Tim Martin (originally in Cyrus distribution)
  */
-/* 
+/*
  * Copyright (c) 1998-2016 Carnegie Mellon University.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -20,7 +20,7 @@
  * 3. The name "Carnegie Mellon University" must not be used to
  *    endorse or promote products derived from this software without
  *    prior written permission. For permission or any other legal
- *    details, please contact  
+ *    details, please contact
  *      Carnegie Mellon University
  *      Center for Technology Transfer and Enterprise Creation
  *      4615 Forbes Avenue
@@ -50,7 +50,8 @@
 #include "sasl.h"
 #include "saslint.h"
 
-struct configlist {
+struct configlist
+{
     char *key;
     char *value;
 };
@@ -70,85 +71,91 @@ int sasl_config_init(const char *filename)
     char *tail;
     int result;
 
-    nconfiglist=0;
+    nconfiglist = 0;
 
     infile = fopen(filename, "r");
     if (!infile) {
         return SASL_CONTINUE;
     }
-    
+
     while (fgets(buf, sizeof(buf), infile)) {
-	lineno++;
+        lineno++;
 
-	if (buf[strlen(buf)-1] == '\n') buf[strlen(buf)-1] = '\0';
-	for (p = buf; *p && isspace((int) *p); p++);
-	if (!*p || *p == '#') continue;
+        if (buf[strlen(buf) - 1] == '\n') {
+            buf[strlen(buf) - 1] = '\0';
+        }
+        for (p = buf; *p && isspace((int) *p); p++)
+            ;
+        if (!*p || *p == '#') {
+            continue;
+        }
 
-	key = p;
-	while (*p && (isalnum((int) *p) || *p == '-' || *p == '_')) {
-	    if (isupper((int) *p)) *p = (char) tolower(*p);
-	    p++;
-	}
-	if (*p != ':') {
-	    fclose(infile);
-	    return SASL_CONFIGERR;
-	}
-	*p++ = '\0';
+        key = p;
+        while (*p && (isalnum((int) *p) || *p == '-' || *p == '_')) {
+            if (isupper((int) *p)) {
+                *p = (char) tolower(*p);
+            }
+            p++;
+        }
+        if (*p != ':') {
+            fclose(infile);
+            return SASL_CONFIGERR;
+        }
+        *p++ = '\0';
 
-	while (*p && isspace((int) *p)) p++;
-	
-	if (!*p) {
-	    fclose(infile);
-	    return SASL_CONFIGERR;
-	}
+        while (*p && isspace((int) *p)) {
+            p++;
+        }
 
-	/* Now strip trailing spaces, if any */
-	tail = p + strlen(p) - 1;
-	while (tail > p && isspace((int) *tail)) {
-	    *tail = '\0';
-	    tail--;
-	}
+        if (!*p) {
+            fclose(infile);
+            return SASL_CONFIGERR;
+        }
 
-	if (nconfiglist == alloced) {
-	    alloced += CONFIGLISTGROWSIZE;
-	    configlist=sasl_REALLOC((char *)configlist, 
-				    alloced * sizeof(struct configlist));
-	    if (configlist == NULL) {
-		fclose(infile);
-		return SASL_NOMEM;
-	    }
-	}
+        /* Now strip trailing spaces, if any */
+        tail = p + strlen(p) - 1;
+        while (tail > p && isspace((int) *tail)) {
+            *tail = '\0';
+            tail--;
+        }
 
-	result = _sasl_strdup(key,
-			      &(configlist[nconfiglist].key),
-			      NULL);
-	if (result != SASL_OK) {
-	    fclose(infile);
-	    return result;
-	}
-	result = _sasl_strdup(p,
-			      &(configlist[nconfiglist].value),
-			      NULL);
-	if (result != SASL_OK) {
-	    fclose(infile);
-	    return result;
-	}
+        if (nconfiglist == alloced) {
+            alloced += CONFIGLISTGROWSIZE;
+            configlist = sasl_REALLOC((char *) configlist,
+                                      alloced * sizeof(struct configlist));
+            if (configlist == NULL) {
+                fclose(infile);
+                return SASL_NOMEM;
+            }
+        }
 
-	nconfiglist++;
+        result = _sasl_strdup(key, &(configlist[nconfiglist].key), NULL);
+        if (result != SASL_OK) {
+            fclose(infile);
+            return result;
+        }
+        result = _sasl_strdup(p, &(configlist[nconfiglist].value), NULL);
+        if (result != SASL_OK) {
+            fclose(infile);
+            return result;
+        }
+
+        nconfiglist++;
     }
     fclose(infile);
 
     return SASL_OK;
 }
 
-const char *sasl_config_getstring(const char *key,const char *def)
+const char *sasl_config_getstring(const char *key, const char *def)
 {
     int opt;
 
     for (opt = 0; opt < nconfiglist; opt++) {
-	if (*key == configlist[opt].key[0] &&
-	    !strcmp(key, configlist[opt].key))
-	  return configlist[opt].value;
+        if (*key == configlist[opt].key[0] && !strcmp(key, configlist[opt].key))
+        {
+            return configlist[opt].value;
+        }
     }
     return def;
 }
@@ -158,8 +165,12 @@ void sasl_config_done(void)
     int opt;
 
     for (opt = 0; opt < nconfiglist; opt++) {
-	if (configlist[opt].key) sasl_FREE(configlist[opt].key);
-	if (configlist[opt].value) sasl_FREE(configlist[opt].value);
+        if (configlist[opt].key) {
+            sasl_FREE(configlist[opt].key);
+        }
+        if (configlist[opt].value) {
+            sasl_FREE(configlist[opt].value);
+        }
     }
 
     sasl_FREE(configlist);

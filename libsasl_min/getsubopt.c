@@ -33,25 +33,25 @@
  * SUCH DAMAGE.
  */
 
-#if ((!defined(WIN32))&&(!defined(macintosh)))
-#include <sys/cdefs.h>
+#if ((!defined(WIN32)) && (!defined(macintosh)))
+# include <sys/cdefs.h>
 #endif /* WIN32 */
 #if defined(LIBC_SCCS) && !defined(lint)
-#if 0
+# if 0
 static char sccsid[] = "@(#)getsubopt.c	8.1 (Berkeley) 6/4/93";
-#else
+# else
 __RCSID("$NetBSD: getsubopt.c,v 1.4 1998/02/03 18:44:15 perry Exp $");
-#endif
+# endif
 #endif /* LIBC_SCCS and not lint */
 
 #include <stdlib.h>
 #include <string.h>
 #ifdef HAVE_UNISTD_H
-#include <unistd.h>
+# include <unistd.h>
 #endif /* HAVE_UNISTD_H */
-#if (defined(WIN32)||(defined(macintosh)))
-#include "sasl.h"
-LIBSASL_API int getsubopt(char **optionp, char * const *tokens, char **valuep);
+#if (defined(WIN32) || (defined(macintosh)))
+# include "sasl.h"
+LIBSASL_API int getsubopt(char **optionp, char *const *tokens, char **valuep);
 #endif /* WIN32 */
 /*
  * The SVID interface to getsubopt provides no way of figuring out which
@@ -61,54 +61,62 @@ LIBSASL_API int getsubopt(char **optionp, char * const *tokens, char **valuep);
  */
 char *suboptarg;
 
-int
-getsubopt(optionp, tokens, valuep)
-	char **optionp, **valuep;
-	char * const *tokens;
+int getsubopt(optionp, tokens, valuep)
+char **optionp, **valuep;
+char *const *tokens;
 {
-	int cnt;
-	char *p;
+    int cnt;
+    char *p;
 
-	suboptarg = *valuep = NULL;
+    suboptarg = *valuep = NULL;
 
-	if (!optionp || !*optionp)
-		return(-1);
+    if (!optionp || !*optionp) {
+        return (-1);
+    }
 
-	/* skip leading white-space, commas */
-	for (p = *optionp; *p && (*p == ',' || *p == ' ' || *p == '\t'); ++p);
+    /* skip leading white-space, commas */
+    for (p = *optionp; *p && (*p == ',' || *p == ' ' || *p == '\t'); ++p)
+        ;
 
-	if (!*p) {
-		*optionp = p;
-		return(-1);
-	}
+    if (!*p) {
+        *optionp = p;
+        return (-1);
+    }
 
-	/* save the start of the token, and skip the rest of the token. */
-	for (suboptarg = p;
-	    *++p && *p != ',' && *p != '=' && *p != ' ' && *p != '\t';);
+    /* save the start of the token, and skip the rest of the token. */
+    for (suboptarg = p;
+         *++p && *p != ',' && *p != '=' && *p != ' ' && *p != '\t';)
+        ;
 
-	if (*p) {
-		/*
-		 * If there's an equals sign, set the value pointer, and
-		 * skip over the value part of the token.  Terminate the
-		 * token.
-		 */
-		if (*p == '=') {
-			*p = '\0';
-			for (*valuep = ++p;
-			    *p && *p != ',' && *p != ' ' && *p != '\t'; ++p);
-			if (*p) 
-				*p++ = '\0';
-		} else
-			*p++ = '\0';
-		/* Skip any whitespace or commas after this token. */
-		for (; *p && (*p == ',' || *p == ' ' || *p == '\t'); ++p);
-	}
+    if (*p) {
+        /*
+         * If there's an equals sign, set the value pointer, and
+         * skip over the value part of the token.  Terminate the
+         * token.
+         */
+        if (*p == '=') {
+            *p = '\0';
+            for (*valuep = ++p; *p && *p != ',' && *p != ' ' && *p != '\t'; ++p)
+                ;
+            if (*p) {
+                *p++ = '\0';
+            }
+        }
+        else {
+            *p++ = '\0';
+        }
+        /* Skip any whitespace or commas after this token. */
+        for (; *p && (*p == ',' || *p == ' ' || *p == '\t'); ++p)
+            ;
+    }
 
-	/* set optionp for next round. */
-	*optionp = p;
+    /* set optionp for next round. */
+    *optionp = p;
 
-	for (cnt = 0; *tokens; ++tokens, ++cnt)
-		if (!strcmp(suboptarg, *tokens))
-			return(cnt);
-	return(-1);
+    for (cnt = 0; *tokens; ++tokens, ++cnt) {
+        if (!strcmp(suboptarg, *tokens)) {
+            return (cnt);
+        }
+    }
+    return (-1);
 }
