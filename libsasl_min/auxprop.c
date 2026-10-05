@@ -43,10 +43,11 @@
  */
 
 #include <config.h>
-#include <sasl.h>
-#include <prop.h>
 #include <ctype.h>
 #include <stdio.h>
+
+#include "sasl.h"
+#include "prop.h"
 #include "saslint.h"
 
 struct proppool

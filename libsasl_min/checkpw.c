@@ -48,6 +48,7 @@
 /* checkpw stuff */
 
 #include <stdio.h>
+
 #include "sasl.h"
 #include "saslutil.h"
 #include "saslplug.h"

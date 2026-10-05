@@ -57,9 +57,9 @@
 #include <stdarg.h>
 #include <ctype.h>
 
-#include <sasl.h>
-#include <saslutil.h>
-#include <saslplug.h>
+#include "sasl.h"
+#include "saslutil.h"
+#include "saslplug.h"
 #include "saslint.h"
 
 #ifdef WIN32

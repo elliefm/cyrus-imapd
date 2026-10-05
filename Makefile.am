@@ -327,10 +327,7 @@ lib_libsasl_min_la_SOURCES = \
     libsasl_min/client.c \
     libsasl_min/common.c \
     libsasl_min/config.c \
-    libsasl_min/dlopen.c \
     libsasl_min/external.c \
-    libsasl_min/getaddrinfo.c \
-    libsasl_min/getnameinfo.c \
     libsasl_min/getsubopt.c \
     libsasl_min/prop.h \
     libsasl_min/sasl.h \
@@ -340,9 +337,7 @@ lib_libsasl_min_la_SOURCES = \
     libsasl_min/saslutil.h \
     libsasl_min/server.c \
     libsasl_min/seterror.c \
-    libsasl_min/snprintf.c \
     libsasl_min/staticopen.h \
-    libsasl_min/windlopen.c \
     libsasl_min/prop.h \
     libsasl_min/sasl.h \
     libsasl_min/saslint.h \

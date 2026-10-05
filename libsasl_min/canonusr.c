@@ -43,12 +43,12 @@
  */
 
 #include <config.h>
-#include <sasl.h>
 #include <string.h>
 #include <ctype.h>
-#include <prop.h>
 #include <stdio.h>
 
+#include "sasl.h"
+#include "prop.h"
 #include "saslint.h"
 
 typedef struct canonuser_plug_list

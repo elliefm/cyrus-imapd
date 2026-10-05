@@ -49,8 +49,9 @@
 #include <limits.h>
 #include <ctype.h>
 #include <string.h>
-#include <sasl.h>
-#include <saslplug.h>
+
+#include "sasl.h"
+#include "saslplug.h"
 #include "saslint.h"
 
 #include "../common/plugin_common.h"

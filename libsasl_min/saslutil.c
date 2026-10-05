@@ -62,8 +62,9 @@
 #ifdef HAVE_TIME_H
 # include <time.h>
 #endif
+
 #include "saslint.h"
-#include <saslutil.h>
+#include "saslutil.h"
 
 /*  Contains:
  *
