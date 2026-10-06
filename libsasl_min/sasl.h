@@ -306,12 +306,12 @@ typedef unsigned sasl_ssf_t;
  *                         (breaking one won't help break next)
  * NOANONYMOUS          -- don't permit mechanisms that allow anonymous login
  * PASS_CREDENTIALS     -- require mechanisms which pass client
- *			   credentials, and allow mechanisms which can pass
- *			   credentials to do so
+ *                         credentials, and allow mechanisms which can pass
+ *                         credentials to do so
  * MUTUAL_AUTH          -- require mechanisms which provide mutual
- *			   authentication
+ *                         authentication
  * NONSTD_CBIND         -- enable channel binding on mechs that aren't
- *			   supposed to support them but do anyway (e.g. GSSAPI)
+ *                         supposed to support them but do anyway (e.g. GSSAPI)
  */
 #define SASL_SEC_NOPLAINTEXT 0x0001
 #define SASL_SEC_NOACTIVE 0x0002
@@ -438,7 +438,7 @@ typedef int sasl_log_t(void *context, int level, const char *message);
  * inputs:
  *  context     -- getpath context from the callback record
  * outputs:
- *  path	-- colon seperated path
+ *  path        -- colon seperated path
  * returns:
  *  SASL_OK     -- no error
  *  SASL_FAIL   -- error
@@ -1364,7 +1364,7 @@ LIBSASL_API int sasl_encode(sasl_conn_t *conn,
  *  SASL_OK      -- success (returns input if no layer negotiated)
  *  SASL_NOTDONE -- security layer negotiation not finished
  *  SASL_BADPARAM -- input length is greater than the SASL_MAXOUTBUF
- *		     or no security layer
+ *                   or no security layer
  */
 LIBSASL_API int sasl_encodev(sasl_conn_t *conn,
                              const struct iovec *invec,

@@ -337,12 +337,12 @@ typedef struct sasl_client_params
 /* This feature is deprecated.  Instead, plugins should set *serverout to
  * non-NULL and return SASL_OK intelligently to allow flexible use of
  * server-last semantics
-#define SASL_FEAT_WANT_SERVER_LAST	0x0004
+#define SASL_FEAT_WANT_SERVER_LAST 0x0004
 */
 
 /* This feature is deprecated.  Instead, plugins should correctly set
  * SASL_FEAT_SERVER_FIRST as needed
-#define SASL_FEAT_INTERNAL_CLIENT_FIRST	0x0008
+#define SASL_FEAT_INTERNAL_CLIENT_FIRST 0x0008
 */
 
 /* This indicates that the plugin is server-first only.

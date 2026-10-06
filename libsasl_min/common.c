@@ -1881,7 +1881,7 @@ static int _sasl_getsimple(void *context,
  * Parameters:
  *  context   - The SASL context.
  *  path_dest - Address of the pointer in which to store the
- *		 address of the plugin directory string.
+ *  address of the plugin directory string.
  *
  * Return Values:
  *  SASL_OK   - Success.
@@ -1934,20 +1934,20 @@ static int _sasl_getpath_simple(void *context __attribute__((unused)),
  * done with the value, or a memory leak could result.
  *
  * Parameters:
- *	context      - Pointer to the SASL context structure.
- *	attrname     - Pointer to the name of the environment variable
- *			or the name of the registry attribute.
- *	value        - Address of the pointer where the value is to be
- *			returned.
- *	default      - Pointer to the default value. Note that a supplied
- *			default string is copied to an allocated buffer,
- *			so it is always necessary to call the
- *			_sasl_free_registry_value() function.
+ *   context      - Pointer to the SASL context structure.
+ *   attrname     - Pointer to the name of the environment variable
+ *                  or the name of the registry attribute.
+ *   value        - Address of the pointer where the value is to be
+ *                  returned.
+ *   default      - Pointer to the default value. Note that a supplied
+ *                  default string is copied to an allocated buffer,
+ *                  so it is always necessary to call the
+ *                  _sasl_free_registry_value() function.
  *
  * Return Values:
- *	SASL_OK	      - Success
- *	SASL_BADPARAM - A bad parameter was passed
- *      SASL_FAIL     - The call failed (likely out of memory)
+ *   SASL_OK       - Success
+ *   SASL_BADPARAM - A bad parameter was passed
+ *   SASL_FAIL     - The call failed (likely out of memory)
  *
  */
 int _sasl_get_registry_value(void *context __attribute__((unused)),
@@ -2651,7 +2651,7 @@ int _iovec_to_buf(const struct iovec *vec,
 /* This code might be useful in the future, but it isn't now, so.... */
 #if 0
 int _sasl_iptostring(const struct sockaddr *addr, socklen_t addrlen,
-		     char *out, unsigned outlen) {
+    char *out, unsigned outlen) {
     char hbuf[NI_MAXHOST], pbuf[NI_MAXSERV];
     int niflags;
 
@@ -2660,14 +2660,14 @@ int _sasl_iptostring(const struct sockaddr *addr, socklen_t addrlen,
     niflags = (NI_NUMERICHOST | NI_NUMERICSERV);
 # ifdef NI_WITHSCOPEID
     if (addr->sa_family == AF_INET6)
-	niflags |= NI_WITHSCOPEID;
+    niflags |= NI_WITHSCOPEID;
 # endif
     if (getnameinfo(addr, addrlen, hbuf, sizeof(hbuf), pbuf, sizeof(pbuf),
-		    niflags) != 0)
-	return SASL_BADPARAM;
+                    niflags) != 0)
+    return SASL_BADPARAM;
 
     if(outlen < strlen(hbuf) + strlen(pbuf) + 2)
-	return SASL_BUFOVER;
+    return SASL_BUFOVER;
 
     snprintf(out, outlen, "%s;%s", hbuf, pbuf);
 
@@ -2884,7 +2884,7 @@ int _sasl_is_equal_mech(const char *req_mech,
  * reg_key_name  - Pointer to the name of the registry key in which to
  *                 look. Ignored on non-windows platforms.
  * reg_attr_name - Pointer to the name of the attribute value to return.
- * value	 - Address of the pointer in which to store the address
+ * value         - Address of the pointer in which to store the address
  *                 of the attribute value. This pointer is set to NULL
  *                 on failure.
  *
