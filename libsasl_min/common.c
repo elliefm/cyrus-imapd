@@ -76,7 +76,7 @@
 #endif
 
 static const char *implementation_string = "Cyrus SASL";
-static const char *sasl_root_key = SASL_ROOT_KEY;
+static const char *sasl_root_key = NULL;
 
 #define VSTR0(maj, min, step) #maj "." #min "." #step
 #define VSTR(maj, min, step) VSTR0(maj, min, step)
@@ -1900,9 +1900,9 @@ static int _sasl_getpath(void *context __attribute__((unused)),
     if (!default_plugin_path) {
         res = _sasl_get_default_path(context,
                                      sasl_root_key,
-                                     SASL_PLUGIN_PATH_ATTR,
+                                     "SASL_PLUGINDIR",
                                      &default_plugin_path,
-                                     PLUGINDIR);
+                                     "/usr/local/lib/sasl2/"); // XXX
     }
     if (res == SASL_OK) {
         *path_dest = default_plugin_path;
@@ -2005,9 +2005,9 @@ static int _sasl_getconfpath(void *context __attribute__((unused)),
     if (!default_conf_path) {
         res = _sasl_get_default_path(context,
                                      sasl_root_key,
-                                     SASL_CONF_PATH_ATTR,
+                                     "SASL_CONFDIR",
                                      &default_conf_path,
-                                     CONFIGDIR);
+                                     "/usr/local/lib/sasl2/etc/sasl2"); // XXX
     }
     if (res == SASL_OK) {
         *path_dest = default_conf_path;
@@ -2903,8 +2903,10 @@ static int _sasl_get_default_path(void *context __attribute__((unused)),
                                   const char *default_value)
 #ifndef WIN32
 {
-    char *path = NULL;
+    const char *path = NULL;
     int res = SASL_OK;
+
+    (void) reg_key_name; // only used for win32
 
     if (!reg_attr_name || !value) {
         return SASL_BADPARAM;

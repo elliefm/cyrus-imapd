@@ -322,7 +322,7 @@ typedef int sasl_plaintext_verifier(sasl_conn_t *conn,
 
 struct sasl_verify_password_s
 {
-    char *name;
+    const char *name;
     sasl_plaintext_verifier *verify;
 };
 
@@ -555,7 +555,7 @@ int _sasl_canon_user_lookup(sasl_conn_t *conn,
 /*
  * saslutil.c
  */
-int get_fqhostname(char *name, int namelen, int abort_if_no_fqdn);
+int get_fqhostname(char *name, size_t namelen, int abort_if_no_fqdn);
 
 #ifndef HAVE_GETHOSTNAME
 # ifdef sun

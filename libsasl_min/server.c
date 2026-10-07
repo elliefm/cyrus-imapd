@@ -774,7 +774,7 @@ static int load_config(const sasl_callback_t *verifyfile_cb)
                  "%.*s%c%s.conf",
                  (int) path_len,
                  path_to_config,
-                 HIER_DELIMITER,
+                 '/',
                  global_callbacks.appname);
 
         /* Ask the application if it's safe to use this file */
@@ -855,7 +855,7 @@ static char *grab_field(char *line, char **eofield)
 
 struct secflag_map_s
 {
-    char *name;
+    const char *name;
     int value;
 };
 

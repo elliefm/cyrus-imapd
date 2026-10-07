@@ -54,7 +54,7 @@
 #include "saslplug.h"
 #include "saslint.h"
 
-#include "../common/plugin_common.h"
+#include "plugin_common.h"
 
 /*****************************  Common Section  *****************************/
 

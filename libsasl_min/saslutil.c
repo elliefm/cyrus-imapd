@@ -583,7 +583,7 @@ char *sasl_strlower(char *val)
 }
 
 /* A version of gethostname that tries hard to return a FQDN */
-int get_fqhostname(char *name, int namelen, int abort_if_no_fqdn)
+int get_fqhostname(char *name, size_t namelen, int abort_if_no_fqdn)
 {
     int return_value;
     struct addrinfo hints;

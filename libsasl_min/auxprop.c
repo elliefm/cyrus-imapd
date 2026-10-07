@@ -45,6 +45,8 @@
 #include <config.h>
 #include <ctype.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "sasl.h"
 #include "prop.h"

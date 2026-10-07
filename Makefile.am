@@ -328,7 +328,7 @@ lib_libsasl_min_la_SOURCES = \
     libsasl_min/common.c \
     libsasl_min/config.c \
     libsasl_min/external.c \
-    libsasl_min/getsubopt.c \
+    libsasl_min/plugin_common.h \
     libsasl_min/prop.h \
     libsasl_min/sasl.h \
     libsasl_min/saslint.h \
@@ -344,7 +344,10 @@ lib_libsasl_min_la_SOURCES = \
     libsasl_min/saslplug.h \
     libsasl_min/saslutil.h
 
-lib_libsasl_min_la_CFLAGS = $(AM_CFLAGS) $(CFLAG_VISIBILITY)
+# sasl_callback_t and sasl_callback_ft throw cast-function-type warnings
+# everywhere they're used, so we need to suppress that
+lib_libsasl_min_la_CFLAGS = $(AM_CFLAGS) $(CFLAG_VISIBILITY) \
+                            -Wno-cast-function-type
 lib_libsasl_min_la_LIBADD =
 endif # USE_INTERNAL_SASL
 
