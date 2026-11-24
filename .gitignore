@@ -56,10 +56,13 @@ cunit/CUnitAutomated-Results.xml
 cunit/run
 cunit/test-dbdir
 cunit/unit
+cunit/mockserviced
 ### ignore intermediate c files from foo.testc
 cunit/*.c
 ### but not the framework files
 !cunit/unit*.c
+### and not the mockserviced source
+!cunit/mockserviced.c
 ### but do ignore the generated registry file
 cunit/unit-registry.c
 debian/

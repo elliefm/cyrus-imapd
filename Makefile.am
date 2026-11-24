@@ -608,6 +608,8 @@ cunit_FRAMEWORK = \
     cunit/unit.c \
     cunit/unit.h \
     cunit/unit-registry.h \
+    cunit/unit-service.h \
+    cunit/unit-service.c \
     cunit/unit-syslog.c \
     cunit/unit-syslog.h \
     cunit/unit-timeofday.c \
@@ -704,6 +706,9 @@ cunit_unit_SOURCES = $(cunit_FRAMEWORK) $(cunit_TESTS) \
 nodist_cunit_unit_SOURCES = cunit/unit-registry.c
 cunit_unit_LDADD = $(LD_SIEVE_ADD) $(LD_UTILITY_ADD) -lcunit
 
+cunit_mockserviced_SOURCES = cunit/mockserviced.c imap/mutex_fake.c
+cunit_mockserviced_LDADD = $(LD_UTILITY_ADD) -lpthread
+
 # n.b. $(patsubst ...) is a GNU Make function, not an automake thing.
 # It's passed through to Makefile verbatim, not interpreted in any way.
 CUNIT_INTERMEDIATES = $(patsubst %.testc,%.c,$(cunit_TESTS))
@@ -727,7 +732,7 @@ if CUNIT
 
 BUILT_SOURCES += cunit/unit-registry.c
 CLEANFILES += cunit/unit-registry.c $(CUNIT_INTERMEDIATES)
-check_PROGRAMS += cunit/unit
+check_PROGRAMS += cunit/mockserviced cunit/unit
 
 # To run unit tests under Valgrind, do:
 #     make VG=1 check
