@@ -5,7 +5,14 @@
 
 #include "cunit/unit-service.h"
 
+#include <sys/mman.h>
+#include <sys/stat.h>
+
+#include <fcntl.h>
+#include <signal.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <sysexits.h>
 #include <unistd.h>
 
@@ -99,7 +106,7 @@ int main(int argc, char **argv)
 
     if (!shm_name) usage();
 
-    shm_fd = shm_open(shm_name, O_RDRW, 0);
+    shm_fd = shm_open(shm_name, O_RDWR, 0);
     if (shm_fd == -1) {
         perror("shm_open");
         exit(EX_OSERR);
@@ -137,13 +144,21 @@ int main(int argc, char **argv)
     sigaction(SIGQUIT, &sa, NULL);
     sigaction(SIGTERM, &sa, NULL);
 
+    // initialise sasl server:
+    // need mutex_fake
+    // sasl_set_alloc
+    // sasl_set_mutex
+    // sasl_server_init
+
     while (!got_signal) {
-        r = accept_client(service);
+        r = server_accept(service);
         if (r) break;
 
-        cmdloop(service);
-        reset(service);
+        server_cmdloop(service);
+        server_reset(service);
     }
+
+    // sasl done
 
  done:
     if (sock >= 0)
