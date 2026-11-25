@@ -9,7 +9,10 @@
 #include <sys/stat.h>
 
 #include <fcntl.h>
+#include <signal.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <sysexits.h>
 #include <unistd.h>
 
@@ -19,6 +22,7 @@ EXPORTED struct mock_service *cunit_service_spawn(const char *name)
 {
     struct mock_service *service = NULL;
     char shm_name[MAX_SHM_NAME + 1] = {0};
+    struct timespec timeout;
     int shm_fd, r;
     pid_t child;
 
@@ -27,11 +31,11 @@ EXPORTED struct mock_service *cunit_service_spawn(const char *name)
                  (long) getpid(),
                  serial++,
                  name);
-    if (r <= 0 || r >= sizeof(shm_name))
+    if (r <= 0 || (unsigned) r >= sizeof(shm_name))
         return NULL;
 
     shm_fd = shm_open(shm_name,
-                      O_RDWR | O_CREATE | O_EXCL,
+                      O_RDWR | O_CREAT | O_EXCL,
                       S_IWUSR | S_IRUSR);
     if (shm_fd == -1)
         return NULL;
@@ -61,8 +65,8 @@ EXPORTED struct mock_service *cunit_service_spawn(const char *name)
 
     if (child == 0) {
         /* child process */
-        const char *const argv[] = {
-            "-s",
+        char *const argv[] = {
+            (char []) { "-s" },
             shm_name,
             NULL,
         };
@@ -72,8 +76,24 @@ EXPORTED struct mock_service *cunit_service_spawn(const char *name)
         exit(EX_OSERR);
     }
 
-    // sem_timedwait for child to be ready
-    // listening port will be available in shared state
+    /* wait for child to be ready */
+    timeout.tv_sec = time(NULL) + 20;
+    timeout.tv_nsec = 0;
+    while ((r = sem_timedwait(&service->semaphore, &timeout)) == -1
+           && errno == EINTR)
+        continue;
+
+    if (r) {
+        fputs("mockserviced took too long to start up!\n", stderr);
+        kill(child, SIGKILL);
+        while ((r = waitpid(child, NULL, 0)) == -1 && errno == EINTR)
+            continue;
+        goto error;
+    }
+
+    service->pid = child;
+    sem_post(&service->semaphore);
+    return service;
 
  error:
     if (service) {
@@ -86,11 +106,25 @@ EXPORTED struct mock_service *cunit_service_spawn(const char *name)
     return NULL;
 }
 
-EXPORTED void cunit_service_destroy(struct server_state *server_state)
+EXPORTED void cunit_service_destroy(struct mock_service **pservice)
 {
-    // signal child to exit
-    // wait for child pid
-    // destroy semaphore
-    // munmap
-    // shm_unlink
+    struct mock_service *service = *pservice;
+    char shm_name[MAX_SHM_NAME + 1];
+    int sig = SIGTERM;
+    pid_t reaped;
+
+    do {
+        kill(service->pid, sig);
+        while ((reaped = waitpid(service->pid, NULL, 0)) == -1
+               && errno == EINTR)
+            continue;
+        sig = SIGKILL;
+    } while (reaped != service->pid);
+
+    memcpy(shm_name, service->shm_name, sizeof(shm_name));
+
+    sem_destroy(&service->semaphore);
+    munmap(service, sizeof(*service));
+    shm_unlink(shm_name);
+    *pservice = NULL;
 }
