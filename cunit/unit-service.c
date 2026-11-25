@@ -10,11 +10,12 @@
 
 #include <fcntl.h>
 #include <stdio.h>
+#include <sysexits.h>
 #include <unistd.h>
 
 static unsigned serial;
 
-EXPORTED struct mock_service *service_spawn(const char *name)
+EXPORTED struct mock_service *cunit_service_spawn(const char *name)
 {
     struct mock_service *service = NULL;
     char shm_name[MAX_SHM_NAME + 1] = {0};
@@ -60,15 +61,15 @@ EXPORTED struct mock_service *service_spawn(const char *name)
 
     if (child == 0) {
         /* child process */
-        char *const argv[] = {
-            // ...
+        const char *const argv[] = {
+            "-s",
+            shm_name,
             NULL,
         };
 
-        // XXX what cloned state needs to be cleaned up before exec?
-
         execv("mockserviced", argv);
-        exit(errno);
+        perror("exec mockserviced");
+        exit(EX_OSERR);
     }
 
     // sem_timedwait for child to be ready
@@ -85,7 +86,7 @@ EXPORTED struct mock_service *service_spawn(const char *name)
     return NULL;
 }
 
-EXPORTED void service_destroy(struct server_state *server_state)
+EXPORTED void cunit_service_destroy(struct server_state *server_state)
 {
     // signal child to exit
     // wait for child pid
