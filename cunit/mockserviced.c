@@ -27,7 +27,8 @@
 #include <unistd.h>
 
 static volatile sig_atomic_t got_signal;
-static char *accept_username, *accept_password;
+static char accept_username[MAX_USERNAME + 1];
+static char accept_password[MAX_PASSWORD + 1];
 static int verbose = 0;
 
 static void cmd_authenticate(struct mock_service *service,
@@ -37,9 +38,7 @@ static void cmd_starttls(struct mock_service *service);
 
 static void usage(void)
 {
-    // XXX update this
-    fputs("Usage:\n", stderr);
-    fputs("    mockserviced -s shm_name -h host\n", stderr);
+    fputs("Usage: mockserviced [-v] shm_name\n", stderr);
     exit(EX_USAGE);
 }
 
@@ -124,17 +123,12 @@ static int server_checkpass(sasl_conn_t *conn __attribute__((unused)),
                             unsigned passlen,
                             struct propctx *propctx __attribute__((unused)))
 {
-    if (!accept_username || strcmp(user, accept_username))
+    if (strcmp(user, accept_username))
         return SASL_NOUSER;
 
-    if (accept_password) {
-        if (passlen != strlen(accept_password)
-            || strncmp(pass, accept_password, passlen))
-        {
-            return SASL_BADAUTH;
-        }
-    }
-    else if (passlen > 0) {
+    if (passlen != strlen(accept_password)
+        || strncmp(pass, accept_password, passlen))
+    {
         return SASL_BADAUTH;
     }
 
@@ -613,19 +607,8 @@ int main(int argc, char **argv)
     int opt, r;
     int shm_fd, sock = -1, port = 0;
 
-    while (-1 != (opt = getopt(argc, argv, "p:s:u:v"))) {
+    while (-1 != (opt = getopt(argc, argv, "hv"))) {
         switch (opt) {
-        case 'p':
-            free(accept_password);
-            accept_password = strdup(optarg);
-            break;
-        case 's':
-            shm_name = optarg;
-            break;
-        case 'u':
-            free(accept_username);
-            accept_username = strdup(optarg);
-            break;
         case 'v':
             verbose++;
             break;
@@ -634,11 +617,14 @@ int main(int argc, char **argv)
         }
     }
 
-    if (!shm_name) usage();
+    if (optind >= argc) usage();
+    shm_name = argv[optind++];
+
+    if (optind < argc) usage();
 
     shm_fd = shm_open(shm_name, O_RDWR, 0);
     if (shm_fd == -1) {
-        perror("shm_open");
+        perror(shm_name);
         exit(EX_OSERR);
     }
 
@@ -657,6 +643,10 @@ int main(int argc, char **argv)
 
     close(shm_fd);
     shm_fd = -1;
+
+    /* copy username and password to somewhere server_checkpass can see them */
+    strlcpy(accept_username, service->config.username, sizeof(accept_username));
+    strlcpy(accept_password, service->config.password, sizeof(accept_password));
 
     sock = create_server_socket(&port);
     if (sock < 0) {
@@ -707,9 +697,6 @@ int main(int argc, char **argv)
         shutdown(sock, SHUT_RDWR);
     if (service)
         munmap(service, sizeof(*service));
-
-    free(accept_username);
-    free(accept_password);
 
     return r;
 }
