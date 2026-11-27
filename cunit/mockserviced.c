@@ -163,7 +163,7 @@ static int server_accept(struct mock_service *service, int listen)
     service->in = prot_new(conn_sock, /*read*/0);
     service->out = prot_new(dup(conn_sock), /*write*/1);
 
-    r = sasl_server_new("mockserviced", "localhost",
+    r = sasl_server_new(CUNIT_SERVICE_SASLNAME, "localhost",
                         /*user_realm*/NULL, /*iplocalport*/NULL,
                         /*ipremoteport*/NULL, /*callbacks*/NULL,
                         /*flags*/0, &service->saslconn);
@@ -667,8 +667,12 @@ int main(int argc, char **argv)
         goto done;
     }
 
-    service->port = port;
-    sem_post(&service->semaphore);
+    /* write port back so clients can find us */
+    r = snprintf(service->port, sizeof(service->port), "%d", port);
+    if (r <= 0 || (unsigned) r >= sizeof(service->port)) {
+        r = EX_SOFTWARE;
+        goto done;
+    }
 
     sa.sa_handler = &signalled;
     sigemptyset(&sa.sa_mask);
@@ -694,6 +698,9 @@ int main(int argc, char **argv)
                         sasl_errstring(r, NULL, NULL));
         goto done;
     }
+
+    /* okay, we're ready now */
+    sem_post(&service->semaphore);
 
     while (!got_signal) {
         r = server_accept(service, sock);
