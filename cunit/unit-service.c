@@ -3,6 +3,7 @@
 /* See COPYING file at the root of the distribution for more details. */
 #include <config.h>
 
+#include "cunit/unit.h"
 #include "cunit/unit-service.h"
 
 #include <sys/mman.h>
@@ -27,8 +28,42 @@ EXPORTED const struct mock_service_config cunit_service_default_config =
     .deflate = false,
     .caps_one_per_line = true,
     .alpn_map = {{{0}, NULL, NULL }},
+    .username = "fbloggs",
+    .password = "shibboleth",
     .banner = {0},
 };
+
+__attribute__((noreturn))
+static void exec_mockserviced(char *shm_name)
+{
+    char arg_verbose[8];
+    char *const argv[] = {
+        arg_verbose,
+        shm_name,
+        NULL,
+    };
+    char *const *pargv = argv;
+
+    switch (abs(verbose)) {
+    case 0:
+        /* don't pass any -v switches */
+        pargv += 1;
+        break;
+    case 1:
+        strlcpy(arg_verbose, "-v", sizeof(arg_verbose));
+        break;
+    case 2:
+        strlcpy(arg_verbose, "-vv", sizeof(arg_verbose));
+        break;
+    default:
+        strlcpy(arg_verbose, "-vvv", sizeof(arg_verbose));
+        break;
+    }
+
+    execv("mockserviced", pargv);
+    perror("exec mockserviced");
+    exit(EX_OSERR);
+}
 
 EXPORTED struct mock_service *cunit_service_spawn(
     const char *name,
@@ -93,16 +128,8 @@ EXPORTED struct mock_service *cunit_service_spawn(
     if (child < 0) goto error;
 
     if (child == 0) {
-        /* child process */
-        char *const argv[] = {
-            (char []) { "-s" }, shm_name,
-            // XXX pass username, password
-            NULL,
-        };
-
-        execv("mockserviced", argv);
-        perror("exec mockserviced");
-        exit(EX_OSERR);
+        exec_mockserviced(shm_name);
+        /* doesn't return */
     }
 
     /* wait for child to be ready */

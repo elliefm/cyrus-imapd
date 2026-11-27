@@ -15,6 +15,8 @@
 #define MAX_ALPN_MAP    (4)
 #define MAX_SHM_NAME    (255)
 #define MAX_BANNER      (63)
+#define MAX_USERNAME    (15)
+#define MAX_PASSWORD    (15)
 
 struct mock_service_config
 {
@@ -24,6 +26,8 @@ struct mock_service_config
     bool deflate;
     bool caps_one_per_line;
     struct tls_alpn_t alpn_map[MAX_ALPN_MAP + 1];
+    char username[MAX_USERNAME + 1];
+    char password[MAX_PASSWORD + 1];
     char banner[MAX_BANNER + 1];
 };
 extern const struct mock_service_config cunit_service_default_config;
