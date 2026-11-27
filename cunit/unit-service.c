@@ -28,8 +28,8 @@ EXPORTED const struct mock_service_config cunit_service_default_config =
     .deflate = false,
     .caps_one_per_line = true,
     .alpn_map = {{{0}, NULL, NULL }},
-    .username = "fbloggs",
-    .password = "shibboleth",
+    .userid = CUNIT_SERVICE_USERID,
+    .password = CUNIT_SERVICE_PASSWORD,
     .banner = {0},
 };
 
