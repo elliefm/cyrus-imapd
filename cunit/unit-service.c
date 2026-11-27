@@ -260,3 +260,24 @@ EXPORTED void cunit_service_set_banner(struct mock_service *service,
         memset(service->config.banner, 0, sizeof(service->config.banner));
     }
 }
+
+EXPORTED unsigned cunit_protocol_append_capas(struct protocol_t *protocol,
+                                              const struct capa_t *extra)
+{
+    unsigned n_capa = 0, n_extra = 0;
+
+    while (n_capa < MAX_CAPA
+           && protocol->u.std.capa_cmd.capa[n_capa].str != NULL)
+        n_capa ++;
+
+    while (n_capa < MAX_CAPA && extra->str != NULL) {
+        protocol->u.std.capa_cmd.capa[n_capa] = *extra;
+        n_capa ++;
+        n_extra ++;
+        extra ++;
+    }
+
+    protocol->u.std.capa_cmd.capa[n_capa] = (struct capa_t){ NULL, 0 };
+
+    return n_extra;
+}

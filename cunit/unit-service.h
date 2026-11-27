@@ -23,6 +23,7 @@
 #define CUNIT_SERVICE_SASLNAME  "vorpal"
 #define CUNIT_SERVICE_USERID    "fbloggs"
 #define CUNIT_SERVICE_PASSWORD  "shibboleth"
+#define CUNIT_SERVICE_HOST      "localhost"
 
 struct mock_service_config
 {
@@ -36,7 +37,6 @@ struct mock_service_config
     char password[MAX_PASSWORD + 1];
     char banner[MAX_BANNER + 1];
 };
-extern const struct mock_service_config cunit_service_default_config;
 
 struct mock_service
 {
@@ -60,6 +60,8 @@ struct mock_service
     struct mock_service_config config;
 };
 
+extern const struct mock_service_config cunit_service_default_config;
+
 extern struct mock_service *cunit_service_spawn(
     const char *name,
     const char *banner,
@@ -70,4 +72,7 @@ extern void cunit_service_destroy(struct mock_service **pservice);
 
 extern void cunit_service_set_banner(struct mock_service *service,
                                      const char *banner);
+
+extern unsigned cunit_protocol_append_capas(struct protocol_t *protocol,
+                                            const struct capa_t *extra);
 #endif
