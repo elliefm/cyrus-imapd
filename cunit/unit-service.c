@@ -103,9 +103,9 @@ static void exec_mockserviced(char *shm_name)
     };
     char *const *pargv = argv;
 
-    switch (abs(verbose)) {
+    switch (verbose > 0 ? verbose : 0) {
     case 0:
-        /* don't pass any -v switches */
+        /* not verbose, don't pass any -v switches */
         pargv += 1;
         break;
     case 1:
