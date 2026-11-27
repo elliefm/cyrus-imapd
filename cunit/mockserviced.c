@@ -27,7 +27,7 @@
 #include <unistd.h>
 
 static volatile sig_atomic_t got_signal;
-static char accept_username[MAX_USERNAME + 1];
+static char accept_userid[MAX_USERID + 1];
 static char accept_password[MAX_PASSWORD + 1];
 static int verbose = 0;
 
@@ -123,7 +123,7 @@ static int server_checkpass(sasl_conn_t *conn __attribute__((unused)),
                             unsigned passlen,
                             struct propctx *propctx __attribute__((unused)))
 {
-    if (strcmp(user, accept_username))
+    if (strcmp(user, accept_userid))
         return SASL_NOUSER;
 
     if (passlen != strlen(accept_password)
@@ -657,8 +657,8 @@ int main(int argc, char **argv)
     close(shm_fd);
     shm_fd = -1;
 
-    /* copy username and password to somewhere server_checkpass can see them */
-    strlcpy(accept_username, service->config.username, sizeof(accept_username));
+    /* copy userid and password to somewhere server_checkpass can see them */
+    strlcpy(accept_userid, service->config.userid, sizeof(accept_userid));
     strlcpy(accept_password, service->config.password, sizeof(accept_password));
 
     sock = create_server_socket(&port);
