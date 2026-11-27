@@ -5,6 +5,7 @@
 #ifndef CUNIT_UNIT_SERVICE_H
 #define CUNIT_UNIT_SERVICE_H
 
+#include "imap/protocol.h"
 #include "imap/tls.h"
 
 #include <sasl/sasl.h>
@@ -14,9 +15,12 @@
 
 #define MAX_ALPN_MAP    (4)
 #define MAX_SHM_NAME    (255)
+#define MAX_PORT        (31)
 #define MAX_BANNER      (63)
 #define MAX_USERNAME    (15)
 #define MAX_PASSWORD    (15)
+
+#define CUNIT_SERVICE_SASLNAME  "vorpal"
 
 struct mock_service_config
 {
@@ -35,9 +39,9 @@ extern const struct mock_service_config cunit_service_default_config;
 struct mock_service
 {
     char shm_name[MAX_SHM_NAME + 1];
+    char port[MAX_PORT + 1];
     sem_t semaphore;
     pid_t pid;
-    int port;
 
     struct protstream *in;
     struct protstream *out;
@@ -57,7 +61,8 @@ struct mock_service
 extern struct mock_service *cunit_service_spawn(
     const char *name,
     const char *banner,
-    const struct mock_service_config *config);
+    const struct mock_service_config *config,
+    struct protocol_t *protocol);
 
 extern void cunit_service_destroy(struct mock_service **pservice);
 

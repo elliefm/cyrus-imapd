@@ -33,6 +33,65 @@ EXPORTED const struct mock_service_config cunit_service_default_config =
     .banner = {0},
 };
 
+static const struct protocol_t default_protocol =
+{
+    .service = NULL,
+    .sasl_service = CUNIT_SERVICE_SASLNAME,
+    .alpn_map = NULL,
+    .type = TYPE_STD,
+    .u.std = {
+        .banner = {
+            .auto_capa = 1,
+            .resp = "OK"
+        },
+        .capa_cmd = {
+            .cmd = "XXCAPABILITY",
+            .arg = NULL,
+            .resp = "OK",
+            .postcapability = NULL,
+            .formatflags = CAPAF_ONE_PER_LINE|CAPAF_SKIP_FIRST_WORD,
+            .capa = {
+                { "CCSASL", CAPA_AUTH },
+                { "CCSTARTTLS", CAPA_STARTTLS },
+                { "CCCOMPRESS=DEFLATE", CAPA_COMPRESS },
+                { NULL, 0 }
+            },
+        },
+        .tls_cmd = {
+            .cmd = "XXSTARTTLS",
+            .ok = "OK",
+            .fail = "NO",
+            .auto_capa = 0
+        },
+        .sasl_cmd = {
+            .cmd = "XXAUTHENTICATE",
+            .maxlen = USHRT_MAX,
+            .quote = 0,
+            .ok = "OK",
+            .fail = "NO",
+            .cont = "+ ",
+            .cancel = "*",
+            .parse_success = NULL,
+            .auto_capa = 0
+        },
+        .compress_cmd = {
+            .cmd = NULL,
+            .unsol = NULL,
+            .ok = NULL
+        },
+        .ping_cmd = {
+            .cmd = "XXNOOP",
+            .unsol = NULL,
+            .ok = "OK"
+        },
+        .logout_cmd = {
+            .cmd = "XXLOGOUT",
+            .unsol = NULL,
+            .ok = "OK"
+        }
+    }
+};
+
 __attribute__((noreturn))
 static void exec_mockserviced(char *shm_name)
 {
@@ -68,7 +127,8 @@ static void exec_mockserviced(char *shm_name)
 EXPORTED struct mock_service *cunit_service_spawn(
     const char *name,
     const char *banner,
-    const struct mock_service_config *config)
+    const struct mock_service_config *config,
+    struct protocol_t *protocol)
 {
     struct mock_service *service = NULL;
     char shm_name[MAX_SHM_NAME + 1] = {0};
@@ -148,6 +208,11 @@ EXPORTED struct mock_service *cunit_service_spawn(
     }
 
     service->pid = child;
+
+    /* set up protocol */
+    memcpy(protocol, &default_protocol, sizeof(*protocol));
+    protocol->service = service->port;
+
     sem_post(&service->semaphore);
     return service;
 
