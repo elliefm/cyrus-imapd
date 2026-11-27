@@ -243,6 +243,19 @@ static void server_flush(struct mock_service *service)
     prot_flush(service->out);
 }
 
+static const char *server_banner(struct mock_service *service)
+{
+    static const char default_banner[] = "mockserviced default banner";
+
+    if (!*service->config.banner) {
+        strlcpy(service->config.banner,
+                default_banner,
+                sizeof(service->config.banner));
+    }
+
+    return service->config.banner;
+}
+
 /*
  * Emit to the client a banner including the server's capability
  * strings.  This might be in response to the client connecting, or to
@@ -370,7 +383,7 @@ static void server_emit_caps(struct mock_service *service)
             server_printf(service, "* %s%s\r\n", name, line);
         }
         server_printf(service, "OK %s server ready\r\n",
-                      service->config.banner);
+                      server_banner(service));
     } else {
         /* One-line, NAME=VALUE pairs inside IMAP-style response code */
         line[0] = '\0';
@@ -389,7 +402,7 @@ static void server_emit_caps(struct mock_service *service)
             n++;
         }
         server_printf(service, "OK [CAPABILITY%s] %s server ready\r\n",
-                      line, service->config.banner);
+                      line, server_banner(service));
     }
     server_flush(service);
 }
