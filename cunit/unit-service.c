@@ -184,3 +184,14 @@ EXPORTED void cunit_service_destroy(struct mock_service **pservice)
     shm_unlink(shm_name);
     *pservice = NULL;
 }
+
+EXPORTED void cunit_service_set_banner(struct mock_service *service,
+                                       const char *banner)
+{
+    if (banner) {
+        strlcpy(service->config.banner, banner, sizeof(service->config.banner));
+    }
+    else {
+        memset(service->config.banner, 0, sizeof(service->config.banner));
+    }
+}

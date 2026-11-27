@@ -54,4 +54,13 @@ struct mock_service
     struct mock_service_config config;
 };
 
+extern struct mock_service *cunit_service_spawn(
+    const char *name,
+    const char *banner,
+    const struct mock_service_config *config);
+
+extern void cunit_service_destroy(struct mock_service **pservice);
+
+extern void cunit_service_set_banner(struct mock_service *service,
+                                     const char *banner);
 #endif
