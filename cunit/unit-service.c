@@ -119,9 +119,11 @@ static void exec_mockserviced(char *shm_name)
         break;
     }
 
+    /* XXX need path to the build directory */
+
     execv("mockserviced", pargv);
     perror("exec mockserviced");
-    exit(EX_OSERR);
+    _Exit(EX_OSERR);
 }
 
 EXPORTED struct mock_service *cunit_service_spawn(
@@ -191,6 +193,8 @@ EXPORTED struct mock_service *cunit_service_spawn(
         exec_mockserviced(shm_name);
         /* doesn't return */
     }
+
+    // XXX check if child exited already?
 
     /* wait for child to be ready */
     timeout.tv_sec = time(NULL) + 20;
