@@ -7,6 +7,7 @@
 
 #include <sys/mman.h>
 #include <sys/stat.h>
+#include <sys/wait.h>
 
 #include <fcntl.h>
 #include <signal.h>
@@ -18,7 +19,21 @@
 
 static unsigned serial;
 
-EXPORTED struct mock_service *cunit_service_spawn(const char *name)
+EXPORTED const struct mock_service_config cunit_service_default_config =
+{
+    .sasl_plain = true,
+    .sasl_login = false,
+    .starttls = false,
+    .deflate = false,
+    .caps_one_per_line = true,
+    .alpn_map = {{{0}, NULL, NULL }},
+    .banner = {0},
+};
+
+EXPORTED struct mock_service *cunit_service_spawn(
+    const char *name,
+    const char *banner,
+    const struct mock_service_config *config)
 {
     struct mock_service *service = NULL;
     char shm_name[MAX_SHM_NAME + 1] = {0};
@@ -57,6 +72,20 @@ EXPORTED struct mock_service *cunit_service_spawn(const char *name)
     close(shm_fd);
     shm_fd = -1;
 
+    if (!config) config = &cunit_service_default_config;
+    memcpy(&service->config, config, sizeof(*config));
+
+    if (banner && *banner) {
+        strlcpy(service->config.banner,
+                banner,
+                sizeof(service->config.banner));
+    }
+    else {
+        strlcpy(service->config.banner,
+                "mockserviced default banner",
+                sizeof(service->config.banner));
+    }
+
     memcpy(service->shm_name, shm_name, sizeof(shm_name));
     sem_init(&service->semaphore, 1, 0);
 
@@ -66,8 +95,8 @@ EXPORTED struct mock_service *cunit_service_spawn(const char *name)
     if (child == 0) {
         /* child process */
         char *const argv[] = {
-            (char []) { "-s" },
-            shm_name,
+            (char []) { "-s" }, shm_name,
+            // XXX pass username, password
             NULL,
         };
 
